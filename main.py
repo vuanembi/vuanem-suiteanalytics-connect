@@ -40,7 +40,7 @@ class NetSuiteJob:
             df,
             f"{self.dataset}._stage_{self.table}",
             job_config=bigquery.LoadJobConfig(
-                #schema=schema,
+                schema=schema,
                 create_disposition="CREATE_IF_NEEDED",
                 write_disposition="WRITE_TRUNCATE",
             ),
@@ -59,12 +59,12 @@ class NetSuiteJob:
 
 def main(request):
     print(datetime.now())
-    # SalesOrderLines = NetSuiteJob("SalesOrderLines")
+    SalesOrderLines = NetSuiteJob("SalesOrderLines")
     InventoryMovements = NetSuiteJob("InventoryMovements")
     results = {
         "pipelines": "NetSuite",
         "results": [
-            # SalesOrderLines.run(),
+            SalesOrderLines.run(),
             InventoryMovements.run()
         ],
     }
