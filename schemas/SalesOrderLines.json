@@ -1,0 +1,47 @@
+[
+    {
+        "name": "TRANSACTION_ID",
+        "type": "INTEGER",
+        "mode": "REQUIRED"
+    },
+    {
+        "name": "TRANDATE",
+        "type": "DATE",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "TRANID",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "CUSTOMER_PHONE",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "LOCATION_ID",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "PRODUCT_GROUP_CODE",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "FULL_NAME",
+        "type": "STRING",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "ITEM_COUNT",
+        "type": "FLOAT",
+        "mode": "NULLABLE"
+    },
+    {
+        "name": "NET_AMOUNT",
+        "type": "FLOAT",
+        "mode": "NULLABLE"
+    }
+]
