@@ -6,8 +6,7 @@ ENV PYTHONUNBUFFERED True
 WORKDIR /vuanem_ns
 COPY . ./
 
-RUN wget "https://4975572.app.netsuite.com/app/external/odbc/odbcDriverZipDownload.nl?type=BIT_64&os=LINUX" > NetSuiteODBCDrivers_Linux64bit.zip \
-    && mkdir -p /opt/netsuite/odbcclient \
+RUN && mkdir -p /opt/netsuite/odbcclient \
     && unzip NetSuiteODBCDrivers_Linux64bit.zip -d /opt/netsuite/odbcclient
 RUN sed -i 's/NetSuite=/NetSuiteML=/g' /opt/netsuite/odbcclient/odbc64.ini \
     && sed -i 's/\[NetSuite\]/\[NetSuiteML\]/g' /opt/netsuite/odbcclient/odbc64.ini
