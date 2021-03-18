@@ -2,7 +2,6 @@ import os
 import json
 
 import requests
-from flask import Flask
 import pyodbc
 import pandas as pd
 from google.cloud import bigquery
@@ -52,18 +51,12 @@ class NetSuiteJob:
         df = self.transform(df)
         errors = self.load(df)
         return {
-            "db": self.db,
             "table": self.table,
             "num_processed": self.num_processed,
             "output_rows": errors.output_rows,
             "errors": errors.errors,
         }
 
-
-app = Flask(__name__)
-
-
-@app.route("/")
 def main():
     SalesOrderLines = NetSuiteJob("SalesOrderLines")
     InventoryMovements = NetSuiteJob("InventoryMovements")
@@ -90,7 +83,3 @@ def main():
         },
     )
     return responses
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

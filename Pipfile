@@ -12,11 +12,9 @@ requests = "*"
 pyarrow = "*"
 parallel-execute = "*"
 pymysql = "*"
-flask = "*"
-gunicorn = "*"
+functions-framework = "*"
 
 [dev-packages]
-functions-framework = "*"
 black = "*"
 pytest = "*"
 
