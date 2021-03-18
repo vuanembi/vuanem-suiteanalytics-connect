@@ -59,10 +59,13 @@ class NetSuiteJob:
 
 def main(request):
     SalesOrderLines = NetSuiteJob("SalesOrderLines")
-    InventoryMovements = NetSuiteJob("InventoryMovements")
+    #InventoryMovements = NetSuiteJob("InventoryMovements")
 
     loom = ThreadLoom(max_runner_cap=10)
-    for i in [SalesOrderLines, InventoryMovements]:
+    for i in [
+        SalesOrderLines,
+        #InventoryMovements
+        ]:
         loom.add_function(i.run)
     results = loom.execute()
 
