@@ -57,7 +57,7 @@ class NetSuiteJob:
             "errors": errors.errors,
         }
 
-def main():
+def main(request):
     SalesOrderLines = NetSuiteJob("SalesOrderLines")
     InventoryMovements = NetSuiteJob("InventoryMovements")
 

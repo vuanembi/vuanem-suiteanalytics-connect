@@ -36,7 +36,7 @@ jobs:
         gcloud run deploy ${{ env.SERVICE }}
         --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
         --memory=1Gi
-        --platform managed
+        --platform=managed
         --service-account=${{ secrets.GCP_SA }}
         --region=${{ env.REGION }}
         --timeout=900

@@ -7,4 +7,4 @@ def test_requests():
     for i in response.get("results"):
         assert i["num_processed"] > 0
         assert i["output_rows"] > 0
-        assert i["errors"] is not None
+        assert i["errors"] is None
