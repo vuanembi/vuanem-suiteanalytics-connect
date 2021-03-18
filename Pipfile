@@ -10,6 +10,10 @@ python-dotenv = "*"
 google-cloud-bigquery = "*"
 requests = "*"
 pyarrow = "*"
+parallel-execute = "*"
+pymysql = "*"
+flask = "*"
+gunicorn = "*"
 
 [dev-packages]
 functions-framework = "*"

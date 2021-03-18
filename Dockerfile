@@ -1,8 +1,10 @@
 FROM centos/python-38-centos7:latest
 USER root
 
-COPY . .
-SHELL ["/bin/bash", "-c"]
+ENV PYTHONUNBUFFERED True
+
+WORKDIR /vuanem_ns
+COPY . ./
 
 RUN wget "https://4975572.app.netsuite.com/app/external/odbc/odbcDriverZipDownload.nl?type=BIT_64&os=LINUX" > NetSuiteODBCDrivers_Linux64bit.zip \
     && mkdir -p /opt/netsuite/odbcclient \
@@ -15,11 +17,11 @@ RUN yum -y install epel-release \
     && yum clean all
     
 RUN pip install pipenv \
-    && pipenv install --system --skip-lock \
-    && pipenv install --dev --system --skip-lock
-
-WORKDIR /etl
+    && pipenv install --system --skip-lock
+# \    && pipenv install --dev --system --skip-lock
 
 ENV LD_LIBRARY_PATH=/opt/netsuite/odbcclient/lib64${LD_LIBRARY_PATH:+":"}${LD_LIBRARY_PATH:-""}
 ENV OASDK_ODBC_HOME=/opt/netsuite/odbcclient/lib64
 ENV ODBCINI=/opt/netsuite/odbcclient/odbc64.ini
+
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
