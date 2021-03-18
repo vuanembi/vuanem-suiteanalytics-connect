@@ -9,10 +9,9 @@ from google.cloud import bigquery
 from pexecute.thread import ThreadLoom
 
 
-class DBJob:
-    def __init__(self, db, dataset, table):
-        self.db = db
-        self.dataset = dataset
+class NetSuiteJob:
+    def __init__(self, table):
+        self.dataset = "NetSuite"
         self.table = table
 
     def connect_ns(self):
@@ -66,8 +65,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    SalesOrderLines = DBJob("NetSuite", "SalesOrderLines")
-    InventoryMovements = DBJob("NetSuite", "InventoryMovements")
+    SalesOrderLines = NetSuiteJob("SalesOrderLines")
+    InventoryMovements = NetSuiteJob("InventoryMovements")
 
     loom = ThreadLoom(max_runner_cap=10)
     for i in [SalesOrderLines, InventoryMovements]:
