@@ -1,7 +1,5 @@
 name: build & deploy
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 env:
@@ -36,8 +34,9 @@ jobs:
         gcloud run deploy ${{ env.SERVICE }}
         --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
         --memory=1Gi
+        --cpu=2
         --platform=managed
         --service-account=${{ secrets.GCP_SA }}
         --region=${{ env.REGION }}
-        --timeout=900
+        --timeout=600
         --set-env-vars=NS_DSN=${{ secrets.NS_DSN }},NS_UID=${{ secrets.NS_UID }},NS_PWD=${{ secrets.NS_PWD }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}

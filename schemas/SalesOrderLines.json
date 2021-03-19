@@ -1,47 +1,42 @@
 [
-    {
-        "name": "TRANSACTION_ID",
-        "type": "INTEGER",
-        "mode": "REQUIRED"
-    },
-    {
-        "name": "TRANDATE",
-        "type": "DATE",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "TRANID",
-        "type": "STRING",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "CUSTOMER_PHONE",
-        "type": "STRING",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "LOCATION_ID",
-        "type": "INTEGER",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "PRODUCT_GROUP_CODE",
-        "type": "STRING",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "FULL_NAME",
-        "type": "STRING",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "ITEM_COUNT",
-        "type": "FLOAT",
-        "mode": "NULLABLE"
-    },
-    {
-        "name": "NET_AMOUNT",
-        "type": "FLOAT",
-        "mode": "NULLABLE"
-    }
+	{
+		"name": "FULL_NAME",
+		"type": "STRING"
+	},
+	{
+		"name": "STATUS",
+		"type": "STRING"
+	},
+	{
+		"name": "TRANDATE",
+		"type": "DATE"
+	},
+	{
+		"name": "PRODUCT_GROUP_CODE",
+		"type": "STRING"
+	},
+	{
+		"name": "NET_AMOUNT",
+		"type": "FLOAT"
+	},
+	{
+		"name": "CUSTOMER_PHONE",
+		"type": "STRING"
+	},
+	{
+		"name": "ITEM_COUNT",
+		"type": "FLOAT"
+	},
+	{
+		"name": "LOCATION_ID",
+		"type": "FLOAT64"
+	},
+	{
+		"name": "TRANID",
+		"type": "STRING"
+	},
+	{
+		"name": "TRANSACTION_ID",
+		"type": "FLOAT64"
+	}
 ]

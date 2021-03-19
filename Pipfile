@@ -11,8 +11,8 @@ google-cloud-bigquery = "*"
 requests = "*"
 pyarrow = "*"
 parallel-execute = "*"
-pymysql = "*"
 functions-framework = "*"
+tqdm = "*"
 
 [dev-packages]
 black = "*"
