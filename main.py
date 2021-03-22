@@ -1,9 +1,11 @@
 import os
 import json
+from datetime import datetime
 
 import requests
 import pyodbc
 from tqdm import tqdm
+from flask import Flask
 from google.cloud import bigquery
 from pexecute.thread import ThreadLoom
 
@@ -26,10 +28,16 @@ class NetSuiteJob:
         cursor = self.connect_ns().cursor()
         with open(f"queries/{self.table}.sql") as f:
             query = f.read()
+        start = datetime.now()
         cursor.execute(query)
         columns = [column[0] for column in cursor.description]
-        results = cursor.fetchall()
-        rows = [dict(zip(columns, result)) for result in tqdm(results)]
+        rows = []
+        while True:
+            results = cursor.fetchmany(200)
+            if results:
+                rows.extend((dict(zip(columns, result)) for result in results))
+            else:
+                break
         self.num_processed = len(rows)
         return rows
 
@@ -69,8 +77,9 @@ class NetSuiteJob:
             "errors": errors.errors,
         }
 
-
-def main(request):
+app = Flask(__name__)
+@app.route("/")
+def main():
     SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
     # InventoryMovements = NetSuiteJob("InventoryMovements")
 
@@ -100,5 +109,5 @@ def main(request):
     )
     return responses
 
-if __name__ == '__main__':
-    main(0)
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

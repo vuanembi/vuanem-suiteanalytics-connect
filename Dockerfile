@@ -22,4 +22,4 @@ ENV LD_LIBRARY_PATH=/opt/netsuite/odbcclient/lib64${LD_LIBRARY_PATH:+":"}${LD_LI
 ENV OASDK_ODBC_HOME=/opt/netsuite/odbcclient/lib64
 ENV ODBCINI=/opt/netsuite/odbcclient/odbc64.ini
 
-CMD exec functions-framework --target=main
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app

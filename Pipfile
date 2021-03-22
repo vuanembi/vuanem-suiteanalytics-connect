@@ -5,14 +5,13 @@ name = "pypi"
 
 [packages]
 pyodbc = "*"
-pandas = "*"
 python-dotenv = "*"
 google-cloud-bigquery = "*"
 requests = "*"
-pyarrow = "*"
 parallel-execute = "*"
 functions-framework = "*"
 tqdm = "*"
+flask = "*"
 
 [dev-packages]
 black = "*"
