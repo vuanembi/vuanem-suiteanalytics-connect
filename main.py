@@ -28,7 +28,6 @@ class NetSuiteJob:
         cursor = self.connect_ns().cursor()
         with open(f"queries/{self.table}.sql") as f:
             query = f.read()
-        start = datetime.now()
         cursor.execute(query)
         columns = [column[0] for column in cursor.description]
         rows = []
@@ -77,9 +76,7 @@ class NetSuiteJob:
             "errors": errors.errors,
         }
 
-app = Flask(__name__)
-@app.route("/")
-def main():
+def main(request):
     SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
     # InventoryMovements = NetSuiteJob("InventoryMovements")
 
@@ -110,4 +107,4 @@ def main():
     return responses
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    main({})
