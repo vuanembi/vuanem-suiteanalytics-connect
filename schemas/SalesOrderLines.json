@@ -1,6 +1,30 @@
 [
 	{
-		"name": "FULL_NAME",
+		"name": "TRANSACTION_ID",
+		"type": "FLOAT64"
+	},
+	{
+		"name": "LOCATION_ID",
+		"type": "FLOAT64"
+	},
+	{
+		"name": "ITEM_COUNT",
+		"type": "FLOAT"
+	},
+	{
+		"name": "NET_AMOUNT",
+		"type": "FLOAT"
+	},
+	{
+		"name": "TRANDATE",
+		"type": "DATE"
+	},
+	{
+		"name": "TRANID",
+		"type": "STRING"
+	},
+	{
+		"name": "CUSTOMER_PHONE",
 		"type": "STRING"
 	},
 	{
@@ -8,35 +32,19 @@
 		"type": "STRING"
 	},
 	{
-		"name": "TRANDATE",
-		"type": "DATE"
-	},
-	{
 		"name": "PRODUCT_GROUP_CODE",
 		"type": "STRING"
 	},
 	{
-		"name": "NET_AMOUNT",
-		"type": "FLOAT"
-	},
-	{
-		"name": "CUSTOMER_PHONE",
+		"name": "FULL_NAME",
 		"type": "STRING"
 	},
 	{
-		"name": "ITEM_COUNT",
-		"type": "FLOAT"
-	},
-	{
-		"name": "LOCATION_ID",
-		"type": "FLOAT64"
-	},
-	{
-		"name": "TRANID",
+		"name": "PRODUCT_CODE",
 		"type": "STRING"
 	},
 	{
-		"name": "TRANSACTION_ID",
-		"type": "FLOAT64"
+		"name": "DISPLAYNAME",
+		"type": "STRING"
 	}
 ]

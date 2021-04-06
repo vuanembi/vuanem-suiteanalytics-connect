@@ -1,11 +1,9 @@
 import os
 import json
-from datetime import datetime
 
 import requests
 import pyodbc
 from tqdm import tqdm
-from flask import Flask
 from google.cloud import bigquery
 from pexecute.thread import ThreadLoom
 
@@ -51,6 +49,7 @@ class NetSuiteJob:
         return rows
 
     def load(self, rows):
+
         with open(f"schemas/{self.table}.json") as f:
             schema = json.load(f)
         client = bigquery.Client()
