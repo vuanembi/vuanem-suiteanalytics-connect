@@ -1,17 +1,22 @@
 [
     {
+        "name": "TRANSACTION_ID",
+        "type": "FLOAT",
+        "mode": "NULLABLE"
+    },
+    {
         "name": "CREATE_DATE",
         "type": "TIMESTAMP",
         "mode": "NULLABLE"
     },
     {
         "name": "LOCATION_ID",
-        "type": "INTEGER",
+        "type": "FLOAT",
         "mode": "NULLABLE"
     },
     {
         "name": "ITEM_ID",
-        "type": "INTEGER",
+        "type": "FLOAT",
         "mode": "NULLABLE"
     },
     {

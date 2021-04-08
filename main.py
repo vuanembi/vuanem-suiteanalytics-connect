@@ -49,10 +49,10 @@ class NetSuiteJob:
         return rows
 
     def load(self, rows):
+        client = bigquery.Client()
 
         with open(f"schemas/{self.table}.json") as f:
             schema = json.load(f)
-        client = bigquery.Client()
 
         return client.load_table_from_json(
             rows,
@@ -76,13 +76,13 @@ class NetSuiteJob:
         }
 
 def main(request):
-    SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
-    # InventoryMovements = NetSuiteJob("InventoryMovements")
+    # SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
+    InventoryMovements = NetSuiteJob("InventoryMovements", datetime_cols=['CREATE_DATE'])
 
     loom = ThreadLoom(max_runner_cap=10)
     for i in [
-        SalesOrderLines,
-        # InventoryMovements
+        # SalesOrderLines,
+        InventoryMovements
     ]:
         loom.add_function(i.run)
     results = loom.execute()

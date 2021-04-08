@@ -1,21 +1,35 @@
 SELECT
     TRANSACTIONS.TRANSACTION_ID,
-    TRANSACTIONS.CREATE_DATE - 7 / 24 AS CREATE_DATE,
+    TRANSACTIONS.CREATE_DATE,
     TRANSACTION_LINES.LOCATION_ID,
     TRANSACTION_LINES.ITEM_ID,
     TRANSACTION_LINES.ITEM_COUNT,
     TRANSACTION_LINES.NET_AMOUNT
 FROM
-    "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".TRANSACTION_LINES TRANSACTION_LINES
-    LEFT JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".TRANSACTIONS TRANSACTIONS ON TRANSACTION_LINES.TRANSACTION_ID = TRANSACTIONS.TRANSACTION_ID
-    LEFT JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".INVENTORY_ITEMS INVENTORY_ITEMS ON TRANSACTION_LINES.ITEM_ID = INVENTORY_ITEMS.ITEM_ID
-WHERE
-    TRANSACTION_LINES.ACCOUNT_ID IN (365, 366, 367, 370, 371)
-    AND INVENTORY_ITEMS.DISPLAYNAME IS NOT NULL
-    AND TRANSACTIONS.TRANSACTION_TYPE IN (
-        'Credit Memo',
-        'Invoice',
-        'Item Fulfillment',
-        'Inventory Adjustment',
-        'Item Receipt'
-    )
+    (
+        SELECT
+            TRANSACTION_LINES.TRANSACTION_ID,
+            TRANSACTION_LINES.LOCATION_ID,
+            TRANSACTION_LINES.ITEM_ID,
+            TRANSACTION_LINES.ITEM_COUNT,
+            TRANSACTION_LINES.NET_AMOUNT
+        FROM
+            "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".TRANSACTION_LINES TRANSACTION_LINES
+        WHERE
+            TRANSACTION_LINES.ACCOUNT_ID IN (365, 366, 367, 370, 371)
+    ) TRANSACTION_LINES
+    INNER JOIN (
+        SELECT
+            TRANSACTIONS.TRANSACTION_ID,
+            TRANSACTIONS.CREATE_DATE - 7 / 24 AS CREATE_DATE
+        FROM
+            "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".TRANSACTIONS TRANSACTIONS
+        WHERE
+            TRANSACTIONS.TRANSACTION_TYPE IN (
+                'Credit Memo',
+                'Invoice',
+                'Item Fulfillment',
+                'Inventory Adjustment',
+                'Item Receipt'
+            )
+    ) TRANSACTIONS ON TRANSACTIONS.TRANSACTION_ID = TRANSACTION_LINES.TRANSACTION_ID
