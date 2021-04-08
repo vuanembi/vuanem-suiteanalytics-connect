@@ -76,12 +76,12 @@ class NetSuiteJob:
         }
 
 def main(request):
-    # SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
+    SalesOrderLines = NetSuiteJob("SalesOrderLines", date_cols=["TRANDATE"])
     InventoryMovements = NetSuiteJob("InventoryMovements", datetime_cols=['CREATE_DATE'])
 
     loom = ThreadLoom(max_runner_cap=10)
     for i in [
-        # SalesOrderLines,
+        SalesOrderLines,
         InventoryMovements
     ]:
         loom.add_function(i.run)
