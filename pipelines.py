@@ -99,7 +99,7 @@ class NetSuiteJob:
             rows,
             f"{self.dataset}._stage_{self.table}",
             job_config=bigquery.LoadJobConfig(
-                schema=self.schema,
+                # schema=self.schema,
                 create_disposition="CREATE_IF_NEEDED",
                 write_disposition=write_disposition,
             ),
@@ -138,7 +138,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("ITEMS")
+    job = NetSuiteJob("STORE_TRAFFIC")
     job.run()
 
 
