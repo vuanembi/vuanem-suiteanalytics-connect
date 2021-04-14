@@ -78,11 +78,11 @@ class NetSuiteJob:
 
     def load(self, rows):
         client = bigquery.Client()
-        
+        print(rows[0])
         if self.full_sync == True:
-            write_disposition="WRITE_TRUNCATE"
+            write_disposition = "WRITE_TRUNCATE"
         else:
-            write_disposition="WRITE_APPEND"
+            write_disposition = "WRITE_APPEND"
 
         return client.load_table_from_json(
             rows,
@@ -99,6 +99,7 @@ class NetSuiteJob:
             "pipelines": "NetSuite",
             "results": {
                 "table": self.table,
+                "cutoff": self.cutoff,
                 "num_processed": self.num_processed,
                 "output_rows": errors.output_rows,
                 "errors": errors.errors,
@@ -126,7 +127,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("TRANSACTIONS")
+    job = NetSuiteJob("TRANSACTION_LINES")
     job.run()
 
 
