@@ -138,7 +138,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("BUDGET")
+    job = NetSuiteJob("ITEMS")
     job.run()
 
 
