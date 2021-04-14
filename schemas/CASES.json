@@ -1,0 +1,98 @@
+[
+    {
+        "name": "ASSIGNED_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CASE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CASE_NUMBER",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CASE_NUMBERCODE",
+        "type": "STRING"
+    },
+    {
+        "name": "CASE_ORIGIN_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CASE_PROFILE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CASE_TYPE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CAI_THIEN",
+        "type": "STRING"
+    },
+    {
+        "name": "COMPANY_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "CREATE_DATE",
+        "type": "TIMESTAMP"
+    },
+    {
+        "name": "DATE_LAST_MODIFIED",
+        "type": "TIMESTAMP"
+    },
+    {
+        "name": "ISINACTIVE",
+        "type": "STRING"
+    },
+    {
+        "name": "KTTV",
+        "type": "FLOAT"
+    },
+    {
+        "name": "LY_DO_CHO_DIEM",
+        "type": "STRING"
+    },
+    {
+        "name": "NAME",
+        "type": "STRING"
+    },
+    {
+        "name": "NPS_SCORE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "OWNER_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "PRIORITY",
+        "type": "STRING"
+    },
+    {
+        "name": "SO_LOCATION_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "SO_REFERENCE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "STAGE",
+        "type": "STRING"
+    },
+    {
+        "name": "STATUS",
+        "type": "STRING"
+    },
+    {
+        "name": "TYPES_NAME",
+        "type": "STRING"
+    },
+    {
+        "name": "ORIGINS_NAME",
+        "type": "STRING"
+    }
+]

@@ -1,6 +1,3 @@
-ALWAYS_TRUNCATE = True
-
-QUERY = """
 SELECT
     LOCATION.LOCATION_ID,
     LOCATION.STORE_NAME,
@@ -49,17 +46,3 @@ FROM
         GROUP BY
             REPLACE(LOCATIONS.NAME, 'HCM', 'HMI')
     ) AS FIRST_TRAFFIC_DATE ON FIRST_TRAFFIC_DATE.STORE_NAME = LOCATION.STORE_NAME
-    """
-
-SCHEMA = [
-    {"name": "LOCATION_ID", "type": "INTEGER"},
-    {"name": "STORE_NAME", "type": "STRING"},
-    {"name": "ISINACTIVE", "type": "STRING"},
-    {"name": "SUBSIDIARY_ID", "type": "INTEGER"},
-    {"name": "OPENNING_DAY", "type": "TIMESTAMP"},
-    {"name": "CLOSE_DATE", "type": "TIMESTAMP"},
-    {"name": "CURRENT_ASM", "type": "STRING"},
-    {"name": "ASM_ID", "type": "INTEGER"},
-    {"name": "ISCLOSE", "type": "INTEGER"},
-    {"name": "FIRST_TRAFFIC_DATE", "type": "TIMESTAMP"},
-]

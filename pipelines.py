@@ -15,15 +15,19 @@ class NetSuiteJob:
     def __init__(self, table, full_sync=False):
         self.table = table
 
-        self.config = __import__(
-            f"config.{table}", fromlist=["ALWAYS_TRUNCATE", "QUERY", "SCHEMA"]
-        )
-        self.query = self.config.QUERY
-        self.schema = self.config.SCHEMA
-        if self.config.ALWAYS_TRUNCATE == True:
-            self.full_sync = True
-        else:
+        with open(f'queries/{table}.sql', 'r') as f:
+            self.query = f.read()
+
+        with open(f'schemas/{table}.json', 'r') as f:
+            self.schema = json.load(f)
+
+        if '?' in self.query:
             self.full_sync = full_sync
+            self.no_params = False
+        else:
+            self.full_sync = True
+            self.no_params = True
+            
 
         self.date_cols = [i["name"] for i in self.schema if i["type"] == "DATE"]
         self.timestamp_cols = [
@@ -48,10 +52,11 @@ class NetSuiteJob:
                 "%Y-%m-%d %H:%M:%S"
             )
 
-        if self.config.ALWAYS_TRUNCATE == True:
+        if self.no_params == True:
             cursor.execute(self.query)
         else:
             cursor.execute(self.query, self.cutoff)
+
         columns = [column[0] for column in cursor.description]
         rows = []
         while True:
@@ -81,7 +86,6 @@ class NetSuiteJob:
                     )
             if self.int_cols:
                 for col in self.int_cols:
-                    print(col)
                     row[col] = int(row[col]) if row[col] is not None else row[col]
         return rows
 
@@ -135,7 +139,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("LOCATIONS")
+    job = NetSuiteJob("CASES")
     job.run()
 
 
