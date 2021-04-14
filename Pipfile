@@ -12,6 +12,7 @@ parallel-execute = "*"
 functions-framework = "*"
 tqdm = "*"
 flask = "*"
+luigi = "*"
 
 [dev-packages]
 black = "*"
