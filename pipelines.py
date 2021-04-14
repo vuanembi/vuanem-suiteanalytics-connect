@@ -14,13 +14,16 @@ class NetSuiteJob:
 
     def __init__(self, table, full_sync=False):
         self.table = table
-        self.full_sync = full_sync
 
-        with open(f"queries/{table}.sql", "r") as f:
-            self.query = f.read()
-
-        with open(f"schemas/{table}.json", "r") as f:
-            self.schema = json.load(f)
+        self.config = __import__(
+            f"config.{table}", fromlist=["ALWAYS_TRUNCATE", "QUERY", "SCHEMA"]
+        )
+        self.query = self.config.QUERY
+        self.schema = self.config.SCHEMA
+        if self.config.ALWAYS_TRUNCATE == True:
+            self.full_sync = True
+        else:
+            self.full_sync = full_sync
 
         self.date_cols = [i["name"] for i in self.schema if i["type"] == "DATE"]
         self.timestamp_cols = [
@@ -37,13 +40,18 @@ class NetSuiteJob:
 
     def extract(self):
         cursor = self.connect_ns().cursor()
+
         if self.full_sync == True:
             self.cutoff = "2018-06-30 00:00:00"
         else:
             self.cutoff = (datetime.now() - timedelta(days=1)).strftime(
                 "%Y-%m-%d %H:%M:%S"
             )
-        cursor.execute(self.query, self.cutoff)
+
+        if self.config.ALWAYS_TRUNCATE == True:
+            cursor.execute(self.query)
+        else:
+            cursor.execute(self.query, self.cutoff)
         columns = [column[0] for column in cursor.description]
         rows = []
         while True:
@@ -73,12 +81,12 @@ class NetSuiteJob:
                     )
             if self.int_cols:
                 for col in self.int_cols:
+                    print(col)
                     row[col] = int(row[col]) if row[col] is not None else row[col]
         return rows
 
     def load(self, rows):
         client = bigquery.Client()
-        print(rows[0])
         if self.full_sync == True:
             write_disposition = "WRITE_TRUNCATE"
         else:
@@ -127,7 +135,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("TRANSACTION_LINES")
+    job = NetSuiteJob("LOCATIONS")
     job.run()
 
 
