@@ -15,19 +15,18 @@ class NetSuiteJob:
     def __init__(self, table, full_sync=False):
         self.table = table
 
-        with open(f'queries/{table}.sql', 'r') as f:
-            self.query = f.read()
+        with open(f"queries/{table}.sql", "r") as q, open(
+            f"schemas/{table}.json", "r"
+        ) as s:
+            self.query = q.read()
+            self.schema = json.load(s)
 
-        with open(f'schemas/{table}.json', 'r') as f:
-            self.schema = json.load(f)
-
-        if '?' in self.query:
+        if "?" in self.query:
             self.full_sync = full_sync
             self.no_params = False
         else:
             self.full_sync = True
             self.no_params = True
-            
 
         self.date_cols = [i["name"] for i in self.schema if i["type"] == "DATE"]
         self.timestamp_cols = [
@@ -139,7 +138,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("CASES")
+    job = NetSuiteJob("BUDGET")
     job.run()
 
 
