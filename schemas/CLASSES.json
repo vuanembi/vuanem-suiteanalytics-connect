@@ -1,0 +1,30 @@
+[
+    {
+        "name": "CLASS_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "DATE_LAST_MODIFIED",
+        "type": "TIMESTAMP"
+    },
+    {
+        "name": "FULL_NAME",
+        "type": "STRING"
+    },
+    {
+        "name": "ISINACTIVE",
+        "type": "STRING"
+    },
+    {
+        "name": "CLASS_DESCRIPTION",
+        "type": "STRING"
+    },
+    {
+        "name": "NAME",
+        "type": "STRING"
+    },
+    {
+        "name": "PRODUCT_GROUP_CODE",
+        "type": "STRING"
+    }
+]
