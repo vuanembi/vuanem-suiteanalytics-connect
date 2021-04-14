@@ -95,7 +95,7 @@ class NetSuiteJob:
         else:
             write_disposition = "WRITE_APPEND"
 
-        return client.load_table_from_json(
+        errors = client.load_table_from_json(
             rows,
             f"{self.dataset}._stage_{self.table}",
             job_config=bigquery.LoadJobConfig(
@@ -105,36 +105,19 @@ class NetSuiteJob:
             ),
         ).result()
 
-    def send_report(self, errors):
-        responses = {
-            "pipelines": "NetSuite",
-            "results": {
-                "table": self.table,
-                "cutoff": self.cutoff,
-                "num_processed": self.num_processed,
-                "output_rows": errors.output_rows,
-                "errors": errors.errors,
-            },
-        }
-
-        print(responses)
-
-        _ = requests.post(
-            "https://api.telegram.org/bot{token}/sendMessage".format(
-                token=os.getenv("TELEGRAM_TOKEN")
-            ),
-            json={
-                "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
-                "text": json.dumps(responses, indent=4),
-            },
-        )
-        return responses
+        del rows
+        return errors
 
     def run(self):
         rows = self.extract()
         rows = self.transform(rows)
         errors = self.load(rows)
-        return self.send_report(errors)
+        return {
+            "table": self.table,
+            "num_processed": self.num_processed,
+            "output_rows": errors.output_rows,
+            "errors": errors.errors,
+        }
 
 
 def main(request):

@@ -52,6 +52,10 @@
         "type": "INTEGER"
     },
     {
+        "name": "EXPECTED_DELIVERY_DATE_SO",
+        "type": "TIMESTAMP"
+    },
+    {
         "name": "GROSS_AMOUNT",
         "type": "INTEGER"
     },
@@ -90,9 +94,16 @@
     {
         "name": "NET_AMOUNT",
         "type": "INTEGER"
+    },{
+        "name": "QUANTITY_RECEIVED_IN_SHIPMENT",
+        "type": "INTEGER"
     },
     {
         "name": "SUBSIDIARY_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "TRANSACTION_ORDER",
         "type": "INTEGER"
     },
     {
