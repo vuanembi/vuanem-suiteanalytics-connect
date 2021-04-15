@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 
 import requests
-import pyodbc
+import jaydebeapi
 from tqdm import tqdm
 from google.cloud import bigquery
 from pexecute.thread import ThreadLoom
@@ -35,10 +35,16 @@ class NetSuiteJob:
         self.int_cols = [i["name"] for i in self.schema if i["type"] == "INTEGER"]
 
     def connect_ns(self):
-        return pyodbc.connect(
-            DSN=os.getenv("NS_DSN"),
-            UID=os.getenv("NS_UID"),
-            PWD=os.getenv("NS_PWD"),
+        return jaydebeapi.connect(
+            "com.netsuite.jdbc.openaccess.OpenAccessDriver",
+            (
+                "jdbc:ns://{ACCOUNT_ID}.connect.api.netsuite.com:1708;"
+                "ServerDataSource=NetSuite.com;"
+                "Encrypted=1;"
+                "CustomProperties=(AccountID={ACCOUNT_ID};RoleID={ROLE_ID})"
+            ).format(ACCOUNT_ID=4975572, ROLE_ID=1022),
+            {"user": os.getenv("NS_UID"), "password": os.getenv("NS_PWD")},
+            "NQjc.jar",
         )
 
     def extract(self):
@@ -69,20 +75,20 @@ class NetSuiteJob:
 
     def transform(self, rows):
         for row in tqdm(rows):
-            if self.date_cols:
-                for col in self.date_cols:
-                    row[col] = (
-                        row[col].strftime("%Y-%m-%d")
-                        if row[col] is not None
-                        else row[col]
-                    )
-            if self.timestamp_cols:
-                for col in self.timestamp_cols:
-                    row[col] = (
-                        row[col].strftime("%Y-%m-%d %H:%M:%S")
-                        if row[col] is not None
-                        else row[col]
-                    )
+            # if self.date_cols:
+            #     for col in self.date_cols:
+            #         row[col] = (
+            #             row[col].strftime("%Y-%m-%d")
+            #             if row[col] is not None
+            #             else row[col]
+            #         )
+            # if self.timestamp_cols:
+            #     for col in self.timestamp_cols:
+            #         row[col] = (
+            #             row[col].strftime("%Y-%m-%d %H:%M:%S")
+            #             if row[col] is not None
+            #             else row[col]
+            #         )
             if self.int_cols:
                 for col in self.int_cols:
                     row[col] = int(row[col]) if row[col] is not None else row[col]
@@ -122,7 +128,7 @@ class NetSuiteJob:
 
 def main(request):
     job = NetSuiteJob("CLASSES")
-    job.run()
+    print(job.run())
 
 
 if __name__ == "__main__":

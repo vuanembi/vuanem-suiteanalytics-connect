@@ -12,6 +12,8 @@ parallel-execute = "*"
 functions-framework = "*"
 tqdm = "*"
 flask = "*"
+jaydebeapi = "*"
+jpype1 = "*"
 
 [dev-packages]
 black = "*"
