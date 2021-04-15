@@ -2,11 +2,9 @@ import os
 import json
 from datetime import datetime, timedelta
 
-import requests
 import jaydebeapi
 from tqdm import tqdm
 from google.cloud import bigquery
-from pexecute.thread import ThreadLoom
 
 
 class NetSuiteJob:
@@ -128,7 +126,7 @@ class NetSuiteJob:
 
 def main(request):
     job = NetSuiteJob("CLASSES")
-    print(job.run())
+    return job.run()
 
 
 if __name__ == "__main__":

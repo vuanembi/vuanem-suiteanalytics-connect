@@ -1,22 +1,19 @@
 import os
 import json
-from argparse import ArgumentParser
 
 import requests
-from tqdm import tqdm
 
 from pipelines import NetSuiteJob
 
-def main():
-    pipelines = [i.split('.')[0] for i in os.listdir('schemas')]
-    jobs = [NetSuiteJob(i) for i in pipelines]
 
-    responses = {
-            "pipelines": "NetSuite",
-            "results": [i.run() for i in tqdm(jobs)]
-        }
+def main(request):
+    request_json = request.get_json()
+    if request_json:
+        job = NetSuiteJob(request_json.get("table"))
+    else:
+        job = NetSuiteJob("CLASSES")
 
-    print(responses)
+    responses = {"pipelines": "NetSuite", "results": [job.run()]}
 
     _ = requests.post(
         "https://api.telegram.org/bot{token}/sendMessage".format(

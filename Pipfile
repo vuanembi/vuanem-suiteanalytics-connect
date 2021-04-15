@@ -4,14 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyodbc = "*"
 python-dotenv = "*"
 google-cloud-bigquery = "*"
 requests = "*"
-parallel-execute = "*"
 functions-framework = "*"
 tqdm = "*"
-flask = "*"
 jaydebeapi = "*"
 jpype1 = "*"
 
