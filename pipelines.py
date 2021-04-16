@@ -58,7 +58,7 @@ class NetSuiteJob:
         if self.no_params == True:
             cursor.execute(self.query)
         else:
-            cursor.execute(self.query, self.cutoff)
+            cursor.execute(self.query, [self.cutoff])
 
         columns = [column[0] for column in cursor.description]
         rows = []
@@ -73,20 +73,6 @@ class NetSuiteJob:
 
     def transform(self, rows):
         for row in tqdm(rows):
-            # if self.date_cols:
-            #     for col in self.date_cols:
-            #         row[col] = (
-            #             row[col].strftime("%Y-%m-%d")
-            #             if row[col] is not None
-            #             else row[col]
-            #         )
-            # if self.timestamp_cols:
-            #     for col in self.timestamp_cols:
-            #         row[col] = (
-            #             row[col].strftime("%Y-%m-%d %H:%M:%S")
-            #             if row[col] is not None
-            #             else row[col]
-            #         )
             if self.int_cols:
                 for col in self.int_cols:
                     row[col] = int(row[col]) if row[col] is not None else row[col]
@@ -125,7 +111,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("CLASSES")
+    job = NetSuiteJob("TRANSACTIONS")
     return job.run()
 
 

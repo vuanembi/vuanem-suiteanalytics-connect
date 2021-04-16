@@ -13,7 +13,7 @@
     },
     {
         "name": "TRANDATE",
-        "type": "DATE"
+        "type": "TIMESTAMP"
     },
     {
         "name": "BILLADDRESS",
@@ -30,6 +30,10 @@
     {
         "name": "CREATE_DATE",
         "type": "TIMESTAMP"
+    },
+    {
+        "name": "CREATED_FROM_ID",
+        "type": "INTEGER"
     },
     {
         "name": "CUSTOMER_PHONE",
@@ -77,7 +81,11 @@
     },
     {
         "name": "EXPECTED_DELIVERY_DATE_C",
-        "type": "DATE"
+        "type": "TIMESTAMP"
+    },
+    {
+        "name": "IN_CHARGE_LOCATION_ID",
+        "type": "INTEGER"
     },
     {
         "name": "KHNG_YU_CU_T_CC",
@@ -85,6 +93,14 @@
     },
     {
         "name": "LEAD_SOURCE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "LICENSE_PLATE",
+        "type": "STRING"
+    },
+    {
+        "name": "LICENSE_PLATE_V_2_ID",
         "type": "INTEGER"
     },
     {
@@ -162,5 +178,33 @@
     {
         "name": "TRANSACTION_TYPE",
         "type": "STRING"
+    },
+    {
+        "name": "REF__INVOICE__DELIVERY_ORDE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "REF__TRANSACTION_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "RETURNED_REASON_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "REFERENCE_SALES_ORDER_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "TRANSFER_LOCATION",
+        "type": "INTEGER"
+    },
+    {
+        "name": "TRANSFER_ORDER_TYPE_ID",
+        "type": "INTEGER"
+    },
+    {
+        "name": "PURCHASE_ORDER_TYPE_ID",
+        "type": "INTEGER"
     }
 ]
