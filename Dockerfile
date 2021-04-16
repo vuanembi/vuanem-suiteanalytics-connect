@@ -1,5 +1,5 @@
 FROM adoptopenjdk/openjdk8:centos-slim
-COPY --from=python:3.8.9-alpine / /
+COPY --from=python:3.8-slim / /
 USER root
 ENV PYTHONUNBUFFERED True
 
