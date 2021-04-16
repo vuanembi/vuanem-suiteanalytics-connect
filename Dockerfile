@@ -9,8 +9,8 @@ RUN yum update -y \
 WORKDIR /vuanem_ns
 COPY . ./
 
-RUN pip install pipenv \
-    && pipenv install --system --skip-lock
+RUN pip install pipenv --no-cache-dir \
+    && pipenv install --system --deploy
 
 EXPOSE 8080
 
