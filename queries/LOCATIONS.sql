@@ -29,18 +29,18 @@ FROM
                 ELSE '1'
             END AS 'ISCLOSE'
         FROM
-            "Vua Nem Joint Stock Company".Administrator.LOCATIONS LOCATIONS
-            INNER JOIN "Vua Nem Joint Stock Company".Administrator.SUBSIDIARY_LOCATION_MAP SUBSIDIARY_LOCATION_MAP ON SUBSIDIARY_LOCATION_MAP.LOCATION_ID = LOCATIONS.LOCATION_ID
-            INNER JOIN "Vua Nem Joint Stock Company".Administrator.SUBSIDIARIES SUBSIDIARIES ON SUBSIDIARY_LOCATION_MAP.SUBSIDIARY_ID = SUBSIDIARIES.SUBSIDIARY_ID
-            LEFT JOIN "Vua Nem Joint Stock Company".Administrator.EMPLOYEES EMPLOYEES ON LOCATIONS.ASM_ID = EMPLOYEES.EMPLOYEE_ID
+            "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".LOCATIONS LOCATIONS
+            INNER JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".SUBSIDIARY_LOCATION_MAP SUBSIDIARY_LOCATION_MAP ON SUBSIDIARY_LOCATION_MAP.LOCATION_ID = LOCATIONS.LOCATION_ID
+            INNER JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".SUBSIDIARIES SUBSIDIARIES ON SUBSIDIARY_LOCATION_MAP.SUBSIDIARY_ID = SUBSIDIARIES.SUBSIDIARY_ID
+            LEFT JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".EMPLOYEES EMPLOYEES ON LOCATIONS.ASM_ID = EMPLOYEES.EMPLOYEE_ID
     ) AS LOCATION
     LEFT JOIN (
         SELECT
             REPLACE(LOCATIONS.NAME, 'HCM', 'HMI') AS STORE_NAME,
             MIN(STORE_TRAFFIC.DATE_0) AS FIRST_TRAFFIC_DATE
         FROM
-            "Vua Nem Joint Stock Company".Administrator.LOCATIONS
-            LEFT JOIN "Vua Nem Joint Stock Company".Administrator.STORE_TRAFFIC ON STORE_TRAFFIC.LOCATION_ID = LOCATIONS.LOCATION_ID
+            "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".LOCATIONS
+            LEFT JOIN "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".STORE_TRAFFIC ON STORE_TRAFFIC.LOCATION_ID = LOCATIONS.LOCATION_ID
         WHERE
             LOCATIONS.NAME IS NOT NULL
         GROUP BY
