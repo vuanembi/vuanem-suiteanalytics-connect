@@ -55,19 +55,19 @@ jobs:
         --project=${{ secrets.PROJECT_ID }}
         --service-account=${{ secrets.GCP_SA }}
 
-    - name: Integrate PubSub
-      run: >-
-        echo "URL=$(gcloud run services describe vuanem-ns
-        --platform=managed
-        --region=us-central1
-        --format='value(status.url)')" >> $GITHUB_ENV
-        &&
-        gcloud run services add-iam-policy-binding ${{ env.SERVICE }}
-        --platform=managed
-        --region=${{ env.REGION }}
-        --member=serviceAccount:${{ secrets.GCP_SA }}
-        --role=roles/run.invoker
-        &&
-        gcloud pubsub subscriptions create sub --topic ${{ env.TOPIC }}
-        --push-endpoint=${{ env.URL }}
-        --push-auth-service-account=${{ secrets.GCP_SA }}
+    # - name: Integrate PubSub
+    #   run: >-
+    #     echo "URL=$(gcloud run services describe vuanem-ns
+    #     --platform=managed
+    #     --region=us-central1
+    #     --format='value(status.url)')" >> $GITHUB_ENV
+    #     &&
+    #     gcloud run services add-iam-policy-binding ${{ env.SERVICE }}
+    #     --platform=managed
+    #     --region=${{ env.REGION }}
+    #     --member=serviceAccount:${{ secrets.GCP_SA }}
+    #     --role=roles/run.invoker
+    #     &&
+    #     gcloud pubsub subscriptions create sub --topic ${{ env.TOPIC }}
+    #     --push-endpoint=${{ env.URL }}
+    #     --push-auth-service-account=${{ secrets.GCP_SA }}
