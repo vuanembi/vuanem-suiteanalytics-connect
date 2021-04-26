@@ -12,7 +12,11 @@ def main(data, context):
 
     if 'table' in message:
         table = message['table']
-        job = NetSuiteJob(table)
+        full_sync = message.get('full_sync')
+        if full_sync:
+            job = NetSuiteJob(table, full_sync)
+        else:
+            job = NetSuiteJob(table)
     else:
         job = NetSuiteJob("CLASSES")
 

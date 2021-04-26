@@ -16,7 +16,7 @@ FROM
                     {{ incremental_key }} DESC
             ) AS row_num
         FROM
-            {{ dataset }}._stage_ {{ table }}
+            `{{ dataset }}._stage_{{ table }}`
     )
 WHERE
     row_num = 1

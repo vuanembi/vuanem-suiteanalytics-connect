@@ -1,26 +1,28 @@
-[
-    {
-        "name": "LOCATION_ID",
-        "type": "INTEGER"
-    },
-    {
-        "name": "STARTING",
-        "type": "TIMESTAMP"
-    },
-    {
-        "name": "PERIODS_NAME",
-        "type": "STRING"
-    },
-    {
-        "name": "CATEGORY_NAME",
-        "type": "STRING"
-    },
-    {
-        "name": "AMOUNT",
-        "type": "INTEGER"
-    },
-    {
-        "name": "BUDGET_ISINACTIVE",
-        "type": "STRING"
-    }
-]
+{
+    "schema": [
+        {
+            "name": "LOCATION_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "STARTING",
+            "type": "TIMESTAMP"
+        },
+        {
+            "name": "PERIODS_NAME",
+            "type": "STRING"
+        },
+        {
+            "name": "CATEGORY_NAME",
+            "type": "STRING"
+        },
+        {
+            "name": "AMOUNT",
+            "type": "INTEGER"
+        },
+        {
+            "name": "BUDGET_ISINACTIVE",
+            "type": "STRING"
+        }
+    ]
+}

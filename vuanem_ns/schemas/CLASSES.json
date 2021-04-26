@@ -1,4 +1,5 @@
-[
+{
+    "schema": [
     {
         "name": "CLASS_ID",
         "type": "INTEGER"
@@ -28,3 +29,4 @@
         "type": "STRING"
     }
 ]
+}

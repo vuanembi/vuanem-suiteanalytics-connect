@@ -1,4 +1,10 @@
-[
+{
+    "keys": {
+        "p_key": ["TRANSACTION_ID", "TRANSACTION_LINE_ID"],
+        "incremental_key": "DATE_LAST_MODIFIED",
+        "partition_key": "DATE_CREATED"
+    },
+    "schemas": [
     {
         "name": "TRANSACTION_ID",
         "type": "INTEGER"
@@ -119,3 +125,4 @@
         "type": "INTEGER"
     }
 ]
+}

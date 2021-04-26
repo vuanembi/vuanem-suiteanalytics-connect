@@ -11,6 +11,7 @@ functions-framework = "*"
 tqdm = "*"
 jaydebeapi = "*"
 jpype1 = "*"
+jinja2 = "*"
 
 [dev-packages]
 black = "*"
