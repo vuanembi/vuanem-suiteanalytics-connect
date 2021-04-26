@@ -9,7 +9,7 @@ env:
   REGION: us-central1
 
 jobs:
-  deploy:
+  main:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -40,8 +40,21 @@ jobs:
         --platform=managed
         --service-account=${{ secrets.GCP_SA }}
         --region=${{ env.REGION }}
-        --timeout=600
+        --timeout=900
         --set-env-vars=NS_DSN=${{ secrets.NS_DSN }},NS_UID=${{ secrets.NS_UID }},NS_PWD=${{ secrets.NS_PWD }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+
+  invoker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
     
     - name: Deploy Invoker to Cloud Function
       run: >-
@@ -54,20 +67,3 @@ jobs:
         --trigger-http
         --project=${{ secrets.PROJECT_ID }}
         --service-account=${{ secrets.GCP_SA }}
-
-    # - name: Integrate PubSub
-    #   run: >-
-    #     echo "URL=$(gcloud run services describe vuanem-ns
-    #     --platform=managed
-    #     --region=us-central1
-    #     --format='value(status.url)')" >> $GITHUB_ENV
-    #     &&
-    #     gcloud run services add-iam-policy-binding ${{ env.SERVICE }}
-    #     --platform=managed
-    #     --region=${{ env.REGION }}
-    #     --member=serviceAccount:${{ secrets.GCP_SA }}
-    #     --role=roles/run.invoker
-    #     &&
-    #     gcloud pubsub subscriptions create sub --topic ${{ env.TOPIC }}
-    #     --push-endpoint=${{ env.URL }}
-    #     --push-auth-service-account=${{ secrets.GCP_SA }}
