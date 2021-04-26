@@ -7,12 +7,12 @@ import requests
 from pipelines import NetSuiteJob
 
 
-def main(event, context):
-    if 'data' in event:
-        message = base64.b64decode(event['data']).decode('utf-8')
-        if 'table' in message:
-            table = message['table']
-            job = NetSuiteJob(table)
+def main(data, context):
+    message = json.loads(base64.b64decode(data).decode('utf-8'))
+
+    if 'table' in message:
+        table = message['table']
+        job = NetSuiteJob(table)
     else:
         job = NetSuiteJob("CLASSES")
 

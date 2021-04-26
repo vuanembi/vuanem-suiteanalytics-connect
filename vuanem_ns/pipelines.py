@@ -40,7 +40,7 @@ class NetSuiteJob:
                 "ServerDataSource=NetSuite.com;"
                 "Encrypted=1;"
                 "CustomProperties=(AccountID={ACCOUNT_ID};RoleID={ROLE_ID})"
-            ).format(ACCOUNT_ID=4975572, ROLE_ID=1022),
+            ).format(ACCOUNT_ID=os.getenv('ACCOUNT_ID'), ROLE_ID=os.getenv('ROLE_ID')),
             {"user": os.getenv("NS_UID"), "password": os.getenv("NS_PWD")},
             "NQjc.jar",
         )

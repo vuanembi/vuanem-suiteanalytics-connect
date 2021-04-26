@@ -1,0 +1,22 @@
+CREATE
+OR REPLACE TABLE {{ dataset }}.{{ table }} PARTITION BY DATE(
+    {{ partition }}
+) AS
+SELECT
+    *
+EXCEPT
+    (row_num)
+FROM
+    (
+        SELECT
+            *,
+            ROW_NUMBER() over (
+                PARTITION BY {{ p_key }}
+                ORDER BY
+                    {{ incremental_key }} DESC
+            ) AS row_num
+        FROM
+            {{ dataset }}._stage_ {{ table }}
+    )
+WHERE
+    row_num = 1
