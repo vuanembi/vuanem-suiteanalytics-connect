@@ -1,15 +1,18 @@
 import os
 import json
+import base64
 
 import requests
 
 from pipelines import NetSuiteJob
 
 
-def main(request):
-    request_json = request.get_json()
-    if request_json:
-        job = NetSuiteJob(request_json.get("table"))
+def main(event, context):
+    if 'data' in event:
+        message = base64.b64decode(event['data']).decode('utf-8')
+        if 'table' in message:
+            table = message['table']
+            job = NetSuiteJob(table)
     else:
         job = NetSuiteJob("CLASSES")
 
