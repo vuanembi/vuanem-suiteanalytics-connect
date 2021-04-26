@@ -25,29 +25,29 @@ jobs:
     - name: Authorize Docker push
       run: gcloud auth configure-docker
 
-    # - name: Build and Push Container
-    #   run: |-
-    #     docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} ./vuanem_ns
-    #     docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+    - name: Build and Push Container
+      run: |-
+        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} ./vuanem_ns
+        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
 
-    # - name: Deploy to Main module to Cloud Run
-    #   run: >-
-    #     gcloud run deploy ${{ env.SERVICE }}
-    #     --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
-    #     --concurrency=1
-    #     --memory=1Gi
-    #     --cpu=2
-    #     --platform=managed
-    #     --service-account=${{ secrets.GCP_SA }}
-    #     --region=${{ env.REGION }}
-    #     --timeout=600
-    #     --set-env-vars=NS_DSN=${{ secrets.NS_DSN }},NS_UID=${{ secrets.NS_UID }},NS_PWD=${{ secrets.NS_PWD }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+    - name: Deploy to Main module to Cloud Run
+      run: >-
+        gcloud run deploy ${{ env.SERVICE }}
+        --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+        --concurrency=1
+        --memory=1Gi
+        --cpu=2
+        --platform=managed
+        --service-account=${{ secrets.GCP_SA }}
+        --region=${{ env.REGION }}
+        --timeout=600
+        --set-env-vars=NS_DSN=${{ secrets.NS_DSN }},NS_UID=${{ secrets.NS_UID }},NS_PWD=${{ secrets.NS_PWD }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
     
     - name: Deploy Invoker to Cloud Function
       run: >-
         python invoker/build.py
         &&
-        gcloud function deploy ${{ env.SERVICE }}
+        gcloud functions deploy ${{ env.SERVICE }}
         --source=invoker
         --entry-point=main
         --runtime=python38
@@ -63,7 +63,9 @@ jobs:
         --format='value(status.url)')" >> $GITHUB_ENV
         &&
         gcloud run services add-iam-policy-binding ${{ env.SERVICE }}
-        --member=${{ secrets.GCP_SA }}
+        --platform=managed
+        --region=${{ env.REGION }}
+        --member=serviceAccount:${{ secrets.GCP_SA }}
         --role=roles/run.invoker
         &&
         gcloud pubsub subscriptions create sub --topic ${{ env.TOPIC }}
