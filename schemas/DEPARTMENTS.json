@@ -1,12 +1,20 @@
 {
     "schema": [
     {
-        "name": "CLASS_ID",
-        "type": "INTEGER"
-    },
-    {
         "name": "DATE_LAST_MODIFIED",
         "type": "TIMESTAMP"
+    },
+    {
+        "name": "DEPARTMENT_DESCRIPTION",
+        "type": "STRING"
+    },
+    {
+        "name": "DEPARTMENT_EXTID",
+        "type": "STRING"
+    },
+    {
+        "name": "DEPARTMENT_ID",
+        "type": "INTEGER"
     },
     {
         "name": "FULL_NAME",
@@ -17,7 +25,7 @@
         "type": "STRING"
     },
     {
-        "name": "CLASS_DESCRIPTION",
+        "name": "IS_INCLUDING_CHILD_SUBS",
         "type": "STRING"
     },
     {
@@ -25,8 +33,8 @@
         "type": "STRING"
     },
     {
-        "name": "PRODUCT_GROUP_CODE",
-        "type": "STRING"
+        "name": "PARENT_ID",
+        "type": "INTEGER"
     }
 ]
 }

@@ -75,6 +75,7 @@ class NetSuiteJob:
             else:
                 break
         self.num_processed = len(rows)
+        print(rows[-1])
         return rows
 
     def transform(self, rows):
@@ -141,7 +142,7 @@ class NetSuiteJob:
 
 
 def main(request):
-    job = NetSuiteJob("CLASSES")
+    job = NetSuiteJob("EMPLOYEES")
     return job.run()
 
 

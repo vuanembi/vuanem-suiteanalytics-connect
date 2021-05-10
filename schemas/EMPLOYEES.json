@@ -1,0 +1,138 @@
+[
+	{
+		"name": "EMPLOYEE_ID",
+		"type": "INTEGER"
+	},
+	{
+		"name": "VN_CODE",
+		"type": "STRING"
+	},
+	{
+		"name": "FULL_NAME",
+		"type": "STRING"
+	},
+	{
+		"name": "FIRSTNAME",
+		"type": "STRING"
+	},
+	{
+		"name": "MIDDLENAME",
+		"type": "STRING"
+	},
+	{
+		"name": "LASTNAME",
+		"type": "STRING"
+	},
+	{
+		"name": "NAME",
+		"type": "STRING"
+	},
+	{
+		"name": "JOBTITLE",
+		"type": "STRING"
+	},
+	{
+		"name": "PHONE",
+		"type": "STRING"
+	},
+	{
+		"name": "MOBILE_PHONE",
+		"type": "STRING"
+	},
+	{
+		"name": "EMAIL",
+		"type": "STRING"
+	},
+	{
+		"name": "GENDER",
+		"type": "STRING"
+	},
+	{
+		"name": "BIRTHDATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "COMMENTS",
+		"type": "STRING"
+	},
+	{
+		"name": "CREATE_DATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "DATE_LAST_MODIFIED",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "LAST_MODIFIED_DATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "HIREDDATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "ONBOARDING_DATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "RELEASEDATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "RELEASE_REASON_ID",
+		"type": "INTEGER"
+	},
+	{
+		"name": "DELIVERY_PERSON",
+		"type": "STRING"
+	},
+	{
+		"name": "DEPARTMENT_ID",
+		"type": "INTEGER"
+	},
+	{
+		"name": "LOCATION_ID",
+		"type": "INTEGER"
+	},
+	{
+		"name": "EMPLOYEE_TYPE_ID",
+		"type": "STRING"
+	},
+	{
+		"name": "IDENTITY_NO_",
+		"type": "STRING"
+	},
+	{
+		"name": "IDENTITY_PROVIDED_AGENCY",
+		"type": "STRING"
+	},
+	{
+		"name": "IDENTITY_PROVIDED_DATE",
+		"type": "TIMESTAMP"
+	},
+	{
+		"name": "ISINACTIVE",
+		"type": "STRING"
+	},
+	{
+		"name": "ISSALESREP",
+		"type": "STRING"
+	},
+	{
+		"name": "JOB_DESCRIPTION",
+		"type": "STRING"
+	},
+	{
+		"name": "STATUS",
+		"type": "STRING"
+	},
+	{
+		"name": "SUBSIDIARY_ID",
+		"type": "INTEGER"
+	},
+	{
+		"name": "SUPERVISOR_ID",
+		"type": "INTEGER"
+	}
+]

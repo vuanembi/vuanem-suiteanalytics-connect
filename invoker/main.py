@@ -11,8 +11,8 @@ def publish():
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path("voltaic-country-280607", topic_id)
 
-    # with open("tables.json", "r") as f:
-    #     tables = json.load(f).get("tables")
+    with open("tables.json", "r") as f:
+        tables = json.load(f).get("tables")
 
     for table in ['CLASSES']:
         message_json = json.dumps(

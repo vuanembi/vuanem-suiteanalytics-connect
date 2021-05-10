@@ -1,0 +1,20 @@
+{
+    "schema": [
+        {
+            "name": "VENDOR_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "NAME",
+            "type": "STRING"
+        },
+        {
+            "name": "FULL_NAME",
+            "type": "STRING"
+        },
+        {
+            "name": "VENDOR_TYPE",
+            "type": "STRING"
+        }
+    ]
+}

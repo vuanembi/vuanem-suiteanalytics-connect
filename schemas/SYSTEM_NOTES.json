@@ -1,0 +1,20 @@
+{
+    "schema": [
+        {
+            "name": "DATE_CREATED",
+            "type": "TIMESTAMP"
+        },
+        {
+            "name": "ITEM_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "VALUE_NEW",
+            "type": "STRING"
+        },
+        {
+            "name": "OPERATION",
+            "type": "STRING"
+        }
+    ]
+}
