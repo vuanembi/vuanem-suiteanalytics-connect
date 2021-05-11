@@ -14,7 +14,7 @@ def publish():
     with open("tables.json", "r") as f:
         tables = json.load(f).get("tables")
 
-    for table in ['CLASSES']:
+    for table in tables:
         message_json = json.dumps(
             {
                 "data": {"table": table},
@@ -28,5 +28,3 @@ def publish():
 def main(request):
     _ = publish()
     return "ok"
-
-main({})

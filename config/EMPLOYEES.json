@@ -1,4 +1,4 @@
-[
+{"schema": [
 	{
 		"name": "EMPLOYEE_ID",
 		"type": "INTEGER"
@@ -97,7 +97,7 @@
 	},
 	{
 		"name": "EMPLOYEE_TYPE_ID",
-		"type": "STRING"
+		"type": "INTEGER"
 	},
 	{
 		"name": "IDENTITY_NO_",
@@ -136,3 +136,4 @@
 		"type": "INTEGER"
 	}
 ]
+}

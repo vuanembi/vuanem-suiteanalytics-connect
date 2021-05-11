@@ -30,11 +30,11 @@
         },
         {
             "name": "LASTNAME",
-            "type": "INTEGER"
+            "type": "STRING"
         },
         {
             "name": "NAME",
-            "type": "TIMESTAMP"
+            "type": "STRING"
         },
         {
             "name": "BILLADDRESS",
@@ -69,7 +69,7 @@
             "type": "TIMESTAMP"
         },
         {
-            "name": "DATE_CONVERSION",
+            "name": "DATE_CONVSERSION",
             "type": "TIMESTAMP"
         },
         {

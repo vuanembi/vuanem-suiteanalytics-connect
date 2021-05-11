@@ -5,7 +5,6 @@ from abc import ABCMeta, abstractmethod
 
 import jinja2
 import jaydebeapi
-from tqdm import tqdm
 from google.cloud import bigquery
 
 DATASET = "NetSuite"
@@ -82,7 +81,7 @@ class NetSuiteJob(metaclass=ABCMeta):
 
     def transform(self, rows):
         int_cols = [i["name"] for i in self.schema if i["type"] == "INTEGER"]
-        for row in tqdm(rows):
+        for row in rows:
             if int_cols:
                 for col in int_cols:
                     row[col] = (
@@ -201,7 +200,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
 
 
 def main():
-    job = NetSuiteJob.factory("CLASSES")
+    job = NetSuiteJob.factory("DELIVERY_PERSON")
     return job.run()
 
 
