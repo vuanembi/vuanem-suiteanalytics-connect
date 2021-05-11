@@ -54,3 +54,4 @@ FROM
     "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".TRANSACTIONS
 WHERE
     TRANSACTIONS.DATE_LAST_MODIFIED >= ?
+    AND TRANSACTIONS.DATE_LAST_MODIFIED <= ?

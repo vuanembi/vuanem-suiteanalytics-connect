@@ -7,13 +7,15 @@ import requests
 from pipelines import NetSuiteJob
 
 
-def main(data, context):
-    message = json.loads(base64.b64decode(data).decode('utf-8'))
+def main(event, context):
+    data = event["data"]
+    message = json.loads(base64.b64decode(data).decode("utf-8"))
 
     if 'table' in message:
         table = message['table']
-        full_sync = message.get('full_sync', False)
-        job = NetSuiteJob.factory(table, full_sync=full_sync)
+        start = message.get('start')
+        end = message.get('end')
+        job = NetSuiteJob.factory(table, start, end)
     else:
         job = NetSuiteJob.factory("CLASSES")
 

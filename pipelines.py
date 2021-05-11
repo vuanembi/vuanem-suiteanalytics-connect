@@ -8,6 +8,7 @@ import jaydebeapi
 from google.cloud import bigquery
 
 DATASET = "NetSuite"
+DATE_FORMAT = "%Y-%m-%d"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 J2_LOADER = jinja2.FileSystemLoader(searchpath="./templates")
@@ -22,7 +23,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         self.client = bigquery.Client()
 
     @staticmethod
-    def factory(table, full_sync=False):
+    def factory(table, start, end):
         query_path = f"queries/{table}.sql"
         config_path = f"config/{table}.json"
         with open(query_path, "r") as q, open(config_path, "r") as s:
@@ -32,9 +33,7 @@ class NetSuiteJob(metaclass=ABCMeta):
             keys = config.get("keys")
 
         if "?" in query:
-            return NetSuiteIncrementalJob(
-                table, query, schema, keys, full_sync
-            )
+            return NetSuiteIncrementalJob(table, query, schema, keys, start, end)
         else:
             return NetSuiteStandardJob(table, query, schema)
 
@@ -63,7 +62,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         columns = [column[0] for column in cursor.description]
         rows = []
         while True:
-            results = cursor.fetchmany(200)
+            results = cursor.fetchmany(50000)
             if results:
                 rows.extend((dict(zip(columns, result)) for result in results))
             else:
@@ -84,9 +83,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         for row in rows:
             if int_cols:
                 for col in int_cols:
-                    row[col] = (
-                        int(row[col]) if row[col] is not None else row[col]
-                    )
+                    row[col] = int(row[col]) if row[col] is not None else row[col]
         return rows
 
     def load(self, rows):
@@ -161,41 +158,44 @@ class NetSuiteStandardJob(NetSuiteJob):
 
 
 class NetSuiteIncrementalJob(NetSuiteJob):
-    def __init__(self, table, query, schema, keys, full_sync=False):
+    def __init__(self, table, query, schema, keys, start, end):
         self.keys = keys
-        self.full_sync = full_sync
+        self.start, self.end = self._fetch_time_range(start, end)
         super().__init__(table, query, schema)
 
-    def _fetch_cursor(self, cursor):
-        if self.full_sync is False:
-            cutoff_dt = datetime.now() - timedelta(days=1)
-        elif self.full_sync is True:
-            cutoff_dt = datetime(2018, 6, 30, 0, 0, 0)
+    def _fetch_time_range(self, start, end):
+        if start and end:
+            start, end = [
+                datetime.strptime(i, DATE_FORMAT).strftime(TIMESTAMP_FORMAT)
+                for i in [start, end]
+            ]
+        else:
+            now = datetime.now()
+            end = now.strftime(TIMESTAMP_FORMAT)
+            start = (now - timedelta(days=3)).strftime(TIMESTAMP_FORMAT)
+        return start, end
 
-        cutoff = cutoff_dt.strftime("%Y-%m-%d %H:%M:%S")
-        cursor.execute(self.query, [cutoff])
+    def _fetch_cursor(self, cursor):
+        cursor.execute(self.query, [self.start, self.end])
         return cursor
 
     def _fetch_write_disposition(self):
-        if self.full_sync is False:
-            write_disposition = "WRITE_APPEND"
-        else:
-            write_disposition = "WRITE_TRUNCATE"
-        return write_disposition
+        return "WRITE_APPEND"
 
-    def _fetch_update_query(self):
+    def _fetch_updated_query(self):
         template = J2_ENV.get_template("update_incremental.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
-            p_key=self.keys["p_key"],
+            p_key=",".join(self.keys["p_key"]),
             incremental_key=self.keys["incremental_key"],
             partition_key=self.keys["partition_key"],
         )
         return rendered_query
 
     def _make_responses(self, responses):
-        responses["full_sync"] = self.full_sync
+        responses["start"] = self.start
+        responses["end"] = self.end
         return responses
 
 

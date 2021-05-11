@@ -59,7 +59,7 @@
         },
         {
             "name": "DELIVERY_TERMS_ID",
-            "type": "STRING"
+            "type": "INTEGER"
         },
         {
             "name": "DELIVERY_VEHICLE_ID",
@@ -131,11 +131,11 @@
         },
         {
             "name": "MAGENTO_SO_ID",
-            "type": "INTEGER"
+            "type": "STRING"
         },
         {
             "name": "MAGENTO_TOTAL",
-            "type": "STRING"
+            "type": "INTEGER"
         },
         {
             "name": "MEMO",

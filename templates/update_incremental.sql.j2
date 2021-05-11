@@ -1,6 +1,6 @@
 CREATE
 OR REPLACE TABLE {{ dataset }}.{{ table }} PARTITION BY DATE(
-    {{ partition }}
+    {{ partition_key }}
 ) AS
 SELECT
     *

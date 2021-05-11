@@ -4,6 +4,7 @@ import base64
 import json
 import re
 import ast
+from datetime import datetime
 
 import requests
 
@@ -17,6 +18,7 @@ def process_output(out):
     res = re.search(RESULTS_REGEX, out).group(0)
     res = ast.literal_eval(res)
     return res
+
 
 def test_standard():
     """Test the scripts for default/auto mode"""
@@ -45,10 +47,11 @@ def test_standard():
     res = process_output(out)
     assertion(res)
 
+
 def test_incremental_auto():
     """Test the scripts for default/auto mode"""
 
-    port = 8080
+    port = 8082
     process = subprocess.Popen(
         [
             "functions-framework",
@@ -72,10 +75,11 @@ def test_incremental_auto():
     res = process_output(out)
     assertion(res)
 
-def test_incremental_auto():
+
+def test_incremental_manual():
     """Test the scripts for default/auto mode"""
 
-    port = 8080
+    port = 8083
     process = subprocess.Popen(
         [
             "functions-framework",
@@ -87,7 +91,11 @@ def test_incremental_auto():
         stdout=subprocess.PIPE,
     )
 
-    message = {"table": "TRANSACTIONS"}
+    message = {
+        "table": "TRANSACTIONS",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2018, 7, 10).strftime("%Y-%m-%d"),
+    }
     message_json = json.dumps(message)
     message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
     event = {"data": {"data": message_encoded}}
@@ -98,4 +106,3 @@ def test_incremental_auto():
     out, err = process.communicate()
     res = process_output(out)
     assertion(res)
-

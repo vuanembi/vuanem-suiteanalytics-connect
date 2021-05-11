@@ -1,5 +1,8 @@
 name: build & deploy
 on:
+  push:
+    branches:
+      - incremental
   workflow_dispatch:
 
 env:
