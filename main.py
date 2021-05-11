@@ -12,15 +12,12 @@ def main(data, context):
 
     if 'table' in message:
         table = message['table']
-        full_sync = message.get('full_sync')
-        if full_sync:
-            job = NetSuiteJob(table, full_sync)
-        else:
-            job = NetSuiteJob(table)
+        full_sync = message.get('full_sync', False)
+        job = NetSuiteJob.factory(table, full_sync=full_sync)
     else:
-        job = NetSuiteJob("CLASSES")
+        job = NetSuiteJob.factory("CLASSES")
 
-    responses = {"pipelines": "NetSuite", "results": [job.run()]}
+    responses = {"pipelines": "NetSuite", "results": job.run()}
 
     _ = requests.post(
         "https://api.telegram.org/bot{token}/sendMessage".format(
