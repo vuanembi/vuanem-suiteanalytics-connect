@@ -6,10 +6,8 @@ from google.cloud import pubsub_v1
 
 
 def publish():
-    topic_id = "vuanem_ns"
-
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path("voltaic-country-280607", topic_id)
+    topic_path = publisher.topic_path(os.getenv('PROJECT_ID'), "vuanem_ns")
 
     with open("tables.json", "r") as f:
         tables = json.load(f).get("tables")

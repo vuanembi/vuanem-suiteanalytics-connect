@@ -8,8 +8,11 @@ from pipelines import NetSuiteJob
 
 
 def main(event, context):
+    print(event)
     data = event["data"]
+    print(data)
     message = json.loads(base64.b64decode(data).decode("utf-8"))
+    print(message)
 
     if 'table' in message:
         table = message['table']
@@ -20,6 +23,8 @@ def main(event, context):
         job = NetSuiteJob.factory("CLASSES")
 
     responses = {"pipelines": "NetSuite", "results": job.run()}
+
+    print(responses)
 
     _ = requests.post(
         "https://api.telegram.org/bot{token}/sendMessage".format(

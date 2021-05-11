@@ -4,6 +4,7 @@ import base64
 import json
 import re
 import ast
+import time
 from datetime import datetime
 
 import requests
@@ -31,7 +32,7 @@ def test_standard():
             "--signature-type=event",
             f"--port={port}",
         ],
-        cwd=os.path.dirname(__file__),
+        cwd=os.getcwd(),
         stdout=subprocess.PIPE,
     )
 
@@ -45,6 +46,7 @@ def test_standard():
     process.wait()
     out, err = process.communicate()
     res = process_output(out)
+    res = res.get('results')
     assertion(res)
 
 
@@ -73,6 +75,7 @@ def test_incremental_auto():
     process.wait()
     out, err = process.communicate()
     res = process_output(out)
+    res = res.get('results')
     assertion(res)
 
 
@@ -87,9 +90,11 @@ def test_incremental_manual():
             "--signature-type=event",
             f"--port={port}",
         ],
-        cwd=os.path.dirname(__file__),
+        cwd=os.getcwd(),
         stdout=subprocess.PIPE,
     )
+
+    time.sleep(5)
 
     message = {
         "table": "TRANSACTIONS",
@@ -105,4 +110,5 @@ def test_incremental_manual():
     process.wait()
     out, err = process.communicate()
     res = process_output(out)
+    res = res.get('results')
     assertion(res)

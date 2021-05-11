@@ -11,6 +11,8 @@ functions-framework = "*"
 jaydebeapi = "*"
 jpype1 = "*"
 jinja2 = "*"
+google-cloud-pubsub = "*"
+gunicorn = "*"
 
 [dev-packages]
 black = "*"
