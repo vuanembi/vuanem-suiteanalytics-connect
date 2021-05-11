@@ -13,6 +13,7 @@ jpype1 = "*"
 jinja2 = "*"
 google-cloud-pubsub = "*"
 gunicorn = "*"
+flask = "*"
 
 [dev-packages]
 black = "*"
