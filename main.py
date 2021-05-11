@@ -6,32 +6,33 @@ import requests
 
 from pipelines import NetSuiteJob
 
-def main(data, context):
-    # print(event)
+def main(event, context):
+    print(event)
+    print("type", type(event))
     # data = event["data"]
-    print(data)
-    message = json.loads(base64.b64decode(data).decode("utf-8"))
-    print(message)
+    # print(type(data))
+    # message = json.loads(base64.b64decode(data).decode("utf-8"))
+    # print(message)
 
-    if 'table' in message:
-        table = message['table']
-        start = message.get('start')
-        end = message.get('end')
-        job = NetSuiteJob.factory(table, start, end)
-    else:
-        job = NetSuiteJob.factory("CLASSES")
+    # if 'table' in message:
+    #     table = message['table']
+    #     start = message.get('start')
+    #     end = message.get('end')
+    #     job = NetSuiteJob.factory(table, start, end)
+    # else:
+    #     job = NetSuiteJob.factory("CLASSES")
 
-    responses = {"pipelines": "NetSuite", "results": job.run()}
+    # responses = {"pipelines": "NetSuite", "results": job.run()}
 
-    print(responses)
+    # print(responses)
 
-    _ = requests.post(
-        "https://api.telegram.org/bot{token}/sendMessage".format(
-            token=os.getenv("TELEGRAM_TOKEN")
-        ),
-        json={
-            "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
-            "text": json.dumps(responses, indent=4),
-        },
-    )
-    return responses
+    # _ = requests.post(
+    #     "https://api.telegram.org/bot{token}/sendMessage".format(
+    #         token=os.getenv("TELEGRAM_TOKEN")
+    #     ),
+    #     json={
+    #         "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
+    #         "text": json.dumps(responses, indent=4),
+    #     },
+    # )
+    return "ok"
