@@ -6,10 +6,9 @@ import requests
 
 from pipelines import NetSuiteJob
 
-
-def main(event, context):
-    print(event)
-    data = event["data"]
+def main(data, context):
+    # print(event)
+    # data = event["data"]
     print(data)
     message = json.loads(base64.b64decode(data).decode("utf-8"))
     print(message)

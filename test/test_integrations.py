@@ -39,8 +39,8 @@ def test_standard():
     message = {"table": "CLASSES"}
     message_json = json.dumps(message)
     message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    event = {"data": {"data": message_encoded}}
-    with requests.post(f"http://localhost:{port}", json=event) as r:
+    data = {"data": message_encoded}
+    with requests.post(f"http://localhost:{port}", json=data) as r:
         assert r.status_code == 200
     process.kill()
     process.wait()
@@ -68,8 +68,8 @@ def test_incremental_auto():
     message = {"table": "TRANSACTIONS"}
     message_json = json.dumps(message)
     message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    event = {"data": {"data": message_encoded}}
-    with requests.post(f"http://localhost:{port}", json=event) as r:
+    data = {"data": message_encoded}
+    with requests.post(f"http://localhost:{port}", json=data) as r:
         assert r.status_code == 200
     process.kill()
     process.wait()
@@ -103,8 +103,8 @@ def test_incremental_manual():
     }
     message_json = json.dumps(message)
     message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    event = {"data": {"data": message_encoded}}
-    with requests.post(f"http://localhost:{port}", json=event) as r:
+    data = {"data": message_encoded}
+    with requests.post(f"http://localhost:{port}", json=data) as r:
         assert r.status_code == 200
     process.kill()
     process.wait()
