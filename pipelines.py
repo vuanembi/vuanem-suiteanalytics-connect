@@ -189,7 +189,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
         return "WRITE_APPEND"
 
     def _update(self):
-        if self.manual:
+        if not self.manual:
             rendered_query = self._fetch_updated_query()
             _ = self.client.query(rendered_query).result()
         else:
