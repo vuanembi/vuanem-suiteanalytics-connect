@@ -13,4 +13,4 @@ EXPOSE 8080
 
 ENV PORT=8080
 
-CMD exec functions-framework --target=main --signature-type=event
+CMD exec functions-framework --target=main

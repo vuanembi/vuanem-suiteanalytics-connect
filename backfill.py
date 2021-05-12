@@ -31,7 +31,7 @@ def get_time_range(start, end):
             date_array.append(end.strftime("%Y-%m-%d"))
     messages = [date_array[i : i + 2] for i in range(len(date_array))]
     messages = [
-        {"table": "TRANSACTIONS", "start": i[0], "end": i[1]}
+        {"data": {"table": "TRANSACTIONS", "start": i[0], "end": i[1]}}
         for i in messages
         if len(i) == 2
     ]

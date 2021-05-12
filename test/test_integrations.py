@@ -1,15 +1,12 @@
 import os
 import subprocess
-import base64
-import json
 import re
 import ast
-import time
 from datetime import datetime
 
 import requests
 
-from .assertions import assertion
+from .utils import assertion, encode_data
 
 RESULTS_REGEX = "{\\'pipelines.*}"
 
@@ -20,95 +17,65 @@ def process_output(out):
     res = ast.literal_eval(res)
     return res
 
-
-def test_standard():
-    """Test the scripts for default/auto mode"""
-
-    port = 8080
-    process = subprocess.Popen(
+def open_process(port):
+    return subprocess.Popen(
         [
             "functions-framework",
             "--target=main",
-            "--signature-type=event",
             f"--port={port}",
         ],
         cwd=os.getcwd(),
         stdout=subprocess.PIPE,
     )
 
-    message = {"table": "CLASSES"}
-    message_json = json.dumps(message)
-    message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    data = {"data": message_encoded}
-    with requests.post(f"http://localhost:{port}", json=data) as r:
-        assert r.status_code == 200
+
+def test_standard():
+    """Test the scripts for default/auto mode"""
+
+    port = 8080
+    process = open_process(port)
+
+    data = {"table": "CLASSES"}
+    message = encode_data(data)
+    with requests.post(f"http://localhost:{port}", json=message) as r:
+        res = r.json()
     process.kill()
     process.wait()
-    out, err = process.communicate()
-    res = process_output(out)
-    res = res.get('results')
-    assertion(res)
+    results = res.get('results')
+    assertion(results)
 
 
 def test_incremental_auto():
     """Test the scripts for default/auto mode"""
 
     port = 8082
-    process = subprocess.Popen(
-        [
-            "functions-framework",
-            "--target=main",
-            "--signature-type=event",
-            f"--port={port}",
-        ],
-        cwd=os.path.dirname(__file__),
-        stdout=subprocess.PIPE,
-    )
+    process = open_process(port)
 
-    message = {"table": "TRANSACTIONS"}
-    message_json = json.dumps(message)
-    message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    data = {"data": message_encoded}
-    with requests.post(f"http://localhost:{port}", json=data) as r:
-        assert r.status_code == 200
+    data = {"table": "TRANSACTIONS"}
+    message = encode_data(data)
+    with requests.post(f"http://localhost:{port}", json=message) as r:
+        res = r.json()
     process.kill()
     process.wait()
-    out, err = process.communicate()
-    res = process_output(out)
-    res = res.get('results')
-    assertion(res)
+    results = res.get('results')
+    assertion(results)
 
 
 def test_incremental_manual():
     """Test the scripts for default/auto mode"""
 
     port = 8083
-    process = subprocess.Popen(
-        [
-            "functions-framework",
-            "--target=main",
-            "--signature-type=event",
-            f"--port={port}",
-        ],
-        cwd=os.getcwd(),
-        stdout=subprocess.PIPE,
-    )
+    process = open_process(port)
 
-    time.sleep(5)
-
-    message = {
+    data = {
         "table": "TRANSACTIONS",
         "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
         "end": datetime(2018, 7, 10).strftime("%Y-%m-%d"),
     }
-    message_json = json.dumps(message)
-    message_encoded = base64.b64encode(message_json.encode("utf-8")).decode("utf-8")
-    data = {"data": message_encoded}
-    with requests.post(f"http://localhost:{port}", json=data) as r:
-        assert r.status_code == 200
+    message = encode_data(data)
+    with requests.post(f"http://localhost:{port}", json=message) as r:
+        res = r.json()
     process.kill()
     process.wait()
-    out, err = process.communicate()
-    res = process_output(out)
-    res = res.get('results')
-    assertion(res)
+    results = res.get('results')
+    assertion(results)
