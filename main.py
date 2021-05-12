@@ -11,6 +11,7 @@ def main(request):
     message = request_json['message']
     data_bytes = message['data']
     data = json.loads(base64.b64decode(data_bytes).decode("utf-8"))
+    print(data)
 
     if 'table' in data:
         table = data['table']

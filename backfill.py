@@ -6,11 +6,11 @@ from argparse import ArgumentParser
 from google.cloud import pubsub_v1
 
 
-def send_messages(start, end):
+def send_messages(table, start, end):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
 
-    messages = get_time_range(start, end)
+    messages = get_time_range(table, start, end)
     print(messages)
     for i in messages:
         message_json = json.dumps(i)
@@ -31,7 +31,7 @@ def get_time_range(table, start, end):
             date_array.append(end.strftime("%Y-%m-%d"))
     messages = [date_array[i : i + 2] for i in range(len(date_array))]
     messages = [
-        {"data": {"table": table, "start": i[0], "end": i[1]}}
+        {"table": table, "start": i[0], "end": i[1]}
         for i in messages
         if len(i) == 2
     ]
