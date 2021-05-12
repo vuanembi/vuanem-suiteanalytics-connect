@@ -14,9 +14,7 @@ def publish():
 
     for table in tables:
         message_json = json.dumps(
-            {
-                "data": {"table": table},
-            }
+                {"table": table}
         )
         message_bytes = message_json.encode("utf-8")
         data = base64.b64encode(message_bytes)
