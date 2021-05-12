@@ -105,9 +105,9 @@ class NetSuiteJob(metaclass=ABCMeta):
     def _fetch_write_disposition(self):
         raise NotImplementedError
 
-    def update(self):
-        rendered_query = self._fetch_updated_query()
-        _ = self.client.query(rendered_query).result()
+    @abstractmethod
+    def _update(self):
+        raise NotImplementedError
 
     @abstractmethod
     def _fetch_updated_query(self):
@@ -117,7 +117,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         rows = self.extract()
         rows = self.transform(rows)
         loads = self.load(rows)
-        self.update()
+        self._update()
 
         responses = {
             "table": self.table,
@@ -144,6 +144,10 @@ class NetSuiteStandardJob(NetSuiteJob):
     def _fetch_write_disposition(self):
         write_disposition = "WRITE_TRUNCATE"
         return write_disposition
+    
+    def _update(self):
+        rendered_query = self._fetch_updated_query()
+        _ = self.client.query(rendered_query).result()
 
     def _fetch_updated_query(self):
         template = J2_ENV.get_template("update.sql.j2")
@@ -169,10 +173,12 @@ class NetSuiteIncrementalJob(NetSuiteJob):
                 datetime.strptime(i, DATE_FORMAT).strftime(TIMESTAMP_FORMAT)
                 for i in [start, end]
             ]
+            self.manual = True
         else:
             now = datetime.utcnow()
             end = now.strftime(TIMESTAMP_FORMAT)
             start = (now - timedelta(days=3)).strftime(TIMESTAMP_FORMAT)
+            self.manual = False
         return start, end
 
     def _fetch_cursor(self, cursor):
@@ -181,6 +187,13 @@ class NetSuiteIncrementalJob(NetSuiteJob):
 
     def _fetch_write_disposition(self):
         return "WRITE_APPEND"
+
+    def _update(self):
+        if self.manual:
+            rendered_query = self._fetch_updated_query()
+            _ = self.client.query(rendered_query).result()
+        else:
+            pass
 
     def _fetch_updated_query(self):
         template = J2_ENV.get_template("update_incremental.sql.j2")

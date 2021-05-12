@@ -28,10 +28,6 @@
             "type": "INTEGER"
         },
         {
-            "name": "CASE_PROFILE_ID",
-            "type": "INTEGER"
-        },
-        {
             "name": "CASE_TYPE_ID",
             "type": "INTEGER"
         },
