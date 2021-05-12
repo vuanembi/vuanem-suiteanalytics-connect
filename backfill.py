@@ -19,7 +19,7 @@ def send_messages(start, end):
     print(f"Sent {len(messages)} messages")
 
 
-def get_time_range(start, end):
+def get_time_range(table, start, end):
     start = datetime.strptime(start, "%Y-%m-%d")
     end = datetime.strptime(end, "%Y-%m-%d")
     _start = start
@@ -31,7 +31,7 @@ def get_time_range(start, end):
             date_array.append(end.strftime("%Y-%m-%d"))
     messages = [date_array[i : i + 2] for i in range(len(date_array))]
     messages = [
-        {"data": {"table": "TRANSACTIONS", "start": i[0], "end": i[1]}}
+        {"data": {"table": table, "start": i[0], "end": i[1]}}
         for i in messages
         if len(i) == 2
     ]
@@ -40,11 +40,12 @@ def get_time_range(start, end):
 
 def main():
     parser = ArgumentParser()
+    parser.add_argument("--table")
     parser.add_argument("--start")
     parser.add_argument("--end")
     args = parser.parse_args()
 
-    _ = send_messages(args.start, args.end)
+    _ = send_messages(args.table, args.start, args.end)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
-name: build & deploy
+name: Build & Deploy
 on:
   push:
     branches:
-      - http
+      - incremental
   workflow_dispatch:
 
 env:
@@ -13,7 +13,7 @@ env:
   REGION: us-central1
 
 jobs:
-  main:
+  vuanem-ns:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -47,7 +47,7 @@ jobs:
         --timeout=900
         --set-env-vars=ACCOUNT_ID=${{ secrets.ACCOUNT_ID }},ROLE_ID=${{ secrets.ROLE_ID }},NS_DSN=${{ secrets.NS_DSN }},NS_UID=${{ secrets.NS_UID }},NS_PWD=${{ secrets.NS_PWD }},TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }},TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
 
-  invoker:
+  dispatcher:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
