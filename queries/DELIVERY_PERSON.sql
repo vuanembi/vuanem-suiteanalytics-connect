@@ -1,4 +1,4 @@
-SELECT 
+SELECT
 	DATE_CREATED,
 	DELIVERY_PERSON_EXTID,
 	DELIVERY_PERSON_ID,
@@ -7,4 +7,5 @@ SELECT
 	LAST_MODIFIED_DATE,
 	REF__EMPLOYEE_ID,
 	VN_CODE
-FROM "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".DELIVERY_PERSON
+FROM
+	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".DELIVERY_PERSON

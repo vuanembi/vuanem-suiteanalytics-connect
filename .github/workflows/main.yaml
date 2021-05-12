@@ -9,6 +9,7 @@ env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   TOPIC: vuanem_ns
   SERVICE: vuanem-ns
+  DISPATCHER_NAME: vuanem_ns_dispatcher
   REGION: us-central1
 
 jobs:
@@ -63,7 +64,7 @@ jobs:
       run: >-
         python invoker/build.py
         &&
-        gcloud functions deploy ${{ env.SERVICE }}
+        gcloud functions deploy ${{ env.DISPATCHER_NAME }}
         --source=invoker
         --entry-point=main
         --runtime=python38

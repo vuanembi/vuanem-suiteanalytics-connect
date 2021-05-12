@@ -4,7 +4,7 @@
         "incremental_key": "DATE_LAST_MODIFIED",
         "partition_key": "DATE_CREATED"
     },
-    "schemas": [
+    "schema": [
     {
         "name": "TRANSACTION_ID",
         "type": "INTEGER"
@@ -23,6 +23,10 @@
     },
     {
         "name": "AMOUNT_BEFORE_DISCOUNT",
+        "type": "INTEGER"
+    },
+    {
+        "name": "AMOUNT_FOREIGN_LINKED",
         "type": "INTEGER"
     },
     {

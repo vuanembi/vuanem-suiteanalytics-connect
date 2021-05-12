@@ -27,7 +27,7 @@ def test_incremental_auto():
 
 def test_incremental_manual():
     data = {
-        "table": "TRANSACTIONS",
+        "table": "TRANSACTION_LINES",
         "start": datetime(2018, 6, 30).strftime('%Y-%m-%d'),
         "end": datetime(2018, 7, 10).strftime('%Y-%m-%d')
     }

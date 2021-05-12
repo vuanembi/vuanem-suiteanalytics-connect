@@ -25,7 +25,8 @@ FROM
             EMPLOYEES.FULL_NAME AS 'CURRENT_ASM',
             LOCATIONS.ASM_ID,
             CASE
-                WHEN LOCATIONS.CLOSE_DATE IS NULL OR LOCATIONS.CLOSE_DATE > NOW() THEN '0'
+                WHEN LOCATIONS.CLOSE_DATE IS NULL
+                OR LOCATIONS.CLOSE_DATE > NOW() THEN '0'
                 ELSE '1'
             END AS 'ISCLOSE'
         FROM
