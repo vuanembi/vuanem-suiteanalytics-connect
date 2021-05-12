@@ -170,7 +170,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
                 for i in [start, end]
             ]
         else:
-            now = datetime.now()
+            now = datetime.utcnow()
             end = now.strftime(TIMESTAMP_FORMAT)
             start = (now - timedelta(days=3)).strftime(TIMESTAMP_FORMAT)
         return start, end
