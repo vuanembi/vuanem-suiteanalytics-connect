@@ -163,9 +163,9 @@ class NetSuiteStandardJob(NetSuiteJob):
 
 class NetSuiteIncrementalJob(NetSuiteJob):
     def __init__(self, table, query, schema, keys, start, end):
+        super().__init__(table, query, schema)
         self.keys = keys
         self.start, self.end = self._fetch_time_range(start, end)
-        super().__init__(table, query, schema)
 
     def _fetch_time_range(self, start, end):
         if start and end:
@@ -177,9 +177,21 @@ class NetSuiteIncrementalJob(NetSuiteJob):
         else:
             now = datetime.utcnow()
             end = now.strftime(TIMESTAMP_FORMAT)
-            start = (now - timedelta(days=3)).strftime(TIMESTAMP_FORMAT)
+            start = self._fetch_latest_incre()
             self.manual = False
         return start, end
+    
+    def _fetch_latest_incre(self):
+        template = J2_ENV.get_template("query_max_incremental.sql.j2")
+        rendered_query = template.render(
+            dataset=DATASET,
+            table=self.table,
+            incremental_key=self.keys["incremental_key"]
+        )
+        rows = self.client.query(rendered_query).result()
+        row = [row for row in rows][0]
+        max_incre = row.get('incre')
+        return max_incre.strftime(TIMESTAMP_FORMAT)
 
     def _fetch_cursor(self, cursor):
         cursor.execute(self.query, [self.start, self.end])

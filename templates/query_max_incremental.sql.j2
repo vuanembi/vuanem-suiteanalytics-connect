@@ -1,0 +1,6 @@
+SELECT
+    MAX(
+        {{ incremental_key }}
+    ) AS incre
+FROM
+    `{{ dataset }}._stage_{{ table }}`
