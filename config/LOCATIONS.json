@@ -39,6 +39,22 @@
         {
             "name": "FIRST_TRAFFIC_DATE",
             "type": "TIMESTAMP"
+        },
+        {
+            "name": "CITY_ID",
+            "type": "STRING"
+        },
+        {
+            "name": "AREA_M2",
+            "type": "FLOAT"
+        },
+        {
+            "name": "FRONT_LENGTH",
+            "type": "FLOAT"
+        },
+        {
+            "name": "STORE_MODEL",
+            "type": "STRING"
         }
     ]
 }
