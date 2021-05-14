@@ -6,7 +6,7 @@ from google.cloud import pubsub_v1
 
 
 def main(request):
-    request_json = request.get_json(silent=True)
+    request_json = request.get_json(force=True, silent=True)
     print(request_json)
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
@@ -16,6 +16,8 @@ def main(request):
 
     if request_json.get("mode") == "incre":
         tables = [table["table"] for table in tables if table["incre"] is True]
+    else:
+        tables = [table["table"] for table in tables]
 
     _ = publish(publisher, topic_path, tables)
     responses = {"message_sent": len(tables)}
