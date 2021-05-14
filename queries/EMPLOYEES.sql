@@ -34,4 +34,4 @@ SELECT
 	EMPLOYEES.SUBSIDIARY_ID,
 	EMPLOYEES.SUPERVISOR_ID
 FROM
-	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".EMPLOYEES
+	"Vua Nem Joint Stock Company".Administrator.EMPLOYEES

@@ -7,7 +7,7 @@ from .utils import assertion, encode_data
 
 
 def test_standard():
-    data = {"table": "ACCOUNTS"}
+    data = {"table": "VENDORS"}
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
     res = main(req)

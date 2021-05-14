@@ -7,4 +7,4 @@ SELECT
     CLASSES.NAME,
     CLASSES.PRODUCT_GROUP_CODE
 FROM
-    "Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".CLASSES CLASSES
+    "Vua Nem Joint Stock Company".Administrator.CLASSES CLASSES

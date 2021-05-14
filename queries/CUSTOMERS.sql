@@ -35,4 +35,4 @@ SELECT
 	CUSTOMERS.STATUS,
 	CUSTOMERS.SUBSIDIARY_ID
 FROM
-	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".CUSTOMERS
+	"Vua Nem Joint Stock Company".Administrator.CUSTOMERS

@@ -9,4 +9,4 @@ SELECT
 	NAME,
 	PARENT_ID
 FROM
-	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".DEPARTMENTS
+	"Vua Nem Joint Stock Company".Administrator.DEPARTMENTS

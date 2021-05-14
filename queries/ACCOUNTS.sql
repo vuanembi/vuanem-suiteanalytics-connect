@@ -11,4 +11,4 @@ SELECT
 	ACCOUNTNUMBER,
 	TYPE_NAME
 FROM
-	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".ACCOUNTS
+	"Vua Nem Joint Stock Company".Administrator.ACCOUNTS

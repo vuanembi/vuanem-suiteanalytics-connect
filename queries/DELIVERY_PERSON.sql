@@ -8,4 +8,4 @@ SELECT
 	REF__EMPLOYEE_ID,
 	VN_CODE
 FROM
-	"Vua Nem Joint Stock Company"."Vua Nem - Storehouse Officer".DELIVERY_PERSON
+	"Vua Nem Joint Stock Company".Administrator.DELIVERY_PERSON
