@@ -71,3 +71,4 @@ jobs:
         --trigger-http
         --project=${{ secrets.PROJECT_ID }}
         --service-account=${{ secrets.GCP_SA }}
+        --set-env-vars=PROJECT_ID=${{ secrets.PROJECT_ID }}

@@ -5,17 +5,9 @@ import base64
 from google.cloud import pubsub_v1
 
 
-def publish(publisher, topic_path, tables):
-    for table in tables:
-        message_json = json.dumps({"table": table})
-        print(message_json)
-        message_bytes = message_json.encode("utf-8")
-        data = base64.b64encode(message_bytes)
-        publisher.publish(topic_path, data=data).result()
-
-
 def main(request):
-    request_json = request.get_json()
+    request_json = request.get_json(silent=True)
+    print(request_json)
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
 
@@ -26,4 +18,14 @@ def main(request):
         tables = [table["table"] for table in tables if table["incre"] is True]
 
     _ = publish(publisher, topic_path, tables)
-    return {"message_sent": len(tables)}
+    responses = {"message_sent": len(tables)}
+    print(responses)
+    return responses
+
+
+def publish(publisher, topic_path, tables):
+    for table in tables:
+        message_json = json.dumps({"table": table})
+        message_bytes = message_json.encode("utf-8")
+        data = base64.b64encode(message_bytes)
+        publisher.publish(topic_path, data=data).result()
