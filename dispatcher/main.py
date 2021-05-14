@@ -10,7 +10,7 @@ def publish(publisher, topic_path, tables):
         message_json = json.dumps({"table": table})
         message_bytes = message_json.encode("utf-8")
         data = base64.b64encode(message_bytes)
-        # publisher.publish(topic_path, data=data).result()
+        publisher.publish(topic_path, data=data).result()
 
 
 def main(request):

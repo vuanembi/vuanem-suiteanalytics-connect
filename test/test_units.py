@@ -7,7 +7,7 @@ from .utils import assertion, encode_data
 
 
 def test_standard():
-    data = {"table": "LOCATIONS"}
+    data = {"table": "CLASSES"}
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
     res = main(req)
@@ -26,9 +26,9 @@ def test_incremental_auto():
 
 def test_incremental_manual():
     data = {
-        "table": "TRANSACTION_LINES",
+        "table": "STORE_TRAFFIC",
         "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
-        "end": datetime(2018, 7, 10).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 5, 15).strftime("%Y-%m-%d"),
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)

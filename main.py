@@ -6,20 +6,18 @@ import requests
 
 from pipelines import NetSuiteJob
 
+
 def main(request):
     request_json = request.get_json()
-    message = request_json['message']
-    data_bytes = message['data']
+    message = request_json["message"]
+    data_bytes = message["data"]
     data = json.loads(base64.b64decode(data_bytes).decode("utf-8"))
     print(data)
 
-    if 'table' in data:
-        table = data['table']
-        start = data.get('start')
-        end = data.get('end')
-        job = NetSuiteJob.factory(table, start, end)
-    else:
-        job = NetSuiteJob.factory("CLASSES", None, None)
+    table = data.get("table", "CLASSES")
+    start = data.get("start", None)
+    end = data.get("end", None)
+    job = NetSuiteJob.factory(table, start, end)
 
     responses = {"pipelines": "NetSuite", "results": job.run()}
 

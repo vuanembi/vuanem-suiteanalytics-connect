@@ -17,7 +17,7 @@
         },
         {
             "name": "GENDER_ID",
-            "type": "STRING"
+            "type": "INTEGER"
         },
         {
             "name": "IS_INACTIVE",

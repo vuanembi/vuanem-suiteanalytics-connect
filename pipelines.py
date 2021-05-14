@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from abc import ABCMeta, abstractmethod
 
 import jinja2
@@ -64,7 +64,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         while True:
             results = cursor.fetchmany(50000)
             if results:
-                rows.extend((dict(zip(columns, result)) for result in results))
+                rows.extend([dict(zip(columns, result)) for result in results])
             else:
                 break
 
@@ -115,18 +115,20 @@ class NetSuiteJob(metaclass=ABCMeta):
 
     def run(self):
         rows = self.extract()
-        rows = self.transform(rows)
-        loads = self.load(rows)
-        self._update()
-
-        responses = {
-            "table": self.table,
-            "num_processed": self.num_processed,
-            "output_rows": loads.output_rows,
-            "errors": loads.errors,
-        }
-        responses = self._make_responses(responses)
-        return responses
+        if len(rows) == 0:
+            responses = {"table": self.table, "num_processed": self.num_processed}
+        else:
+            rows = self.transform(rows)
+            loads = self.load(rows)
+            self._update()
+            responses = {
+                "table": self.table,
+                "num_processed": self.num_processed,
+                "output_rows": loads.output_rows,
+                "errors": loads.errors,
+            }
+            responses = self._make_responses(responses)
+            return responses
 
     @abstractmethod
     def _make_responses(self):
@@ -144,7 +146,7 @@ class NetSuiteStandardJob(NetSuiteJob):
     def _fetch_write_disposition(self):
         write_disposition = "WRITE_TRUNCATE"
         return write_disposition
-    
+
     def _update(self):
         rendered_query = self._fetch_updated_query()
         _ = self.client.query(rendered_query).result()
@@ -180,17 +182,17 @@ class NetSuiteIncrementalJob(NetSuiteJob):
             start = self._fetch_latest_incre()
             self.manual = False
         return start, end
-    
+
     def _fetch_latest_incre(self):
         template = J2_ENV.get_template("query_max_incremental.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
-            incremental_key=self.keys["incremental_key"]
+            incremental_key=self.keys["incremental_key"],
         )
         rows = self.client.query(rendered_query).result()
         row = [row for row in rows][0]
-        max_incre = row.get('incre')
+        max_incre = row.get("incre")
         return max_incre.strftime(TIMESTAMP_FORMAT)
 
     def _fetch_cursor(self, cursor):
