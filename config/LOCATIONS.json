@@ -55,6 +55,10 @@
         {
             "name": "STORE_MODEL",
             "type": "STRING"
+        },
+        {
+            "name": "OPENNING_DAY2",
+            "type": "TIMESTAMP"
         }
     ]
 }
