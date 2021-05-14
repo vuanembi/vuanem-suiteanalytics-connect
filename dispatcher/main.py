@@ -17,7 +17,7 @@ def main(request):
     if request_json.get("mode") == "incre":
         tables = [table["table"] for table in tables if table["incre"] is True]
     else:
-        tables = [table["table"] for table in tables]
+        tables = [table["table"] for table in tables if table["incre"] is False]
 
     _ = publish(publisher, topic_path, tables)
     responses = {"message_sent": len(tables)}
