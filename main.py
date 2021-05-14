@@ -8,6 +8,15 @@ from pipelines import NetSuiteJob
 
 
 def main(request):
+    """Gateway to process request
+
+    Args:
+        request (flask.Request): Request from PubSub
+
+    Returns:
+        dict: Responses
+    """
+        
     request_json = request.get_json()
     message = request_json["message"]
     data_bytes = message["data"]
