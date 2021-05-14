@@ -2,7 +2,7 @@ name: Build & Deploy
 on:
   push:
     branches:
-      - incremental
+      - master
   workflow_dispatch:
 
 env:
