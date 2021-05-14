@@ -8,6 +8,7 @@ from google.cloud import pubsub_v1
 def publish(publisher, topic_path, tables):
     for table in tables:
         message_json = json.dumps({"table": table})
+        print(message_json)
         message_bytes = message_json.encode("utf-8")
         data = base64.b64encode(message_bytes)
         publisher.publish(topic_path, data=data).result()
@@ -19,7 +20,7 @@ def main(request):
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
 
     with open("tables.json", "r") as f:
-        tables = json.load(f).get("tables")
+        tables = json.load(f)
 
     if request_json.get("mode") == "incre":
         tables = [table["table"] for table in tables if table["incre"] is True]

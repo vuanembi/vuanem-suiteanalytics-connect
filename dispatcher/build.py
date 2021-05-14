@@ -8,7 +8,7 @@ for i in os.listdir("config"):
             incre = True
         else:
             incre = False
-        tables.append({"tables": i.split(".")[0], "incre": incre})
+        tables.append({"table": i.split(".")[0], "incre": incre})
 
 with open("dispatcher/tables.json", "w") as f:
     json.dump(tables, f)
