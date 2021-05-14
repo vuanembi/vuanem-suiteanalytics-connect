@@ -20,60 +20,77 @@
             "type": "INTEGER"
         },
         {
-            "name": "CASE_NUMBERCODE",
-            "type": "STRING"
-        },
-        {
-            "name": "CASE_ORIGIN_ID",
-            "type": "INTEGER"
-        },
-        {
-            "name": "CASE_TYPE_ID",
-            "type": "INTEGER"
-        },
-        {
             "name": "CAI_THIEN",
             "type": "STRING"
-        },
-        {
-            "name": "COMPANY_ID",
-            "type": "INTEGER"
         },
         {
             "name": "CREATE_DATE",
             "type": "TIMESTAMP"
         },
         {
-            "name": "DATE_LAST_MODIFIED",
-            "type": "TIMESTAMP"
-        },
-        {
-            "name": "ISINACTIVE",
+            "name": "LY_DO_CHO_SO_DIEM",
             "type": "STRING"
         },
         {
-            "name": "KTTV",
-            "type": "FLOAT"
+            "name": "LY_DO_KHONG_MUA_HANG",
+            "type": "INTEGER"
         },
-        {
-            "name": "LY_DO_CHO_DIEM",
-            "type": "STRING"
-        },
+        
         {
             "name": "NAME",
             "type": "STRING"
         },
         {
-            "name": "NPS_SCORE_ID",
+            "name": "NV_BN_HNG_ID",
             "type": "INTEGER"
         },
         {
-            "name": "OWNER_ID",
+            "name": "BAOHANH_ID",
             "type": "INTEGER"
         },
         {
-            "name": "PRIORITY",
-            "type": "STRING"
+            "name": "NVGH_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "HOTRO_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "RATING_KHCH_VO_CH_CHA_MUA__ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "RATING__KHCH_DIGITALHOTLINE_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "RATING__SN_PHM_A_DNG_PHON_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "RATING__SAU_KHI_GIAO_HNG_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "RATING__SAU_KHI_LN_SO_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "SAO_CHO_NVBH_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "SAO_CHO_NVGH_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "SAO_CHO_NV_BO_HNH_M_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "SAO_CHO_NV_H_TR_ID",
+            "type": "INTEGER"
         },
         {
             "name": "SO_LOCATION_ID",
@@ -84,20 +101,24 @@
             "type": "INTEGER"
         },
         {
-            "name": "STAGE",
-            "type": "STRING"
+            "name": "NGY_HON_THNH_KHIU_NIBO_",
+            "type": "TIMESTAMP"
         },
         {
-            "name": "STATUS",
-            "type": "STRING"
+            "name": "CASE_TYPE_ID",
+            "type": "INTEGER"
         },
         {
-            "name": "TYPES_NAME",
-            "type": "STRING"
+            "name": "NPS_SCORE_ID",
+            "type": "INTEGER"
         },
         {
-            "name": "ORIGINS_NAME",
-            "type": "STRING"
+            "name": "CASE_ORIGIN_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "DATE_LAST_MODIFIED",
+            "type": "TIMESTAMP"
         }
     ]
 }

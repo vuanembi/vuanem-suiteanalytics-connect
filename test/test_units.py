@@ -16,7 +16,7 @@ def test_standard():
 
 
 def test_incremental_auto():
-    data = {"table": "TRANSACTION_LINES"}
+    data = {"table": "CASES"}
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
     res = main(req)
@@ -26,12 +26,11 @@ def test_incremental_auto():
 
 def test_incremental_manual():
     data = {
-        "table": "STORE_TRAFFIC",
-        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
-        "end": datetime(2021, 5, 15).strftime("%Y-%m-%d"),
+        "table": "CASES",
+        "start": datetime(2021, 5, 1).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 5, 5).strftime("%Y-%m-%d"),
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
     res = main(req)
     res = res.get("results")
-    assertion(res)
