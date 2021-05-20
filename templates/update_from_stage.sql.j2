@@ -1,7 +1,5 @@
 CREATE
-OR REPLACE TABLE {{ dataset }}.{{ table }} PARTITION BY DATE(
-    {{ partition_key }}
-) AS
+OR REPLACE TABLE `{{ dataset }}.{{ table }}` AS
 SELECT
     *
 EXCEPT
@@ -10,7 +8,7 @@ FROM
     (
         SELECT
             *,
-            ROW_NUMBER() over (
+            RANK() over (
                 PARTITION BY {{ p_key }}
                 ORDER BY
                     {{ incremental_key }} DESC

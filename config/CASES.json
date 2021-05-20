@@ -35,7 +35,6 @@
             "name": "LY_DO_KHONG_MUA_HANG",
             "type": "INTEGER"
         },
-        
         {
             "name": "NAME",
             "type": "STRING"

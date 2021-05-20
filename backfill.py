@@ -5,6 +5,8 @@ from argparse import ArgumentParser
 
 from google.cloud import pubsub_v1
 
+DATE_FORMAT = "%Y-%m-%d"
+
 
 def send_messages(table, start, end):
     publisher = pubsub_v1.PublisherClient()
@@ -20,20 +22,23 @@ def send_messages(table, start, end):
 
 
 def get_time_range(table, start, end):
-    start = datetime.strptime(start, "%Y-%m-%d")
-    end = datetime.strptime(end, "%Y-%m-%d")
+    start = datetime.strptime(start, DATE_FORMAT)
+    end = datetime.strptime(end, DATE_FORMAT)
     _start = start
     date_array = []
-    while _start <= end:
-        date_array.append(_start.strftime("%Y-%m-%d"))
-        _start = _start + timedelta(days=30)
-        if _start >= end:
-            date_array.append(end.strftime("%Y-%m-%d"))
-    messages = [date_array[i : i + 2] for i in range(len(date_array))]
+    days = 30
+    if start + timedelta(days=days) > end:
+        messages = [[i.strftime(DATE_FORMAT) for i in [start, end]]]
+    else:
+        while _start < end:
+            date_array.append(_start.strftime(DATE_FORMAT))
+            _start = _start + timedelta(days=30)
+            if _start >= end:
+                date_array.append(end.strftime(DATE_FORMAT))
+        messages = [date_array[i : i + 2] for i in range(len(date_array))]
+        
     messages = [
-        {"table": table, "start": i[0], "end": i[1]}
-        for i in messages
-        if len(i) == 2
+        {"table": table, "start": i[0], "end": i[1]} for i in messages if len(i) == 2
     ]
     return messages
 

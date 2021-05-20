@@ -3,8 +3,7 @@
         "p_key": [
             "STORE_TRAFFIC_ID"
         ],
-        "incremental_key": "LAST_MODIFIED_DATE",
-        "partition_key": "DATE_0"
+        "incremental_key": "LAST_MODIFIED_DATE"
     },
     "schema": [
         {

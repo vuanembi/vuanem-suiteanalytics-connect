@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - rank
   workflow_dispatch:
 
 env:

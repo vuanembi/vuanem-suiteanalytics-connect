@@ -1,8 +1,9 @@
 {
     "keys": {
-        "p_key": ["TRANSACTION_ID"],
-        "incremental_key": "DATE_LAST_MODIFIED",
-        "partition_key": "TRANDATE"
+        "p_key": [
+            "TRANSACTION_ID"
+        ],
+        "incremental_key": "DATE_LAST_MODIFIED"
     },
     "schema": [
         {

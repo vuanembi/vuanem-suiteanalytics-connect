@@ -151,10 +151,11 @@ class NetSuiteJob(metaclass=ABCMeta):
             google.cloud.bigquery.job.base_AsyncJob: LoadJob Results
         """        
 
+        load_target = self._fetch_load_target()
         write_disposition = self._fetch_write_disposition()
         loads = self.client.load_table_from_json(
             rows,
-            f"{DATASET}._stage_{self.table}",
+            load_target,
             job_config=bigquery.LoadJobConfig(
                 schema=self.schema,
                 create_disposition="CREATE_IF_NEEDED",
@@ -164,6 +165,10 @@ class NetSuiteJob(metaclass=ABCMeta):
 
         del rows
         return loads
+
+    @abstractmethod
+    def _fetch_load_target(self):
+        raise NotImplementedError
 
     @abstractmethod
     def _fetch_write_disposition(self):
@@ -181,16 +186,6 @@ class NetSuiteJob(metaclass=ABCMeta):
         Raises:
             NotImplementedError: Abstract Method
         """
-
-        raise NotImplementedError
-
-    @abstractmethod
-    def _fetch_updated_query(self):
-        """Abstract Method to get Update DDL
-
-        Raises:
-            NotImplementedError: Abstract Method
-        """   
 
         raise NotImplementedError
 
@@ -215,6 +210,7 @@ class NetSuiteJob(metaclass=ABCMeta):
                 "errors": loads.errors,
             }
             responses = self._make_responses(responses)
+            self.client.close()
             return responses
 
     @abstractmethod
@@ -263,25 +259,11 @@ class NetSuiteStandardJob(NetSuiteJob):
         write_disposition = "WRITE_TRUNCATE"
         return write_disposition
 
+    def _fetch_load_target(self):
+        return f"{DATASET}.{self.table}"
+
     def _update(self):
-        """Update procedure to standard table"""        
-
-        rendered_query = self._fetch_updated_query()
-        _ = self.client.query(rendered_query).result()
-
-    def _fetch_updated_query(self):
-        """Fetch Update DDL
-
-        Returns:
-            str: Update DDL
-        """
-
-        template = J2_ENV.get_template("update.sql.j2")
-        rendered_query = template.render(
-            dataset=DATASET,
-            table=self.table,
-        )
-        return rendered_query
+        pass
 
     def _make_responses(self, responses):
         """Make Responses for Job Results
@@ -345,7 +327,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
             str: Latest incremental Value
         """
 
-        template = J2_ENV.get_template("query_max_incremental.sql.j2")
+        template = J2_ENV.get_template("read_max_incremental.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
@@ -377,32 +359,21 @@ class NetSuiteIncrementalJob(NetSuiteJob):
         """
 
         return "WRITE_APPEND"
+    
+    def _fetch_load_target(self):
+        return f"{DATASET}._stage_{self.table}"
 
     def _update(self):
         """Update Procedure"""
 
-        if not self.manual:
-            rendered_query = self._fetch_updated_query()
-            _ = self.client.query(rendered_query).result()
-        else:
-            pass
-
-    def _fetch_updated_query(self):
-        """Fetch Update DDL
-
-        Returns:
-            str: Update DDL
-        """
-
-        template = J2_ENV.get_template("update_incremental.sql.j2")
+        template = J2_ENV.get_template("update_from_stage.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
             p_key=",".join(self.keys["p_key"]),
-            incremental_key=self.keys["incremental_key"],
-            partition_key=self.keys["partition_key"],
+            incremental_key=self.keys["incremental_key"]
         )
-        return rendered_query
+        _ = self.client.query(rendered_query).result()
 
     def _make_responses(self, responses):
         """Make responses for Job Result
