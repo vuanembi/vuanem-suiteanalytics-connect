@@ -26,13 +26,13 @@ def get_time_range(table, start, end):
     end = datetime.strptime(end, DATE_FORMAT)
     _start = start
     date_array = []
-    days = 30
+    days = 15
     if start + timedelta(days=days) > end:
         messages = [[i.strftime(DATE_FORMAT) for i in [start, end]]]
     else:
         while _start < end:
             date_array.append(_start.strftime(DATE_FORMAT))
-            _start = _start + timedelta(days=30)
+            _start = _start + timedelta(days=days)
             if _start >= end:
                 date_array.append(end.strftime(DATE_FORMAT))
         messages = [date_array[i : i + 2] for i in range(len(date_array))]
