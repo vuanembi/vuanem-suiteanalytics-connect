@@ -3,6 +3,9 @@
         "p_key": [
             "STORE_TRAFFIC_ID"
         ],
+        "rank_key": [
+            "STORE_TRAFFIC_ID"
+        ],
         "incremental_key": "LAST_MODIFIED_DATE"
     },
     "schema": [

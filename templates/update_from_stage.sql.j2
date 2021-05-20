@@ -3,18 +3,24 @@ OR REPLACE TABLE `{{ dataset }}.{{ table }}` AS
 SELECT
     *
 EXCEPT
-    (row_num)
+    (row_num, _rank)
 FROM
     (
         SELECT
             *,
-            RANK() over (
+            ROW_NUMBER() over (
                 PARTITION BY {{ p_key }}
                 ORDER BY
                     {{ incremental_key }} DESC
-            ) AS row_num
+            ) AS row_num,
+            RANK() over (
+                PARTITION BY {{ rank_key }}
+                ORDER BY
+                    {{ incremental_key }} DESC
+            ) AS _rank
         FROM
             `{{ dataset }}._stage_{{ table }}`
     )
 WHERE
     row_num = 1
+AND _rank = 1

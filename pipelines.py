@@ -371,6 +371,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
             dataset=DATASET,
             table=self.table,
             p_key=",".join(self.keys["p_key"]),
+            rank_key=",".join(self.keys["rank_key"]),
             incremental_key=self.keys["incremental_key"]
         )
         _ = self.client.query(rendered_query).result()

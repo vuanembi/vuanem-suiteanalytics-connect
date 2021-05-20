@@ -3,8 +3,10 @@
         "p_key": [
             "CASE_ID"
         ],
-        "incremental_key": "DATE_LAST_MODIFIED",
-        "partition_key": "CREATE_DATE"
+        "rank_key": [
+            "CASE_ID"
+        ],
+        "incremental_key": "DATE_LAST_MODIFIED"
     },
     "schema": [
         {

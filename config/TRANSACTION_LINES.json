@@ -1,6 +1,10 @@
 {
     "keys": {
         "p_key": [
+            "TRANSACTION_ID",
+            "TRANSACTION_LINE_ID"
+        ],
+        "rank_key": [
             "TRANSACTION_ID"
         ],
         "incremental_key": "TRANSACTIONS_DATE_LAST_MODIFIED"
