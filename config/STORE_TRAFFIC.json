@@ -6,7 +6,15 @@
         "rank_key": [
             "STORE_TRAFFIC_ID"
         ],
-        "incremental_key": "LAST_MODIFIED_DATE"
+        "incremental_key": [
+            "LAST_MODIFIED_DATE"
+        ],
+        "rank_incremental_key": [
+            "LAST_MODIFIED_DATE"
+        ],
+        "row_num_incremental_key": [
+            "LAST_MODIFIED_DATE"
+        ]
     },
     "schema": [
         {

@@ -11,8 +11,11 @@ DATASET = "NetSuite"
 DATE_FORMAT = "%Y-%m-%d"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-J2_LOADER = jinja2.FileSystemLoader(searchpath="./templates")
-J2_ENV = jinja2.Environment(loader=J2_LOADER)
+TEMPLATE_LOADER = jinja2.FileSystemLoader(searchpath="./templates")
+TEMPLATE_ENV = jinja2.Environment(loader=TEMPLATE_LOADER)
+
+QUERIES_LOADER = jinja2.FileSystemLoader(searchpath="./queries")
+QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
 
 
 class NetSuiteJob(metaclass=ABCMeta):
@@ -22,7 +25,7 @@ class NetSuiteJob(metaclass=ABCMeta):
         metaclass (abc.ABCMeta, optional): Abstract Class. Defaults to ABCMeta.
     """  
 
-    def __init__(self, table, query, schema):
+    def __init__(self, table):
         """Initiate NetSuite Job
 
         Args:
@@ -32,9 +35,10 @@ class NetSuiteJob(metaclass=ABCMeta):
         """
 
         self.table = table
-        self.query = query
-        self.schema = schema
         self.client = bigquery.Client()
+        with open(f"config/{table}.json") as f:
+            self.config = json.load(f)
+        self.schema = self.config['schema']
 
     @staticmethod
     def factory(table, start, end):
@@ -49,18 +53,14 @@ class NetSuiteJob(metaclass=ABCMeta):
             NetSuiteJob: NetSuiteJob
         """
 
-        query_path = f"queries/{table}.sql"
-        config_path = f"config/{table}.json"
-        with open(query_path, "r") as q, open(config_path, "r") as s:
+        query_path = f"queries/{table}.sql.j2"
+        with open(query_path, "r") as q:
             query = q.read()
-            config = json.load(s)
-            schema = config.get("schema")
-            keys = config.get("keys")
 
-        if "?" in query:
-            return NetSuiteIncrementalJob(table, query, schema, keys, start, end)
+        if "{{" in query:
+            return NetSuiteIncrementalJob(table, start, end)
         else:
-            return NetSuiteStandardJob(table, query, schema)
+            return NetSuiteStandardJob(table)
 
     def connect_ns(self):
         """Connect NetSuite using JDBC
@@ -94,7 +94,9 @@ class NetSuiteJob(metaclass=ABCMeta):
 
         conn = self.connect_ns()
         cursor = conn.cursor()
-        cursor = self._fetch_cursor(cursor)
+        query = self._build_query()
+        query
+        cursor.execute(query)
 
         columns = [column[0] for column in cursor.description]
         rows = []
@@ -110,6 +112,14 @@ class NetSuiteJob(metaclass=ABCMeta):
         cursor.close()
         conn.close()
         return rows
+
+    def _build_query(self):
+        template = QUERIES_ENV.get_template(f"{self.table}.sql.j2")
+        rendered_query = template.render(
+            start=getattr(self, 'start', None),
+            end=getattr(self, 'end', None)
+        )
+        return rendered_query
 
     @abstractmethod
     def _fetch_cursor(self, cursor):
@@ -225,7 +235,7 @@ class NetSuiteJob(metaclass=ABCMeta):
 
 
 class NetSuiteStandardJob(NetSuiteJob):
-    def __init__(self, table, query, schema):
+    def __init__(self, table):
         """Inititate Standard Job
 
         Args:
@@ -234,7 +244,7 @@ class NetSuiteStandardJob(NetSuiteJob):
             schema (list): Schema in JSON
         """
 
-        super().__init__(table, query, schema)
+        super().__init__(table)
 
     def _fetch_cursor(self, cursor):
         """Execute SQL without Params
@@ -279,7 +289,7 @@ class NetSuiteStandardJob(NetSuiteJob):
 
 
 class NetSuiteIncrementalJob(NetSuiteJob):
-    def __init__(self, table, query, schema, keys, start, end):
+    def __init__(self, table, start, end):
         """Inititate Incremental Job
 
         Args:
@@ -291,9 +301,10 @@ class NetSuiteIncrementalJob(NetSuiteJob):
             end (str): Date in %Y-%m-%d
         """
 
-        super().__init__(table, query, schema)
-        self.keys = keys
+        super().__init__(table)
+        self.keys = self.config.get("keys")
         self.start, self.end = self._fetch_time_range(start, end)
+        self
 
     def _fetch_time_range(self, start, end):
         """Fetch Start & End Date
@@ -312,12 +323,10 @@ class NetSuiteIncrementalJob(NetSuiteJob):
                 datetime.strptime(i, DATE_FORMAT).strftime(TIMESTAMP_FORMAT)
                 for i in [start, end]
             ]
-            self.manual = True
         else:
             now = datetime.utcnow()
             end = now.strftime(TIMESTAMP_FORMAT)
             start = self._fetch_latest_incre()
-            self.manual = False
         return start, end
 
     def _fetch_latest_incre(self):
@@ -327,7 +336,7 @@ class NetSuiteIncrementalJob(NetSuiteJob):
             str: Latest incremental Value
         """
 
-        template = J2_ENV.get_template("read_max_incremental.sql.j2")
+        template = TEMPLATE_ENV.get_template("read_max_incremental.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
@@ -366,14 +375,16 @@ class NetSuiteIncrementalJob(NetSuiteJob):
     def _update(self):
         """Update Procedure"""
 
-        template = J2_ENV.get_template("update_from_stage.sql.j2")
+        template = TEMPLATE_ENV.get_template("update_from_stage.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
             table=self.table,
-            p_key=",".join(self.keys["p_key"]),
-            rank_key=",".join(self.keys["rank_key"]),
-            incremental_key=self.keys["incremental_key"]
+            p_key=self.keys["p_key"],
+            rank_key=self.keys["rank_key"],
+            row_num_incremental_key=self.keys['row_num_incremental_key'],
+            rank_incremental_key=self.keys['rank_incremental_key']
         )
+        rendered_query
         _ = self.client.query(rendered_query).result()
 
     def _make_responses(self, responses):

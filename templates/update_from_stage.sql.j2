@@ -8,15 +8,37 @@ FROM
     (
         SELECT
             *,
-            ROW_NUMBER() over (
-                PARTITION BY {{ p_key }}
-                ORDER BY
-                    {{ incremental_key }} DESC
+            ROW_NUMBER() OVER (
+                PARTITION BY
+                    {% for key in p_key -%}
+                        {{ key }}
+                        {% if not loop.last -%}
+                            ,
+                        {%- endif %}
+                    {%- endfor %}
+                ORDER BY 
+                    {% for key in row_num_incremental_key -%}
+                        {{ key }} DESC
+                        {% if not loop.last -%}
+                            ,
+                        {%- endif %}
+                    {%- endfor %}
             ) AS row_num,
-            RANK() over (
-                PARTITION BY {{ rank_key }}
+            RANK() OVER (
+                PARTITION BY
+                {% for key in rank_key -%}
+                        {{ key }}
+                        {% if not loop.last -%}
+                            ,
+                        {%- endif %}
+                    {%- endfor %}
                 ORDER BY
-                    {{ incremental_key }} DESC
+                {% for key in rank_incremental_key -%}
+                    {{ key }} DESC
+                    {% if not loop.last -%}
+                        ,
+                    {%- endif %}
+                {%- endfor %}
             ) AS _rank
         FROM
             `{{ dataset }}._stage_{{ table }}`
