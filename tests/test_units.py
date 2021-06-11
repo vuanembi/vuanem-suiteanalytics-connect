@@ -26,9 +26,9 @@ def test_incremental_auto():
 
 def test_incremental_manual():
     data = {
-        "table": "TRANSACTION_LINES",
-        "start": datetime(2021, 5, 31).strftime("%Y-%m-%d"),
-        "end": datetime(2021, 6, 4).strftime("%Y-%m-%d"),
+        "table": "DELETED_RECORDS",
+        "start": datetime(2021, 1, 1).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 7, 1).strftime("%Y-%m-%d"),
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)
