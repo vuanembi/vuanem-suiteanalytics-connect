@@ -17,11 +17,6 @@ TEMPLATE_ENV = jinja2.Environment(loader=TEMPLATE_LOADER)
 QUERIES_LOADER = jinja2.FileSystemLoader(searchpath="./queries")
 QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
 
-ACCOUNT_ID = os.getenv("ACCOUNT_ID")
-ROLE_ID = os.getenv("ROLE_ID")
-USER = os.getenv("NS_UID")
-PWD = os.getenv("NS_PWD")
-
 BQ_CLIENT = bigquery.Client()
 
 
@@ -90,6 +85,12 @@ class NetSuite(metaclass=ABCMeta):
         )
 
     def _get_credentials(self):
+        """Get credentials according to Data Source
+
+        Returns:
+            tuple: Account ID, Role ID, User, PWD
+        """
+
         account_id = os.getenv("ACCOUNT_ID")
         if self.data_source == "NetSuite":
             role_id = os.getenv("ROLE_ID")
@@ -123,12 +124,17 @@ class NetSuite(metaclass=ABCMeta):
                 break
 
         self.num_processed = len(rows)
-
         cursor.close()
         conn.close()
         return rows
 
     def _build_query(self):
+        """Build query to get from NetSuite
+
+        Returns:
+            str: Query
+        """
+
         template = QUERIES_ENV.get_template(f"{self.data_source}/{self.table}.sql.j2")
         rendered_query = template.render(
             start=getattr(self, "start", None), end=getattr(self, "end", None)
@@ -192,6 +198,15 @@ class NetSuite(metaclass=ABCMeta):
 
     @abstractmethod
     def _get_load_target(self):
+        """Get Load target
+
+        Raises:
+            NotImplementedError: Abstract Method
+        
+        Return:
+            str: Load target 
+        """
+
         raise NotImplementedError
 
     @abstractmethod
@@ -200,12 +215,16 @@ class NetSuite(metaclass=ABCMeta):
 
         Raises:
             NotImplementedError: Abstract Method
+        
+        Return:
+            str: Write Disposition 
         """
+
         raise NotImplementedError
 
     @abstractmethod
     def _update(self):
-        """Update Main table using DDL
+        """Update from Stage to Main table
 
         Raises:
             NotImplementedError: Abstract Method
@@ -238,13 +257,19 @@ class NetSuite(metaclass=ABCMeta):
             return responses
 
     @abstractmethod
-    def _make_responses(self):
+    def _make_responses(self, responses):
         """Abstract Method to make responses
+
+        Args:
+            responses (dict): Initial Responses
 
         Raises:
             NotImplementedError: Abstract Method
-        """
 
+        Returns:
+            dict: Responses
+        """
+        
         raise NotImplementedError
 
 
@@ -335,15 +360,6 @@ class NetSuiteIncremental(NetSuite):
         return max_incre.strftime(TIMESTAMP_FORMAT)
 
     def _get_cursor(self, cursor):
-        """Execute SQL with Params
-
-        Args:
-            cursor (jaydebeapi.Cursor): Cursor
-
-        Returns:
-            jaydebeapi.Cursor: Cursor after Execution
-        """
-
         cursor.execute(self.query, [self.start, self.end])
         return cursor
 
@@ -354,8 +370,6 @@ class NetSuiteIncremental(NetSuite):
         return f"{DATASET}._stage_{self.table}"
 
     def _update(self):
-        """Update Procedure"""
-
         template = TEMPLATE_ENV.get_template("update_from_stage.sql.j2")
         rendered_query = template.render(
             dataset=DATASET,
@@ -369,15 +383,6 @@ class NetSuiteIncremental(NetSuite):
         _ = BQ_CLIENT.query(rendered_query).result()
 
     def _make_responses(self, responses):
-        """Make responses for Job Result
-
-        Args:
-            responses (dict): Initial Responses
-
-        Returns:
-            dict: Responses
-        """
-
         responses["start"] = self.start
         responses["end"] = self.end
         return responses
