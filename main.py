@@ -4,7 +4,8 @@ import base64
 
 import requests
 
-from pipelines import NetSuiteJob
+from models import NetSuite
+from broadcast import broadcast
 
 
 def main(request):
@@ -16,19 +17,22 @@ def main(request):
     Returns:
         dict: Responses
     """
-        
+
     request_json = request.get_json()
     message = request_json["message"]
     data_bytes = message["data"]
     data = json.loads(base64.b64decode(data_bytes).decode("utf-8"))
     print(data)
-
-    table = data.get("table", "CLASSES")
-    start = data.get("start", None)
-    end = data.get("end", None)
-    job = NetSuiteJob.factory(table, start, end)
-
-    responses = {"pipelines": "NetSuite", "results": job.run()}
+    if "broadcast" in data:
+        responses = broadcast(data["broadcast"])
+    else:
+        job = NetSuite.factory(
+            data.get("data_source", "NetSuite"),
+            data.get("table", "CLASSES"),
+            data.get("start", None),
+            data.get("end", None),
+        )
+        responses = {"pipelines": "NetSuite", "results": job.run()}
 
     print(responses)
 
