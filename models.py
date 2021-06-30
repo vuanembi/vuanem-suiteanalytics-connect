@@ -1,11 +1,13 @@
 import os
 import json
+import time
 from datetime import datetime
 from abc import ABCMeta, abstractmethod
 
 import jinja2
 import jaydebeapi
 from google.cloud import bigquery
+from google.api_core.exceptions import Forbidden
 
 DATASET = "NetSuite"
 DATE_FORMAT = "%Y-%m-%d"
@@ -18,6 +20,7 @@ QUERIES_LOADER = jinja2.FileSystemLoader(searchpath="./queries")
 QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
 
 BQ_CLIENT = bigquery.Client()
+MAX_LOAD_ATTEMPTS = 2
 
 
 class NetSuite(metaclass=ABCMeta):
@@ -183,18 +186,29 @@ class NetSuite(metaclass=ABCMeta):
 
         load_target = self._get_load_target()
         write_disposition = self._get_write_disposition()
-        loads = BQ_CLIENT.load_table_from_json(
-            rows,
-            load_target,
-            job_config=bigquery.LoadJobConfig(
-                schema=self.schema,
-                create_disposition="CREATE_IF_NEEDED",
-                write_disposition=write_disposition,
-            ),
-        ).result()
+        attempts = 0
+        while True:
+            try:
+                loads = BQ_CLIENT.load_table_from_json(
+                    rows,
+                    load_target,
+                    job_config=bigquery.LoadJobConfig(
+                        schema=self.schema,
+                        create_disposition="CREATE_IF_NEEDED",
+                        write_disposition=write_disposition,
+                    ),
+                ).result()
+                break
+            except Forbidden as e:
+                if attempts < MAX_LOAD_ATTEMPTS:
+                    time.sleep(30)
+                    attempts += 1
+                else:
+                    raise e
 
         del rows
         return loads
+
 
     @abstractmethod
     def _get_load_target(self):

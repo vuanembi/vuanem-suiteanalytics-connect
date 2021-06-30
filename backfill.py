@@ -8,7 +8,7 @@ from google.cloud import pubsub_v1
 DATE_FORMAT = "%Y-%m-%d"
 
 
-def send_messages(table, start, end):
+def send_messages(data_source, table, start, end):
     """Send Messages to PubSub Topic
 
     Args:
@@ -20,7 +20,7 @@ def send_messages(table, start, end):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
 
-    messages = get_time_range(table, start, end)
+    messages = get_time_range(data_source, table, start, end)
     print(messages)
     for i in messages:
         message_json = json.dumps(i)
@@ -29,7 +29,7 @@ def send_messages(table, start, end):
     print(f"Sent {len(messages)} messages")
 
 
-def get_time_range(table, start, end):
+def get_time_range(data_source, table, start, end):
     """Break down time range to smaller chunks
 
     Args:
@@ -45,7 +45,7 @@ def get_time_range(table, start, end):
     end = datetime.strptime(end, DATE_FORMAT)
     _start = start
     date_array = []
-    days = 15
+    days = 10
     if start + timedelta(days=days) > end:
         messages = [[i.strftime(DATE_FORMAT) for i in [start, end]]]
     else:
@@ -57,7 +57,7 @@ def get_time_range(table, start, end):
         messages = [date_array[i : i + 2] for i in range(len(date_array))]
         
     messages = [
-        {"table": table, "start": i[0], "end": i[1]} for i in messages if len(i) == 2
+        {"data_source": data_source, "table": table, "start": i[0], "end": i[1]} for i in messages if len(i) == 2
     ]
     return messages
 
@@ -66,12 +66,13 @@ def main():
     """Main function"""
 
     parser = ArgumentParser()
+    parser.add_argument("--source")
     parser.add_argument("--table")
     parser.add_argument("--start")
     parser.add_argument("--end")
     args = parser.parse_args()
 
-    _ = send_messages(args.table, args.start, args.end)
+    _ = send_messages(args.source, args.table, args.start, args.end)
 
 
 if __name__ == "__main__":
