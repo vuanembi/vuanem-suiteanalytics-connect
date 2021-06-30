@@ -253,8 +253,8 @@ class NetSuite(metaclass=ABCMeta):
                 "errors": loads.errors,
             }
             responses = self._make_responses(responses)
-            BQ_CLIENT.close()
-            return responses
+
+        return responses
 
     @abstractmethod
     def _make_responses(self, responses):
@@ -379,8 +379,7 @@ class NetSuiteIncremental(NetSuite):
             row_num_incremental_key=self.keys["row_num_incremental_key"],
             rank_incremental_key=self.keys["rank_incremental_key"],
         )
-        rendered_query
-        _ = BQ_CLIENT.query(rendered_query).result()
+        _ = BQ_CLIENT.query(rendered_query)
 
     def _make_responses(self, responses):
         responses["start"] = self.start

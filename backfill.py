@@ -9,6 +9,14 @@ DATE_FORMAT = "%Y-%m-%d"
 
 
 def send_messages(table, start, end):
+    """Send Messages to PubSub Topic
+
+    Args:
+        table (str): Table name
+        start (str): Date in %Y-%m-%d
+        end (str): Date in %Y-%m-%d
+    """
+
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(os.getenv("PROJECT_ID"), "vuanem_ns")
 
@@ -22,6 +30,17 @@ def send_messages(table, start, end):
 
 
 def get_time_range(table, start, end):
+    """Break down time range to smaller chunks
+
+    Args:
+        table (str): Table name
+        start (str): Date in %Y-%m-%d
+        end (str): Date in %Y-%m-%d
+
+    Returns:
+        list: List of time ranges
+    """
+
     start = datetime.strptime(start, DATE_FORMAT)
     end = datetime.strptime(end, DATE_FORMAT)
     _start = start
@@ -44,6 +63,8 @@ def get_time_range(table, start, end):
 
 
 def main():
+    """Main function"""
+
     parser = ArgumentParser()
     parser.add_argument("--table")
     parser.add_argument("--start")

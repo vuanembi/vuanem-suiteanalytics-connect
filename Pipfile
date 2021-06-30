@@ -17,6 +17,7 @@ google-cloud-pubsub = "*"
 black = "*"
 pytest = "*"
 pytest-dotenv = "*"
+pytest-xdist = "*"
 
 [requires]
 python_version = "3.8"

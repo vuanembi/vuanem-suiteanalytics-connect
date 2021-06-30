@@ -27,7 +27,6 @@ def publish(tables):
         message_json = json.dumps(
             {"data_source": table["data_source"], "table": table["table"]}
         )
-        message_json
         message_bytes = message_json.encode("utf-8")
         publisher.publish(topic_path, data=message_bytes).result()
     return len(tables)
@@ -35,7 +34,6 @@ def publish(tables):
 
 def broadcast(mode="incre"):
     tables = get_tables()
-    tables
     if mode == "incre":
         tables = [i for i in tables if i["incre"] is True]
     elif mode == "standard":
