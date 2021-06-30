@@ -26,6 +26,14 @@ def test_store_traffic():
     process(data)
 
 
+def test_support_person_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SUPPORT_PERSON_MAP",
+    }
+    process(data)
+
+
 def test_transactionLine():
     data = {"date_source": "NetSuite2", "table": "ns2_transactionLine"}
     process(data)

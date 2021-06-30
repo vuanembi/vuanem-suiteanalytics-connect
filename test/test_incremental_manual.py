@@ -52,6 +52,15 @@ def test_store_traffic():
     }
     process(data)
 
+def test_support_person_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SUPPORT_PERSON_MAP",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2018, 7, 2).strftime("%Y-%m-%d"),
+    }
+    process(data)
+
 
 def test_ns2_transactionLine():
     data = {

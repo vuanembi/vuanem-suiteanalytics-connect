@@ -190,10 +190,6 @@
             "type": "STRING"
         },
         {
-            "name": "SUPPORT_PERSON_ID",
-            "type": "INTEGER"
-        },
-        {
             "name": "TRANSACTION_TYPE",
             "type": "STRING"
         },
