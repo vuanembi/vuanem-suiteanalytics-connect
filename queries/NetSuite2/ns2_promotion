@@ -1,0 +1,19 @@
+SELECT 
+	enddate,
+	startdate,
+	discount,
+	description,
+	discounttype,
+	discounteditemssavedsearch,
+	displaylinediscounts,
+	externalid,
+	fixedprice,
+	id,
+	isinactive,
+	itemquantifier,
+	location,
+	name,
+	promotiontype,
+	rate,
+	repeatdiscount
+FROM promotionCode
