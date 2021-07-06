@@ -45,14 +45,14 @@ class NetSuite(metaclass=ABCMeta):
         self.schema = self.config["schema"]
 
     @staticmethod
-    def factory(data_source, table, start, end):        
+    def factory(data_source, table, start, end):
         """Factory Method for creating NetSuiteJob
 
         Args:
             data_source (str): Data Source
             table (str): Table Name
-            start (str): Date in %Y-%m-%d
-            end (str): Date in %Y-%m-%d
+            start (str|int): Start
+            end (str|int): End
 
         Returns:
             NetSuite: NetSuite pipelines
@@ -63,7 +63,10 @@ class NetSuite(metaclass=ABCMeta):
             query = q.read()
 
         if "{{" in query:
-            return NetSuiteIncremental(data_source, table, start, end)
+            if "id_start" in query:
+                return NetSuiteIncrementalID(data_source, table, start, end)
+            elif "time_start" in query:
+                return NetSuiteIncrementalTime(data_source, table, start, end)
         else:
             return NetSuiteStandard(data_source, table)
 
@@ -140,22 +143,12 @@ class NetSuite(metaclass=ABCMeta):
 
         template = QUERIES_ENV.get_template(f"{self.data_source}/{self.table}.sql.j2")
         rendered_query = template.render(
-            start=getattr(self, "start", None), end=getattr(self, "end", None)
+            time_start=getattr(self, "start", None),
+            time_end=getattr(self, "end", None),
+            id_start=getattr(self, "start", None),
+            id_end=getattr(self, "end", None),
         )
         return rendered_query
-
-    @abstractmethod
-    def _get_cursor(self, cursor):
-        """Get Cursor
-
-        Args:
-            cursor (jaydebeapi.Cursor): JDBC Cursor
-
-        Raises:
-            NotImplementedError: Abstract Method
-        """
-
-        raise NotImplementedError
 
     def transform(self, rows):
         """Transform data extracted from NetSuite
@@ -209,16 +202,15 @@ class NetSuite(metaclass=ABCMeta):
         del rows
         return loads
 
-
     @abstractmethod
     def _get_load_target(self):
         """Get Load target
 
         Raises:
             NotImplementedError: Abstract Method
-        
+
         Return:
-            str: Load target 
+            str: Load target
         """
 
         raise NotImplementedError
@@ -229,9 +221,9 @@ class NetSuite(metaclass=ABCMeta):
 
         Raises:
             NotImplementedError: Abstract Method
-        
+
         Return:
-            str: Write Disposition 
+            str: Write Disposition
         """
 
         raise NotImplementedError
@@ -283,7 +275,7 @@ class NetSuite(metaclass=ABCMeta):
         Returns:
             dict: Responses
         """
-        
+
         raise NotImplementedError
 
 
@@ -297,10 +289,6 @@ class NetSuiteStandard(NetSuite):
         """
 
         super().__init__(data_source, table)
-
-    def _get_cursor(self, cursor):
-        cursor.execute(self.query)
-        return cursor
 
     def _get_write_disposition(self):
         write_disposition = "WRITE_TRUNCATE"
@@ -323,16 +311,66 @@ class NetSuiteIncremental(NetSuite):
         Args:
             data_source (str): Data Source
             table (str): Table Name
-            keys (dict): Keys for DDL
-            start (str): Date in %Y-%m-%d
+            start (str): Start
             end (str): Date in %Y-%m-%d
         """
 
         super().__init__(data_source, table)
         self.keys = self.config.get("keys")
-        self.start, self.end = self._get_time_range(start, end)
+        self.start, self.end = self._get_incre_range(start, end)
 
-    def _get_time_range(self, start, end):
+    @abstractmethod
+    def _get_incre_range(self, start, end):
+        raise NotImplementedError
+
+    def _get_latest_incre(self):
+        """Get latest incremental value
+
+        Returns:
+            str: Latest incremental Value
+        """
+
+        template = TEMPLATE_ENV.get_template(f"read_max_incremental.sql.j2")
+        rendered_query = template.render(
+            dataset=DATASET,
+            table=self.table,
+            incremental_key=self.keys["incremental_key"],
+        )
+        rows = BQ_CLIENT.query(rendered_query).result()
+        row = [row for row in rows][0]
+        return row.get("incre")
+
+    def _get_write_disposition(self):
+        return "WRITE_APPEND"
+
+    def _get_load_target(self):
+        return f"{DATASET}._stage_{self.table}"
+
+    def _update(self):
+        """Update from stage table to main table"""
+
+        template = TEMPLATE_ENV.get_template("update_from_stage.sql.j2")
+        rendered_query = template.render(
+            dataset=DATASET,
+            table=self.table,
+            p_key=self.keys["p_key"],
+            rank_key=self.keys["rank_key"],
+            row_num_incremental_key=self.keys["row_num_incremental_key"],
+            rank_incremental_key=self.keys["rank_incremental_key"],
+        )
+        _ = BQ_CLIENT.query(rendered_query)
+
+    def _make_responses(self, responses):
+        responses["start"] = self.start
+        responses["end"] = self.end
+        return responses
+
+
+class NetSuiteIncrementalTime(NetSuiteIncremental):
+    def __init__(self, data_source, table, start, end):
+        super().__init__(data_source, table, start, end)
+
+    def _get_incre_range(self, start, end):
         """Get Start & End Date
         If no start & end specified, defaults to latest value got from the main table
 
@@ -352,50 +390,28 @@ class NetSuiteIncremental(NetSuite):
         else:
             now = datetime.utcnow()
             end = now.strftime(TIMESTAMP_FORMAT)
-            start = self._get_latest_incre()
+            start = self._get_latest_incre().strftime(TIMESTAMP_FORMAT)
         return start, end
 
-    def _get_latest_incre(self):
-        """Get latest incremental value
+
+class NetSuiteIncrementalID(NetSuiteIncremental):
+    def __init__(self, data_source, table, start, end):
+        super().__init__(data_source, table, start, end)
+
+    def _get_incre_range(self, start, end):
+        """Get Start & End ID
+
+        Args:
+            start (int): Start ID
+            end (int): End ID
 
         Returns:
-            str: Latest incremental Value
+            tuple: (start, end)
         """
 
-        template = TEMPLATE_ENV.get_template(f"read_max_incremental.sql.j2")
-        rendered_query = template.render(
-            dataset=DATASET,
-            table=self.table,
-            incremental_key=self.keys["incremental_key"],
-        )
-        rows = BQ_CLIENT.query(rendered_query).result()
-        row = [row for row in rows][0]
-        max_incre = row.get("incre")
-        return max_incre.strftime(TIMESTAMP_FORMAT)
-
-    def _get_cursor(self, cursor):
-        cursor.execute(self.query, [self.start, self.end])
-        return cursor
-
-    def _get_write_disposition(self):
-        return "WRITE_APPEND"
-
-    def _get_load_target(self):
-        return f"{DATASET}._stage_{self.table}"
-
-    def _update(self):
-        template = TEMPLATE_ENV.get_template("update_from_stage.sql.j2")
-        rendered_query = template.render(
-            dataset=DATASET,
-            table=self.table,
-            p_key=self.keys["p_key"],
-            rank_key=self.keys["rank_key"],
-            row_num_incremental_key=self.keys["row_num_incremental_key"],
-            rank_incremental_key=self.keys["rank_incremental_key"],
-        )
-        _ = BQ_CLIENT.query(rendered_query)
-
-    def _make_responses(self, responses):
-        responses["start"] = self.start
-        responses["end"] = self.end
-        return responses
+        if start and end:
+            start, end = start, end
+        else:
+            end = 50e7
+            start = self._get_latest_incre()
+        return start, end

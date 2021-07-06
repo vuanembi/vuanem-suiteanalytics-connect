@@ -1,0 +1,23 @@
+SELECT
+    a.couponcode,
+    a.eligiblefreegifts,
+    a.freegiftsadded,
+    a.promocode,
+    a.promotiontype,
+    a.purchasediscount,
+    a.shippingdiscount,
+    a.transaction,
+    b.lastmodifieddate
+FROM
+    tranPromotion a
+    LEFT JOIN transaction b
+    ON b.id = a.transaction
+WHERE
+    b.lastmodifieddate >= TO_DATE(
+        '{{ time_start }}',
+        'YYYY-MM-DD HH24:MI:SS'
+    )
+    AND b.lastmodifieddate <= TO_DATE(
+        '{{ time_end }}',
+        'YYYY-MM-DD HH24:MI:SS'
+    )

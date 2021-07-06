@@ -1,0 +1,11 @@
+SELECT
+    code,
+    datesent,
+    externalid,
+    id,
+    promotion
+FROM
+    couponCode cc
+WHERE
+    id >= {{ id_start }}
+    AND id <= {{ id_end }}

@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from .utils import process
 
 
@@ -45,4 +43,11 @@ def test_system_notes_price():
 
 def test_vendors():
     data = {"data_source": "NetSuite", "table": "VENDORS"}
+    process(data)
+
+def test_ns2_promotionCode():
+    data = {
+        "data_source": "NetSuite2",
+        "table": "ns2_promotionCode",
+    }
     process(data)

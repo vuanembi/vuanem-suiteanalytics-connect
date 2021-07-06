@@ -34,6 +34,16 @@ def test_support_person_map():
     process(data)
 
 
-def test_transactionLine():
-    data = {"date_source": "NetSuite2", "table": "ns2_transactionLine"}
+def test_ns2_transactionLine():
+    data = {"data_source": "NetSuite2", "table": "ns2_transactionLine"}
+    process(data)
+
+
+def test_ns2_couponCode():
+    data = {"data_source": "NetSuite2", "table": "ns2_couponCode"}
+    process(data)
+
+
+def test_ns2_tranPromo():
+    data = {"data_source": "NetSuite2", "table": "ns2_tranPromotion"}
     process(data)
