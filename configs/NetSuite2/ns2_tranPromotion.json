@@ -1,10 +1,14 @@
 {
     "keys": {
         "p_key": [
-            "transaction"
+            "transaction",
+            "couponcode",
+            "promocode"
         ],
         "rank_key": [
-            "transaction"
+            "transaction",
+            "couponcode",
+            "promocode"
         ],
         "incremental_key": [
             "lastmodifieddate"
