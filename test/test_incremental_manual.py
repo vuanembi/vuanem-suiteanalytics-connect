@@ -91,3 +91,13 @@ def test_ns2_tranPromo():
         "end": datetime(2021, 7, 5).strftime("%Y-%m-%d"),
     }
     process(data)
+
+
+def test_loyalty_transaction():
+    data = {
+        "data_source": "NetSuite",
+        "table": "LOYALTY_TRANSACTION",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 7, 2).strftime("%Y-%m-%d"),
+    }
+    process(data)
