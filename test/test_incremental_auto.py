@@ -47,3 +47,8 @@ def test_ns2_couponCode():
 def test_ns2_tranPromo():
     data = {"data_source": "NetSuite2", "table": "ns2_tranPromotion"}
     process(data)
+
+
+def test_loyalty_transaction():
+    data = {"data_source": "NetSuite", "table": "LOYALTY_TRANSACTION"}
+    process(data)
