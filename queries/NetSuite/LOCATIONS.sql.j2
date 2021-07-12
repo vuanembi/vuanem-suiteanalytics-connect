@@ -20,6 +20,7 @@ FROM
             LOCATION.FRONT_LENGTH,
             LOCATION.STORE_MODEL,
             LOCATION.ISCLOSE,
+            LOCATION.EMAIL,
             FIRST_TRAFFIC_DATE.FIRST_TRAFFIC_DATE
         FROM
             (
@@ -38,6 +39,7 @@ FROM
                     LOCATIONS.ASM_ID,
                     LOCATIONS.AREA_M2,
                     LOCATIONS.FRONT_LENGTH,
+                    LOCATIONS.EMAIL,
                     STORE_MODEL.LIST_ITEM_NAME AS STORE_MODEL,
                     CASE
                         WHEN LOCATIONS.CLOSE_DATE IS NULL

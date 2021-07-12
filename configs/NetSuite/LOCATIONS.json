@@ -37,6 +37,10 @@
             "type": "INTEGER"
         },
         {
+            "name": "EMAIL",
+            "type": "STRING"
+        },
+        {
             "name": "FIRST_TRAFFIC_DATE",
             "type": "TIMESTAMP"
         },
