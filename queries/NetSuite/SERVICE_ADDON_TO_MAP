@@ -1,0 +1,4 @@
+SELECT 
+	LIST_SERVICE_ADD_ON_TO_ID,
+	TRANSACTION_ID
+FROM "Vua Nem Joint Stock Company".Administrator.SERVICE_ADDON_TO_MAP
