@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 import jinja2
 import jaydebeapi
 from google.cloud import bigquery
-from google.api_core.exceptions import Forbidden
+from google.api_core.exceptions import Forbidden, NotFound
 
 DATASET = "NetSuite"
 DATE_FORMAT = "%Y-%m-%d"
@@ -336,9 +336,13 @@ class NetSuiteIncremental(NetSuite):
             table=self.table,
             incremental_key=self.keys["incremental_key"],
         )
-        rows = BQ_CLIENT.query(rendered_query).result()
-        row = [row for row in rows][0]
-        return row.get("incre")
+        try:
+            rows = BQ_CLIENT.query(rendered_query).result()
+            row = [row for row in rows][0]
+            start = row['incre']
+        except NotFound:
+            start = datetime(2018, 6, 30)
+        return start
 
     def _get_write_disposition(self):
         return "WRITE_APPEND"

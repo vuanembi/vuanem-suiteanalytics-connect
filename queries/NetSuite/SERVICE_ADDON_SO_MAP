@@ -1,4 +1,0 @@
-SELECT 
-	LIST_SERVICE_ADD_ON_SO_ID,
-	TRANSACTION_ID
-FROM "Vua Nem Joint Stock Company".Administrator.SERVICE_ADDON_SO_MAP

@@ -1,0 +1,34 @@
+{
+    "keys": {
+        "p_key": [
+            "TRANSACTION_ID",
+            "LIST_SERVICE_ADD_ON_TO_ID"
+        ],
+        "rank_key": [
+            "TRANSACTION_ID"
+        ],
+        "incremental_key": [
+            "DATE_LAST_MODIFIED"
+        ],
+        "rank_incremental_key": [
+            "DATE_LAST_MODIFIED"
+        ],
+        "row_num_incremental_key": [
+            "DATE_LAST_MODIFIED"
+        ]
+    },
+    "schema": [
+        {
+            "name": "LIST_SERVICE_ADD_ON_TO_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "TRANSACTION_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "DATE_LAST_MODIFIED",
+            "type": "TIMESTAMP"
+        }
+    ]
+}

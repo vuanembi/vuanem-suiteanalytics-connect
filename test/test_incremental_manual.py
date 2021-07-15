@@ -101,3 +101,22 @@ def test_loyalty_transaction():
         "end": datetime(2021, 7, 2).strftime("%Y-%m-%d"),
     }
     process(data)
+
+def test_service_addon_so_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SERVICE_ADDON_SO_MAP",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 7, 2).strftime("%Y-%m-%d"),
+    }
+    process(data)
+
+def test_service_addon_to_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SERVICE_ADDON_TO_MAP",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2021, 7, 2).strftime("%Y-%m-%d"),
+    }
+    process(data)
+

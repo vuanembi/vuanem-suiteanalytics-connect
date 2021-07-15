@@ -52,3 +52,19 @@ def test_ns2_tranPromo():
 def test_loyalty_transaction():
     data = {"data_source": "NetSuite", "table": "LOYALTY_TRANSACTION"}
     process(data)
+
+
+def test_service_addon_so_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SERVICE_ADDON_SO_MAP",
+    }
+    process(data)
+
+def test_service_addon_to_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SERVICE_ADDON_TO_MAP",
+    }
+    process(data)
+
