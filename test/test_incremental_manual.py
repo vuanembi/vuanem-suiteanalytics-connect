@@ -120,3 +120,11 @@ def test_service_addon_to_map():
     }
     process(data)
 
+def test_system_notes():
+    data = {
+        "data_source": "NetSuite",
+        "table": "SYSTEM_NOTES",
+        "start": datetime(2018, 6, 30).strftime("%Y-%m-%d"),
+        "end": datetime(2018, 7, 2).strftime("%Y-%m-%d"),
+    }
+    process(data)

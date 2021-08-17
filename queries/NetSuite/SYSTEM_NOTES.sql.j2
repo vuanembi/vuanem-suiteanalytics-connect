@@ -1,4 +1,5 @@
 SELECT 
+	RECORD_ID,
 	DATE_CREATED,
 	VALUE_NEW,
 	VALUE_OLD,
@@ -6,3 +7,6 @@ SELECT
 	CUSTOM_FIELD,
 	AUTHOR_ID
 FROM "Vua Nem Joint Stock Company".Administrator.SYSTEM_NOTES
+WHERE
+	DATE_CREATED >= '{{ time_start }}'
+	AND DATE_CREATED <= '{{ time_end }}'
