@@ -8,14 +8,15 @@ def get_tables():
     tables = []
     for data_source in ["NetSuite", "NetSuite2"]:
         for i in os.listdir(f"configs/{data_source}"):
-            with open(f"configs/{data_source}/{i}", "r") as c:
-                if json.load(c).get("keys"):
-                    incre = True
-                else:
-                    incre = False
-            tables.append(
-                {"data_source": data_source, "table": i.split(".")[0], "incre": incre}
-            )
+            if i != "SYSTEM_NOTES.sql.j2":
+                with open(f"configs/{data_source}/{i}", "r") as c:
+                    if json.load(c).get("keys"):
+                        incre = True
+                    else:
+                        incre = False
+                tables.append(
+                    {"data_source": data_source, "table": i.split(".")[0], "incre": incre}
+                )
     return tables
 
 
