@@ -180,18 +180,16 @@ class NetSuite(metaclass=ABCMeta):
             google.cloud.bigquery.job.base_AsyncJob: LoadJob Results
         """
 
-        load_target = self._get_load_target()
-        write_disposition = self._get_write_disposition()
         attempts = 0
         while True:
             try:
                 loads = BQ_CLIENT.load_table_from_json(
                     rows,
-                    load_target,
+                    self._get_load_target(),
                     job_config=bigquery.LoadJobConfig(
                         schema=self.schema,
                         create_disposition="CREATE_IF_NEEDED",
-                        write_disposition=write_disposition,
+                        write_disposition=self._get_write_disposition(),
                     ),
                 ).result()
                 break

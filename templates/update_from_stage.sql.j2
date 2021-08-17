@@ -3,7 +3,7 @@ OR REPLACE TABLE `{{ dataset }}.{{ table }}` AS
 SELECT
     *
 EXCEPT
-    (row_num, _rank)
+    (`row_num`, `_rank`)
 FROM
     (
         SELECT
@@ -23,7 +23,7 @@ FROM
                             ,
                         {%- endif %}
                     {%- endfor %}
-            ) AS row_num,
+            ) AS `row_num`,
             RANK() OVER (
                 PARTITION BY
                 {% for key in rank_key -%}
@@ -39,10 +39,10 @@ FROM
                         ,
                     {%- endif %}
                 {%- endfor %}
-            ) AS _rank
+            ) AS `_rank`
         FROM
-            `{{ dataset }}._stage_{{ table }}`
+            `{{ dataset }}`.`_stage_{{ table }}`
     )
 WHERE
-    row_num = 1
-AND _rank = 1
+    `row_num` = 1
+AND `_rank` = 1

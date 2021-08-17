@@ -6,9 +6,7 @@
             "promocode"
         ],
         "rank_key": [
-            "transaction",
-            "couponcode",
-            "promocode"
+            "transaction"
         ],
         "incremental_key": [
             "lastmodifieddate"
