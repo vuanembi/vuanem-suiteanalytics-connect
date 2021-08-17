@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-python-dotenv = "*"
 google-cloud-bigquery = "*"
 requests = "*"
 functions-framework = "*"
@@ -16,7 +15,6 @@ google-cloud-pubsub = "*"
 [dev-packages]
 black = "*"
 pytest = "*"
-pytest-dotenv = "*"
 
 [requires]
 python_version = "3.8"
