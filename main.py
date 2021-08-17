@@ -27,19 +27,20 @@ def main(request):
         responses = broadcast(data["broadcast"])
     else:
         job = NetSuite.factory(
-            data.get("data_source", "NetSuite"),
-            data.get("table", "CLASSES"),
+            data['data_source'],
+            data['table'],
             data.get("start", None),
             data.get("end", None),
         )
-        responses = {"pipelines": "NetSuite", "results": job.run()}
+        responses = {
+            "pipelines": "NetSuite",
+            "results": job.run(),
+        }
 
     print(responses)
 
-    _ = requests.post(
-        "https://api.telegram.org/bot{token}/sendMessage".format(
-            token=os.getenv("TELEGRAM_TOKEN")
-        ),
+    requests.post(
+        f"https://api.telegram.org/bot{os.getenv('TELEGRAM_TOKEN')}/sendMessage",
         json={
             "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
             "text": json.dumps(responses, indent=4),

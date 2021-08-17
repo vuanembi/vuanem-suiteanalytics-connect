@@ -86,7 +86,10 @@ class NetSuite(metaclass=ABCMeta):
                 "Encrypted=1;"
                 f"CustomProperties=(AccountID={account_id};RoleID={role_id})"
             ),
-            {"user": user, "password": pwd},
+            {
+                "user": user,
+                "password": pwd,
+            },
             "NQjc.jar",
         )
 
@@ -198,8 +201,6 @@ class NetSuite(metaclass=ABCMeta):
                     attempts += 1
                 else:
                     raise e
-
-        del rows
         return loads
 
     @abstractmethod
@@ -246,37 +247,18 @@ class NetSuite(metaclass=ABCMeta):
         """
 
         rows = self.extract()
-        if len(rows) == 0:
-            responses = {"table": self.table, "num_processed": self.num_processed}
-        else:
+        responses = {
+            "table": self.table,
+            "start": getattr(self, "start", None),
+            "end": getattr(self, "end", None),
+            "num_processed": len(rows),
+        }
+        if len(rows) > 0:
             rows = self.transform(rows)
             loads = self.load(rows)
             self._update()
-            responses = {
-                "table": self.table,
-                "num_processed": self.num_processed,
-                "output_rows": loads.output_rows,
-                "errors": loads.errors,
-            }
-            responses = self._make_responses(responses)
-
+            responses["output_rows"] = loads.output_rows
         return responses
-
-    @abstractmethod
-    def _make_responses(self, responses):
-        """Abstract Method to make responses
-
-        Args:
-            responses (dict): Initial Responses
-
-        Raises:
-            NotImplementedError: Abstract Method
-
-        Returns:
-            dict: Responses
-        """
-
-        raise NotImplementedError
 
 
 class NetSuiteStandard(NetSuite):
@@ -299,9 +281,6 @@ class NetSuiteStandard(NetSuite):
 
     def _update(self):
         pass
-
-    def _make_responses(self, responses):
-        return responses
 
 
 class NetSuiteIncremental(NetSuite):
@@ -339,7 +318,7 @@ class NetSuiteIncremental(NetSuite):
         try:
             rows = BQ_CLIENT.query(rendered_query).result()
             row = [row for row in rows][0]
-            start = row['incre']
+            start = row["incre"]
         except NotFound:
             start = datetime(2018, 6, 30)
         return start
@@ -362,12 +341,7 @@ class NetSuiteIncremental(NetSuite):
             row_num_incremental_key=self.keys["row_num_incremental_key"],
             rank_incremental_key=self.keys["rank_incremental_key"],
         )
-        _ = BQ_CLIENT.query(rendered_query)
-
-    def _make_responses(self, responses):
-        responses["start"] = self.start
-        responses["end"] = self.end
-        return responses
+        BQ_CLIENT.query(rendered_query)
 
 
 class NetSuiteIncrementalTime(NetSuiteIncremental):

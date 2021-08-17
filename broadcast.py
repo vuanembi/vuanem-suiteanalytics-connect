@@ -15,7 +15,11 @@ def get_tables():
                     else:
                         incre = False
                 tables.append(
-                    {"data_source": data_source, "table": i.split(".")[0], "incre": incre}
+                    {
+                        "data_source": data_source,
+                        "table": i.split(".")[0],
+                        "incre": incre,
+                    }
                 )
     return tables
 
@@ -26,7 +30,10 @@ def publish(tables):
 
     for table in tables:
         message_json = json.dumps(
-            {"data_source": table["data_source"], "table": table["table"]}
+            {
+                "data_source": table["data_source"],
+                "table": table["table"],
+            }
         )
         message_bytes = message_json.encode("utf-8")
         publisher.publish(topic_path, data=message_bytes).result()
@@ -41,4 +48,6 @@ def broadcast(mode="incre"):
         tables = [i for i in tables if i["incre"] is False]
     else:
         raise NotImplementedError
-    return {"message_sent": publish(tables)}
+    return {
+        "message_sent": publish(tables),
+    }
