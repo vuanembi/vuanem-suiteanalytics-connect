@@ -55,9 +55,16 @@ def get_time_range(data_source, table, start, end):
             if _start >= end:
                 date_array.append(end.strftime(DATE_FORMAT))
         messages = [date_array[i : i + 2] for i in range(len(date_array))]
-        
+
     messages = [
-        {"data_source": data_source, "table": table, "start": i[0], "end": i[1]} for i in messages if len(i) == 2
+        {
+            "data_source": data_source,
+            "table": table,
+            "start": i[0],
+            "end": i[1],
+        }
+        for i in messages
+        if len(i) == 2
     ]
     return messages
 
