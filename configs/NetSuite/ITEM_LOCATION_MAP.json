@@ -11,6 +11,10 @@
         {
             "name": "DISPLAYNAME",
             "type": "STRING"
+        },
+        {
+            "name": "ON_HAND_COUNT",
+            "type": "INTEGER"
         }
     ]
 }
