@@ -1,0 +1,10 @@
+SELECT
+	NEW_ITEM_CODE,
+	LOCATION_ID,
+	i.DISPLAYNAME
+FROM
+	"Vua Nem Joint Stock Company".Administrator.ITEM_LOCATION_MAP ilm
+LEFT JOIN
+    "Vua Nem Joint Stock Company".Administrator.ITEMS i
+ON
+	ilm.NEW_ITEM_CODE = i.NEW_ITEM_CODE

@@ -95,3 +95,10 @@ def test_ns2_promotionCode():
         "table": "ns2_promotionCode",
     }
     process(data)
+
+def test_item_location_map():
+    data = {
+        "data_source": "NetSuite",
+        "table": "ITEM_LOCATION_MAP",
+    }
+    process(data)

@@ -1,0 +1,16 @@
+{
+    "schema": [
+        {
+            "name": "NEW_ITEM_CODE",
+            "type": "STRING"
+        },
+        {
+            "name": "LOCATION_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "DISPLAYNAME",
+            "type": "STRING"
+        }
+    ]
+}
