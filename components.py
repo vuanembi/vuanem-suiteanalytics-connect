@@ -27,10 +27,7 @@ QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
 
 
 class JDBCConnector(metaclass=ABCMeta):
-    @property
-    @abstractmethod
-    def account_id(self):
-        pass
+    account_id = os.getenv("ACCOUNT_ID")
 
     @property
     @abstractmethod
@@ -66,7 +63,6 @@ class JDBCConnector(metaclass=ABCMeta):
 
 class NetSuiteConnector(JDBCConnector):
     data_source = "NetSuite"
-    account_id = os.getenv("ACCOUNT_ID")
     role_id = os.getenv("ROLE_ID")
     user = os.getenv("NS_UID")
     pwd = os.getenv("NS_PWD")
@@ -74,7 +70,6 @@ class NetSuiteConnector(JDBCConnector):
 
 class NetSuite2Connector(JDBCConnector):
     data_source = "NetSuite2"
-    account_id = os.getenv("ACCOUNT_ID2")
     role_id = os.getenv("ROLE_ID2")
     user = os.getenv("NS_UID2")
     pwd = os.getenv("NS_PWD2")
