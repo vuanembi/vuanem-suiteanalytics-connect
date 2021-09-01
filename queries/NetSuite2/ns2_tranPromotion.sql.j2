@@ -14,10 +14,10 @@ FROM
     ON b.id = a.transaction
 WHERE
     b.lastmodifieddate >= TO_DATE(
-        '{{ time_start }}',
+        '{{ start }}',
         'YYYY-MM-DD HH24:MI:SS'
     )
     AND b.lastmodifieddate <= TO_DATE(
-        '{{ time_end }}',
+        '{{ end }}',
         'YYYY-MM-DD HH24:MI:SS'
     )

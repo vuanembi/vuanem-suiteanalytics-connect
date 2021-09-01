@@ -120,8 +120,8 @@ class StandardGetter(Getter):
 class IncrementalGetter(Getter):
     def __init__(self, model):
         super().__init__(model)
-        self.start, self.end = self._get_time_range(model.start, model.end)
         self.keys = model.keys
+        self.start, self.end = self._get_time_range(model.start, model.end)
 
     def _get_start(self):
         template = TEMPLATE_ENV.get_template(f"read_max_incremental.sql.j2")
@@ -140,8 +140,8 @@ class IncrementalGetter(Getter):
 
     def _build_query(self):
         return self.template.render(
-            time_start=self.start,
-            time_end=self.end,
+            start=self.start,
+            end=self.end,
         )
 
 
@@ -252,8 +252,8 @@ class BigQueryIncrementalLoader(BigQueryLoader):
             table=self.table,
             p_key=self.keys["p_key"],
             rank_key=self.keys["rank_key"],
-            row_num_incremental_key=self.keys["row_num_incremental_key"],
-            rank_incremental_key=self.keys["rank_incremental_key"],
+            row_num_incre_key=self.keys["row_num_incre_key"],
+            rank_incre_key=self.keys["rank_incre_key"],
         )
         BQ_CLIENT.query(rendered_query)
 

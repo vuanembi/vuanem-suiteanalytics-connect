@@ -2,28 +2,32 @@ import pytest
 
 from .utils import process
 
-TABLES = [
-    # "CASES",
-    # "DELETED_RECORDS",
+TIME_TABLES = [
+    "CASES",
+    "DELETED_RECORDS",
     "TRANSACTIONS",
-    # "TRANSACTION_LINES",
-    # "STORE_TRAFFIC",
-    # "SUPPORT_PERSON_MAP",
-    # "ns2_transactionLine",
-    # "ns2_couponCode",
-    # "ns2_tranPromotion",
-    # "LOYALTY_TRANSACTION",
-    # "SERVICE_ADDON_SO_MAP",
-    # "SERVICE_ADDON_TO_MAP",
+    "TRANSACTION_LINES",
+    "STORE_TRAFFIC",
+    "SUPPORT_PERSON_MAP",
+    "ns2_transactionLine",
+    "ns2_tranPromotion",
+    "LOYALTY_TRANSACTION",
+    "SERVICE_ADDON_SO_MAP",
+    "SERVICE_ADDON_TO_MAP",
+]
+ID_TABLES = [
+    "ns2_couponCode",
 ]
 
-START = "2018-06-30"
-END = "2018-07-02"
+TIME_START = "2021-07-01"
+TIME_END = "2021-07-02"
+ID_START = 1
+ID_END = 1000
 
 
 @pytest.mark.parametrize(
     "table",
-    TABLES,
+    [*TIME_TABLES, *ID_TABLES],
 )
 def test_auto(table):
     data = {
@@ -34,12 +38,25 @@ def test_auto(table):
 
 @pytest.mark.parametrize(
     "table",
-    TABLES,
+    TIME_TABLES,
 )
-def test_manual(table):
+def test_manual_time(table):
     data = {
         "table": table,
-        "start": START,
-        "end": END,
+        "start": TIME_START,
+        "end": TIME_END,
+    }
+    process(data)
+
+
+@pytest.mark.parametrize(
+    "table",
+    ID_TABLES,
+)
+def test_manual_id(table):
+    data = {
+        "table": table,
+        "start": ID_START,
+        "end": ID_END,
     }
     process(data)
