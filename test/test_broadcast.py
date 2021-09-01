@@ -1,24 +1,21 @@
-from datetime import datetime
 from unittest.mock import Mock
 
-from main import main
+import pytest
 
+from main import main
 from .utils import encode_data
 
 
-def test_broadcast_standard():
+@pytest.mark.parametrize(
+    "broadcast",
+    [
+        "standard",
+        "incre",
+    ],
+)
+def test_broadcast(broadcast):
     data = {
-        "broadcast": "standard",
-    }
-    message = encode_data(data)
-    req = Mock(get_json=Mock(return_value=message), args=message)
-    res = main(req)
-    assert res["message_sent"] > 0
-
-
-def test_broadcast_incre():
-    data = {
-        "broadcast": "incre",
+        "broadcast": broadcast,
     }
     message = encode_data(data)
     req = Mock(get_json=Mock(return_value=message), args=message)

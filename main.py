@@ -4,7 +4,7 @@ import base64
 
 import requests
 
-from models import NetSuite
+from models import NetSuiteFactory
 from broadcast import broadcast
 
 
@@ -23,14 +23,14 @@ def main(request):
     data_bytes = message["data"]
     data = json.loads(base64.b64decode(data_bytes).decode("utf-8"))
     print(data)
+
     if "broadcast" in data:
         responses = broadcast(data["broadcast"])
     else:
-        job = NetSuite.factory(
-            data['data_source'],
+        job = NetSuiteFactory.factory(
             data['table'],
-            data.get("start", None),
-            data.get("end", None),
+            data.get("start"),
+            data.get("end"),
         )
         responses = {
             "pipelines": "NetSuite",
