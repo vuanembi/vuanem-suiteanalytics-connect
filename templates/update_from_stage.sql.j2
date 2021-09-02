@@ -1,5 +1,5 @@
 CREATE
-OR REPLACE TABLE `{{ dataset }}.{{ table }}` AS
+OR REPLACE TABLE `{{ dataset }}`.`{{ table }}` AS
 SELECT
     *
 EXCEPT
@@ -17,7 +17,7 @@ FROM
                         {%- endif %}
                     {%- endfor %}
                 ORDER BY 
-                    {% for key in row_num_incremental_key -%}
+                    {% for key in row_num_incre_key -%}
                         {{ key }} DESC
                         {% if not loop.last -%}
                             ,
@@ -33,7 +33,7 @@ FROM
                         {%- endif %}
                     {%- endfor %}
                 ORDER BY
-                {% for key in rank_incremental_key -%}
+                {% for key in rank_incre_key -%}
                     {{ key }} DESC
                     {% if not loop.last -%}
                         ,
