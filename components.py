@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import io
 from datetime import datetime
 from abc import ABCMeta, abstractmethod
 
@@ -8,6 +9,13 @@ import jinja2
 import jaydebeapi
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden, NotFound
+
+# from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
+
+from pg_models import Base
 
 NOW = datetime.utcnow()
 DATASET = "NetSuite"
@@ -24,6 +32,35 @@ TEMPLATE_ENV = jinja2.Environment(loader=TEMPLATE_LOADER)
 
 QUERIES_LOADER = jinja2.FileSystemLoader(searchpath="./queries")
 QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
+
+ENGINE = create_engine(
+    "postgresql+psycopg2://"
+    + f"{os.getenv('PG_UID')}:{os.getenv('PG_PWD')}@"
+    + f"{os.getenv('PG_HOST')}/{os.getenv('PG_DB')}",
+    executemany_mode="values",
+    executemany_values_page_size=10000,
+    # executemany_batch_page_size=20000,
+    # echo=True,
+)
+
+import cProfile
+import io
+import pstats
+import contextlib
+
+
+@contextlib.contextmanager
+def profiled():
+    pr = cProfile.Profile()
+    pr.enable()
+    yield
+    pr.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(pr, stream=s).sort_stats("cumulative")
+    ps.print_stats()
+    # uncomment this to see who's calling what
+    # ps.print_callers()
+    print(s.getvalue())
 
 
 class JDBCConnector(metaclass=ABCMeta):
@@ -185,7 +222,6 @@ class BigQueryLoader(Loader):
     def __init__(self, model):
         self.table = model.table
         self.schema = model.schema
-        self.keys = model.keys
 
     @property
     @abstractmethod
@@ -217,6 +253,7 @@ class BigQueryLoader(Loader):
                     attempts += 1
                 else:
                     raise e
+        print(datetime.now().isoformat())
         return {
             "load": "BigQuery",
             "output_rows": loads.output_rows,
@@ -241,6 +278,10 @@ class BigQueryStandardLoader(BigQueryLoader):
 class BigQueryIncrementalLoader(BigQueryLoader):
     write_disposition = "WRITE_APPEND"
 
+    def __init__(self, model):
+        super().__init__(model)
+        self.keys = model.keys
+
     @property
     def load_target(self):
         return f"_stage_{self.table}"
@@ -256,6 +297,54 @@ class BigQueryIncrementalLoader(BigQueryLoader):
             rank_incre_key=self.keys["rank_incre_key"],
         )
         BQ_CLIENT.query(rendered_query)
+
+
+class PostgresLoader(Loader):
+    def __init__(self, model):
+        self.model = model.model
+
+    def load(self, rows):
+        with ENGINE.connect().execution_options(autocommit=True) as conn:
+            loads = self._load(conn, rows)
+
+        print(datetime.now().isoformat())
+        return {
+            "load": "Postgres",
+            "output_rows": len(loads.inserted_primary_key_rows),
+        }
+    
+    @abstractmethod
+    def _load(self, conn, rows):
+        pass
+
+class PostgresStandardLoader(PostgresLoader):
+    def _load(self, conn, rows):
+        self.model.main.drop(bind=ENGINE, checkfirst=True)
+        self.model.main.create(bind=ENGINE, checkfirst=True)
+        loads = conn.execute(insert(self.model.main), rows)
+        return loads
+
+
+class PostgresIncrementalLoader(PostgresLoader):
+    def _load(self, conn, rows):
+        self.model.stage.drop(bind=ENGINE, checkfirst=True)
+        self.model.stage.create(bind=ENGINE, checkfirst=True)
+        loads = conn.execute(insert(self.model.stage), rows)
+        self._update(conn)
+        return loads
+
+    def _update(self, conn):
+        self.model.main.create(bind=ENGINE, checkfirst=True)
+        stmt = insert(self.model.main).from_select(
+            self.model.main.c, select(self.model.stage)
+        )
+        update_dict = {c.name: c for c in stmt.excluded if not c.primary_key}
+        stmt = stmt.on_conflict_do_update(
+            index_elements=self.model.main.primary_key.columns,
+            set_=update_dict,
+        )
+        conn.execute(stmt)
+        self.model.stage.drop(bind=ENGINE, checkfirst=True)
 
 
 class NetSuite(metaclass=ABCMeta):
@@ -305,6 +394,7 @@ class NetSuite(metaclass=ABCMeta):
 
     def run(self):
         rows = self._getter.get()
+        print(datetime.now().isoformat())
         response = {
             "table": self.table,
             "data_source": self._connector.data_source,
@@ -315,5 +405,6 @@ class NetSuite(metaclass=ABCMeta):
             response["end"] = self._getter.end
         if len(rows) > 0:
             rows = self._transform(rows)
+            print(datetime.now().isoformat())
             response["loads"] = [loader.load(rows) for loader in self._loader]
         return response

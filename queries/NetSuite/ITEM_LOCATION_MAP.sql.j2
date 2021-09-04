@@ -1,5 +1,7 @@
 SELECT
+	{# TOP 100 #}
 	NEW_ITEM_CODE,
+	ITEM_ID,
 	LOCATION_ID,
 	i.DISPLAYNAME,
 	ON_HAND_COUNT
@@ -9,3 +11,4 @@ LEFT JOIN
     "Vua Nem Joint Stock Company".Administrator.ITEMS i
 ON
 	ilm.NEW_ITEM_CODE = i.NEW_ITEM_CODE
+{# LIMIT 100 #}

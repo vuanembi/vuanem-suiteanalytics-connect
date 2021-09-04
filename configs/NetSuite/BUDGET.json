@@ -1,6 +1,10 @@
 {
     "schema": [
         {
+            "name": "BUDGET_ID",
+            "type": "INTEGER"
+        },
+        {
             "name": "LOCATION_ID",
             "type": "INTEGER"
         },

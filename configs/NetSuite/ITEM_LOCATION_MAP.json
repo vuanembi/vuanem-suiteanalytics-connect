@@ -5,6 +5,10 @@
             "type": "STRING"
         },
         {
+            "name": "ITEM_ID",
+            "type": "INTEGER"
+        },
+        {
             "name": "LOCATION_ID",
             "type": "INTEGER"
         },

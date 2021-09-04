@@ -1,4 +1,5 @@
 import components
+import pg_models
 
 
 class NetSuiteFactory:
@@ -66,118 +67,158 @@ class NetSuiteFactory:
 
 class Accounts(components.NetSuite):
     table = "ACCOUNTS"
-    keys = {}
+    model = pg_models.Accounts
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Budget(components.NetSuite):
     table = "BUDGET"
-    keys = {}
+    model = pg_models.Budget
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        # components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Classes(components.NetSuite):
     table = "CLASSES"
-    keys = {}
+    model = pg_models.Classes
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Customers(components.NetSuite):
     table = "CUSTOMERS"
-    keys = {}
+    model = pg_models.Customers
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class DeliveryPerson(components.NetSuite):
     table = "DELIVERY_PERSON"
-    keys = {}
+    model = pg_models.DeliveryPerson
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Departments(components.NetSuite):
     table = "DEPARTMENTS"
-    keys = {}
+    model = pg_models.Departments
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Employees(components.NetSuite):
     table = "EMPLOYEES"
-    keys = {}
+    model = pg_models.Employees
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Items(components.NetSuite):
     table = "ITEMS"
-    keys = {}
+    model = pg_models.Items
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Locations(components.NetSuite):
     table = "LOCATIONS"
-    keys = {}
+    model = pg_models.Locations
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class SystemNotesPrice(components.NetSuite):
     table = "SYSTEM_NOTES_PRICE"
-    keys = {}
+    model = pg_models.SystemNotesPrice
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class Vendors(components.NetSuite):
     table = "VENDORS"
-    keys = {}
+    model = pg_models.Vendors
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class NS2PromotionCode(components.NetSuite):
     table = "ns2_promotionCode"
-    keys = {}
+    model = pg_models.NS2_PromotionCode
 
     connector = components.NetSuite2Connector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 class ItemLocationMap(components.NetSuite):
     table = "ITEM_LOCATION_MAP"
+    model = pg_models.ItemLocationMap
 
     connector = components.NetSuiteConnector
     getter = components.StandardGetter
-    loader = [components.BigQueryStandardLoader]
+    loader = [
+        # components.BigQueryStandardLoader,
+        components.PostgresStandardLoader,
+    ]
 
 
 # * Incremental
