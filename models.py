@@ -1,5 +1,8 @@
-import components
-import pg_models
+import json
+from datetime import datetime
+from abc import ABCMeta, abstractmethod
+
+from components import connector, getter, loader, pg_models
 
 
 class NetSuiteFactory:
@@ -62,169 +65,232 @@ class NetSuiteFactory:
             raise NotImplementedError(table)
 
 
+class NetSuite(metaclass=ABCMeta):
+    @property
+    @abstractmethod
+    def table(self):
+        pass
+
+    @property
+    @abstractmethod
+    def connector(self):
+        pass
+
+    @property
+    @abstractmethod
+    def getter(self):
+        pass
+
+    @property
+    @abstractmethod
+    def loader(self):
+        pass
+
+    @property
+    def config(self):
+        with open(f"configs/{self._connector.data_source}/{self.table}.json") as f:
+            config = json.load(f)
+        return config
+
+    @property
+    def schema(self):
+        return self.config["schema"]
+
+    def __init__(self, start, end):
+        self.start, self.end = start, end
+        self._connector = self.connector()
+        self._getter = self.getter(self)
+        self._loader = [loader(self) for loader in self.loader]
+
+    def _transform(self, rows):
+        int_cols = [i["name"] for i in self.schema if i["type"] == "INTEGER"]
+        for row in rows:
+            if int_cols:
+                for col in int_cols:
+                    row[col] = int(row[col]) if row[col] is not None else row[col]
+        return rows
+
+    def run(self):
+        rows = self._getter.get()
+        print(datetime.now().isoformat())
+        response = {
+            "table": self.table,
+            "data_source": self._connector.data_source,
+            "num_processed": len(rows),
+        }
+        if getattr(self._getter, "start", None) and getattr(self._getter, "end", None):
+            response["start"] = self._getter.start
+            response["end"] = self._getter.end
+        if len(rows) > 0:
+            rows = self._transform(rows)
+            print(datetime.now().isoformat())
+            response["loads"] = [loader.load(rows) for loader in self._loader]
+        return response
+
+
 # * Standard
 
 
-class Accounts(components.NetSuite):
+class Accounts(NetSuite):
     table = "ACCOUNTS"
     model = pg_models.Accounts
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Budget(components.NetSuite):
+class Budget(NetSuite):
     table = "BUDGET"
     model = pg_models.Budget
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        # components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        # loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Classes(components.NetSuite):
+class Classes(NetSuite):
     table = "CLASSES"
     model = pg_models.Classes
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Customers(components.NetSuite):
+class Customers(NetSuite):
     table = "CUSTOMERS"
     model = pg_models.Customers
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class DeliveryPerson(components.NetSuite):
+class DeliveryPerson(NetSuite):
     table = "DELIVERY_PERSON"
     model = pg_models.DeliveryPerson
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Departments(components.NetSuite):
+class Departments(NetSuite):
     table = "DEPARTMENTS"
     model = pg_models.Departments
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Employees(components.NetSuite):
+class Employees(NetSuite):
     table = "EMPLOYEES"
     model = pg_models.Employees
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Items(components.NetSuite):
+class Items(NetSuite):
     table = "ITEMS"
     model = pg_models.Items
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Locations(components.NetSuite):
+class Locations(NetSuite):
     table = "LOCATIONS"
     model = pg_models.Locations
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class SystemNotesPrice(components.NetSuite):
+class SystemNotesPrice(NetSuite):
     table = "SYSTEM_NOTES_PRICE"
     model = pg_models.SystemNotesPrice
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class Vendors(components.NetSuite):
+class Vendors(NetSuite):
     table = "VENDORS"
     model = pg_models.Vendors
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class NS2PromotionCode(components.NetSuite):
+class NS2PromotionCode(NetSuite):
     table = "ns2_promotionCode"
     model = pg_models.NS2_PromotionCode
 
-    connector = components.NetSuite2Connector
-    getter = components.StandardGetter
+    connector = connector.NetSuite2Connector
+    getter = getter.StandardGetter
     loader = [
-        components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
-class ItemLocationMap(components.NetSuite):
+class ItemLocationMap(NetSuite):
     table = "ITEM_LOCATION_MAP"
     model = pg_models.ItemLocationMap
 
-    connector = components.NetSuiteConnector
-    getter = components.StandardGetter
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
     loader = [
-        # components.BigQueryStandardLoader,
-        components.PostgresStandardLoader,
+        # loader.BigQueryStandardLoader,
+        loader.PostgresStandardLoader,
     ]
 
 
 # * Incremental
 
 
-class Cases(components.NetSuite):
+class Cases(NetSuite):
     table = "CASES"
     keys = {
         "p_key": ["CASE_ID"],
@@ -233,12 +299,14 @@ class Cases(components.NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class DeletedRecords(components.NetSuite):
+class DeletedRecords(NetSuite):
     table = "DELETED_RECORDS"
     keys = {
         "p_key": ["RECORD_ID"],
@@ -247,12 +315,14 @@ class DeletedRecords(components.NetSuite):
         "rank_incre_key": ["DATE_DELETED"],
         "row_num_incre_key": ["DATE_DELETED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class Transactions(components.NetSuite):
+class Transactions(NetSuite):
     table = "TRANSACTIONS"
 
     keys = {
@@ -262,12 +332,14 @@ class Transactions(components.NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class TransactionLines(components.NetSuite):
+class TransactionLines(NetSuite):
     table = "TRANSACTION_LINES"
     keys = {
         "p_key": ["TRANSACTION_ID", "TRANSACTION_LINE_ID"],
@@ -279,12 +351,14 @@ class TransactionLines(components.NetSuite):
             "DATE_LAST_MODIFIED",
         ],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class StoreTraffic(components.NetSuite):
+class StoreTraffic(NetSuite):
     table = "STORE_TRAFFIC"
     keys = {
         "p_key": ["STORE_TRAFFIC_ID"],
@@ -293,12 +367,14 @@ class StoreTraffic(components.NetSuite):
         "rank_incre_key": ["LAST_MODIFIED_DATE"],
         "row_num_incre_key": ["LAST_MODIFIED_DATE"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class SupportPersonMap(components.NetSuite):
+class SupportPersonMap(NetSuite):
     table = "SUPPORT_PERSON_MAP"
     keys = {
         "p_key": ["TRANSACTION_ID"],
@@ -307,12 +383,14 @@ class SupportPersonMap(components.NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class NS2TransactionLine(components.NetSuite):
+class NS2TransactionLine(NetSuite):
     table = "ns2_transactionLine"
     keys = {
         "p_key": ["TRANSACTION_ID"],
@@ -321,12 +399,14 @@ class NS2TransactionLine(components.NetSuite):
         "rank_incre_key": ["linelastmodifieddate"],
         "row_num_incre_key": ["linelastmodifieddate"],
     }
-    connector = components.NetSuite2Connector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuite2Connector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class NS2CouponCode(components.NetSuite):
+class NS2CouponCode(NetSuite):
     table = "ns2_couponCode"
     keys = {
         "p_key": ["id"],
@@ -335,12 +415,14 @@ class NS2CouponCode(components.NetSuite):
         "rank_incre_key": ["id"],
         "row_num_incre_key": ["id"],
     }
-    connector = components.NetSuite2Connector
-    getter = components.IDIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuite2Connector
+    getter = getter.IDIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class NS2TranPromotion(components.NetSuite):
+class NS2TranPromotion(NetSuite):
     table = "ns2_tranPromotion"
     keys = {
         "p_key": ["transaction", "couponcode", "promocode"],
@@ -349,12 +431,14 @@ class NS2TranPromotion(components.NetSuite):
         "rank_incre_key": ["lastmodifieddate"],
         "row_num_incre_key": ["lastmodifieddate"],
     }
-    connector = components.NetSuite2Connector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuite2Connector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class LoyaltyTransaction(components.NetSuite):
+class LoyaltyTransaction(NetSuite):
     table = "LOYALTY_TRANSACTION"
     keys = {
         "p_key": ["LOYALTY_TRANSACTION_ID"],
@@ -363,12 +447,14 @@ class LoyaltyTransaction(components.NetSuite):
         "rank_incre_key": ["LAST_MODIFIED_DATE"],
         "row_num_incre_key": ["LAST_MODIFIED_DATE"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class ServiceAddonSOMap(components.NetSuite):
+class ServiceAddonSOMap(NetSuite):
     table = "SERVICE_ADDON_SO_MAP"
     keys = {
         "p_key": ["TRANSACTION_ID", "LIST_SERVICE_ADD_ON_SO_ID"],
@@ -377,12 +463,14 @@ class ServiceAddonSOMap(components.NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
 
 
-class ServiceAddonTOMap(components.NetSuite):
+class ServiceAddonTOMap(NetSuite):
     table = "SERVICE_ADDON_TO_MAP"
     keys = {
         "p_key": ["TRANSACTION_ID", "LIST_SERVICE_ADD_ON_TO_ID"],
@@ -391,6 +479,8 @@ class ServiceAddonTOMap(components.NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
-    connector = components.NetSuiteConnector
-    getter = components.TimeIncrementalGetter
-    loader = [components.BigQueryIncrementalLoader]
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+    ]
