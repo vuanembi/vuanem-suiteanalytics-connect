@@ -3,7 +3,7 @@ from datetime import datetime
 from .utils import process
 
 START = "2018-06-30"
-END = "2018-07-02"
+END = "2021-09-05"
 
 
 def test_cases():
@@ -130,6 +130,15 @@ def test_system_notes():
     data = {
         "data_source": "NetSuite",
         "table": "SYSTEM_NOTES",
+        "start": START,
+        "end": END,
+    }
+    process(data)
+
+def test_promotion_sms_integration():
+    data = {
+        "data_source": "NetSuite",
+        "table": "PROMOTION_SMS_INTEGRATION",
         "start": START,
         "end": END,
     }
