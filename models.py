@@ -282,7 +282,7 @@ class ItemLocationMap(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
     loader = [
-        # loader.BigQueryStandardLoader,
+        loader.BigQueryStandardLoader,
         loader.PostgresStandardLoader,
     ]
 
@@ -303,6 +303,7 @@ class Cases(NetSuite):
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
