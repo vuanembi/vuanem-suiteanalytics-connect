@@ -139,6 +139,10 @@
         {
             "name": "SUBSIDIARY_ID",
             "type": "INTEGER"
+        },
+        {
+            "name": "DATE_OF_BIRTH",
+            "type": "TIMESTAMP"
         }
     ]
 }
