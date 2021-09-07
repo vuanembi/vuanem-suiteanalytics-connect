@@ -292,6 +292,7 @@ class ItemLocationMap(NetSuite):
 
 class Cases(NetSuite):
     table = "CASES"
+    model = pg_models.Cases
     keys = {
         "p_key": ["CASE_ID"],
         "rank_key": ["CASE_ID"],

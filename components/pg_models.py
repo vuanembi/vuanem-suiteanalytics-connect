@@ -15,6 +15,7 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 metadata_obj = MetaData(schema="NetSuite")
 
+
 class Accounts:
     table = "ACCOUNTS"
     columns = [
@@ -314,3 +315,43 @@ class ItemLocationMap:
     ]
     main = Table(table, metadata_obj, *copy.deepcopy(columns))
     stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+# ----------------------------
+
+
+class Cases:
+    table = "CASES"
+    columns = [
+        Column("ASSIGNED_ID", Integer),
+        Column("CASE_ID", Integer, primary_key=True),
+        Column("CASE_NUMBER", Integer),
+        Column("CAI_THIEN", String),
+        Column("CREATE_DATE", DateTime(timezone=True)),
+        Column("LY_DO_CHO_SO_DIEM", String),
+        Column("LY_DO_KHONG_MUA_HANG", Integer),
+        Column("NAME", String),
+        Column("NV_BN_HNG_ID", Integer),
+        Column("BAOHANH_ID", Integer),
+        Column("NVGH_ID", Integer),
+        Column("HOTRO_ID", Integer),
+        Column("RATING_KHCH_VO_CH_CHA_MUA__ID", Integer),
+        Column("RATING__KHCH_DIGITALHOTLINE_ID", Integer),
+        Column("RATING__SN_PHM_A_DNG_PHON_ID", Integer),
+        Column("RATING__SAU_KHI_GIAO_HNG_ID", Integer),
+        Column("RATING__SAU_KHI_LN_SO_ID", Integer),
+        Column("SAO_CHO_NVBH_ID", Integer),
+        Column("SAO_CHO_NVGH_ID", Integer),
+        Column("SAO_CHO_NV_BO_HNH_M_ID", Integer),
+        Column("SAO_CHO_NV_H_TR_ID", Integer),
+        Column("SO_LOCATION_ID", Integer),
+        Column("SO_REFERENCE_ID", Integer),
+        Column("NGY_HON_THNH_KHIU_NIBO_", DateTime(timezone=True)),
+        Column("CASE_TYPE_ID", Integer),
+        Column("NPS_SCORE_ID", Integer),
+        Column("CASE_ORIGIN_ID", Integer),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+

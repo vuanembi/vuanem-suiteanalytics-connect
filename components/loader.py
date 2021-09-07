@@ -4,8 +4,9 @@ from abc import ABCMeta, abstractmethod
 
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
-from sqlalchemy import select
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import select, delete, and_, insert
+
+# from sqlalchemy.dialects.postgresql import insert
 
 from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, ENGINE
 
@@ -111,10 +112,11 @@ class PostgresLoader(Loader):
             "load": "Postgres",
             "output_rows": len(loads.inserted_primary_key_rows),
         }
-    
+
     @abstractmethod
     def _load(self, conn, rows):
         pass
+
 
 class PostgresStandardLoader(PostgresLoader):
     def _load(self, conn, rows):
@@ -125,22 +127,20 @@ class PostgresStandardLoader(PostgresLoader):
 
 
 class PostgresIncrementalLoader(PostgresLoader):
-    def _load(self, conn, rows):
-        self.model.stage.drop(bind=ENGINE, checkfirst=True)
-        self.model.stage.create(bind=ENGINE, checkfirst=True)
-        loads = conn.execute(insert(self.model.stage), rows)
-        self._update(conn)
-        return loads
+    def __init__(self, model):
+        super().__init__(model)
+        self.keys = model.keys
 
-    def _update(self, conn):
+    def _load(self, conn, rows):
         self.model.main.create(bind=ENGINE, checkfirst=True)
-        stmt = insert(self.model.main).from_select(
-            self.model.main.c, select(self.model.stage)
+        delete_stmt = delete(self.model.main).where(
+            and_(
+                *[
+                    self.model.main.c[rank_key].in_([row[rank_key] for row in rows])
+                    for rank_key in self.keys["rank_key"]
+                ]
+            )
         )
-        update_dict = {c.name: c for c in stmt.excluded if not c.primary_key}
-        stmt = stmt.on_conflict_do_update(
-            index_elements=self.model.main.primary_key.columns,
-            set_=update_dict,
-        )
-        conn.execute(stmt)
-        self.model.stage.drop(bind=ENGINE, checkfirst=True)
+        conn.execute(delete_stmt)
+        loads = conn.execute(insert(self.model.main), rows)
+        return loads
