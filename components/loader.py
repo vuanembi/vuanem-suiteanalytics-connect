@@ -120,9 +120,9 @@ class PostgresLoader(Loader):
 
 class PostgresStandardLoader(PostgresLoader):
     def _load(self, conn, rows):
-        self.model.main.drop(bind=ENGINE, checkfirst=True)
-        self.model.main.create(bind=ENGINE, checkfirst=True)
-        loads = conn.execute(insert(self.model.main), rows)
+        self.model.drop(bind=ENGINE, checkfirst=True)
+        self.model.create(bind=ENGINE, checkfirst=True)
+        loads = conn.execute(insert(self.model), rows)
         return loads
 
 
@@ -132,15 +132,15 @@ class PostgresIncrementalLoader(PostgresLoader):
         self.keys = model.keys
 
     def _load(self, conn, rows):
-        self.model.main.create(bind=ENGINE, checkfirst=True)
-        delete_stmt = delete(self.model.main).where(
+        self.model.create(bind=ENGINE, checkfirst=True)
+        delete_stmt = delete(self.model).where(
             and_(
                 *[
-                    self.model.main.c[rank_key].in_([row[rank_key] for row in rows])
+                    self.model.c[rank_key].in_([row[rank_key] for row in rows])
                     for rank_key in self.keys["rank_key"]
                 ]
             )
         )
         conn.execute(delete_stmt)
-        loads = conn.execute(insert(self.model.main), rows)
+        loads = conn.execute(insert(self.model), rows)
         return loads

@@ -9,7 +9,6 @@ from .utils import process
         "ACCOUNTS",
         "BUDGET",
         "CLASSES",
-        "CUSTOMERS",
         "DELIVERY_PERSON",
         "DEPARTMENTS",
         "EMPLOYEES",

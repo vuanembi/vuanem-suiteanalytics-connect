@@ -4,6 +4,7 @@ from .utils import process
 
 TIME_TABLES = [
     "CASES",
+    # "CUSTOMERS",
     "DELETED_RECORDS",
     "TRANSACTIONS",
     "TRANSACTION_LINES",
