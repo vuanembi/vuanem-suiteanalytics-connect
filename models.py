@@ -253,7 +253,7 @@ class Vendors(NetSuite):
 
 class NS2PromotionCode(NetSuite):
     table = "ns2_promotionCode"
-    model = pg_models.NS2_PromotionCode
+    model = pg_models.NS2PromotionCode
 
     connector = connector.NetSuite2Connector
     getter = getter.StandardGetter
@@ -287,6 +287,7 @@ class Customers(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.Customers
 
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
@@ -306,6 +307,8 @@ class Cases(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.Cases
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
@@ -323,16 +326,18 @@ class DeletedRecords(NetSuite):
         "rank_incre_key": ["DATE_DELETED"],
         "row_num_incre_key": ["DATE_DELETED"],
     }
+    model = pg_models.DeletedRecords
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
 class Transactions(NetSuite):
     table = "TRANSACTIONS"
-
     keys = {
         "p_key": ["TRANSACTION_ID"],
         "rank_key": ["TRANSACTION_ID"],
@@ -340,10 +345,13 @@ class Transactions(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.Transactions
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -359,10 +367,13 @@ class TransactionLines(NetSuite):
             "DATE_LAST_MODIFIED",
         ],
     }
+    model = pg_models.TransactionLines
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -375,10 +386,13 @@ class StoreTraffic(NetSuite):
         "rank_incre_key": ["LAST_MODIFIED_DATE"],
         "row_num_incre_key": ["LAST_MODIFIED_DATE"],
     }
+    model = pg_models.StoreTraffic
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -391,10 +405,13 @@ class SupportPersonMap(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.SupportPersonMap
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -407,10 +424,13 @@ class NS2TransactionLine(NetSuite):
         "rank_incre_key": ["linelastmodifieddate"],
         "row_num_incre_key": ["linelastmodifieddate"],
     }
+    model = pg_models.NS2TransactionLine
+
     connector = connector.NetSuite2Connector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -423,10 +443,12 @@ class NS2CouponCode(NetSuite):
         "rank_incre_key": ["id"],
         "row_num_incre_key": ["id"],
     }
+    model = pg_models.NS2CouponCode
     connector = connector.NetSuite2Connector
     getter = getter.IDIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -439,10 +461,13 @@ class NS2TranPromotion(NetSuite):
         "rank_incre_key": ["lastmodifieddate"],
         "row_num_incre_key": ["lastmodifieddate"],
     }
+    model = pg_models.NS2TranPromotion
+
     connector = connector.NetSuite2Connector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -455,10 +480,13 @@ class LoyaltyTransaction(NetSuite):
         "rank_incre_key": ["LAST_MODIFIED_DATE"],
         "row_num_incre_key": ["LAST_MODIFIED_DATE"],
     }
+    model = pg_models.LoyaltyTransaction
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -471,10 +499,13 @@ class ServiceAddonSOMap(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.ServiceAddonSOMap
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]
 
 
@@ -487,8 +518,11 @@ class ServiceAddonTOMap(NetSuite):
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
+    model = pg_models.ServiceAddonTOMap
+
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
         loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
     ]

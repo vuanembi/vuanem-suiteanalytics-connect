@@ -28,5 +28,5 @@ ENGINE = create_engine(
     + f"{os.getenv('PG_HOST')}/{os.getenv('PG_DB')}",
     executemany_mode="values",
     executemany_values_page_size=10000,
-    echo=True,
+    # echo=True,
 )

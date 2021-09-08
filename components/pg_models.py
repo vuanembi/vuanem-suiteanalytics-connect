@@ -1,4 +1,5 @@
 import copy
+from datetime import timezone
 
 from sqlalchemy import (
     MetaData,
@@ -278,7 +279,7 @@ class Vendors:
     stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
 
 
-class NS2_PromotionCode:
+class NS2PromotionCode:
     table = "ns2_promotionCode"
     columns = [
         Column("enddate", DateTime(timezone=True)),
@@ -351,6 +352,248 @@ class Cases:
         Column("NPS_SCORE_ID", Integer),
         Column("CASE_ORIGIN_ID", Integer),
         Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class DeletedRecords:
+    table = "DELETED_RECORDS"
+    columns = [
+        Column("CUSTOM_RECORD_TYPE", String),
+        Column("DATE_DELETED", DateTime(timezone=True)),
+        Column("ENTITY_ID", Integer),
+        Column("ENTITY_NAME", String),
+        Column("IS_CUSTOM_LIST", String),
+        Column("NAME", String),
+        Column("RECORD_BASE_TYPE", String),
+        Column("RECORD_ID", Integer),
+        Column("RECORD_TYPE_NAME", String),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class LoyaltyTransaction:
+    table = "LOYALTY_TRANSACTION"
+    columns = [
+        Column("LOYALTY_TRANSACTION_ID", Integer, primary_key=True),
+        Column("AMOUNT", Integer),
+        Column("CUSTOMER_ID", Integer),
+        Column("DATE_CREATED", DateTime(timezone=True)),
+        Column("DOCUMENT_NO", String),
+        Column("EXPIRED_DATE", DateTime(timezone=True)),
+        Column("IS_INACTIVE", String),
+        Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
+        Column("LOYALTY_CUSTOMER_GROUP_ID", Integer),
+        Column("LOYALTY_LOCATION_GROUP_ID", Integer),
+        Column("LOYALTY_PROGRAM_ID", Integer),
+        Column("LOYALTY_TRANSACTION_EXTID", String),
+        Column("POINT_0", Integer),
+        Column("REWARD_RATE", Integer),
+        Column("TRANSACTION_DATE", DateTime(timezone=True)),
+        Column("TRANSACTION_TYPE", String),
+        Column("TRANS_ID", Integer),
+        Column("TRANS_LOCATION_ID", Integer),
+        Column("UPDATE_TIME_", DateTime(timezone=True)),
+        Column("VALID_FROM_DATE", DateTime(timezone=True)),
+        Column("VALID_TO_DATE", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class ServiceAddonSOMap:
+    table = "SERVICE_ADDON_SO_MAP"
+    columns = [
+        Column("LIST_SERVICE_ADD_ON_SO_ID", Integer),
+        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class ServiceAddonTOMap:
+    table = "SERVICE_ADDON_TO_MAP"
+    columns = [
+        Column("LIST_SERVICE_ADD_ON_TO_ID", Integer),
+        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class StoreTraffic:
+    table = "STORE_TRAFFIC"
+    columns = [
+        Column("DATE_0", DateTime(timezone=True)),
+        Column("DATE_CREATED", DateTime(timezone=True)),
+        Column("GENDER_ID", Integer),
+        Column("IS_INACTIVE", String),
+        Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
+        Column("LOCATION_ID", Integer),
+        Column("STORE_TRAFFIC_ID", Integer, primary_key=True),
+        Column("SUBSIDIARY_ID", Integer),
+        Column("TOTAL_TIMES_OF_VISITING", Integer),
+        Column("TOTAL_VISITOR", Integer),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class SupportPersonMap:
+    table = "SUPPORT_PERSON_MAP"
+    columns = [
+        Column("DELIVERY_PERSON_ID", Integer, primary_key=True),
+        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class Transactions:
+    table = "TRANSACTIONS"
+    columns = [
+        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("TRANID", String),
+        Column("TRANSACTION_NUMBER", String),
+        Column("TRANDATE", DateTime(timezone=True)),
+        Column("BILLADDRESS", String),
+        Column("CLOSED", DateTime(timezone=True)),
+        Column("CLOSED_REASON_ID", Integer),
+        Column("CREATE_DATE", DateTime(timezone=True)),
+        Column("CREATED_FROM_ID", Integer),
+        Column("CUSTOMER_PHONE", String),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+        Column("DELIVERY_PERSON_ID", Integer),
+        Column("DELIVERY_STATUS_ID", Integer),
+        Column("DELIVERY_TERMS_ID", Integer),
+        Column("DELIVERY_VEHICLE_ID", Integer),
+        Column("DEPOSIT_PAYMENT_METHOD_ID", Integer),
+        Column("EINVOICE_STATUS", String),
+        Column("EMAIL", String),
+        Column("ENTITY_ID", Integer),
+        Column("EVENT_ID", Integer),
+        Column("EXPECTED_DELIVERY_DATE_C", DateTime(timezone=True)),
+        Column("IN_CHARGE_LOCATION_ID", Integer),
+        Column("KHNG_YU_CU_T_CC", String),
+        Column("LEAD_SOURCE_ID", Integer),
+        Column("LICENSE_PLATE", String),
+        Column("LICENSE_PLATE_V_2_ID", Integer),
+        Column("LOCATION_ID", Integer),
+        Column("LOYALTY_CUSTOMER_GROUP_ID", Integer),
+        Column("LOYALTY_ELIGIBILITY", String),
+        Column("LOYALTY_LOCATION_GROUP_ID", Integer),
+        Column("MAGENTO_ORDER_NUMBER", String),
+        Column("MAGENTO_SO_ID", String),
+        Column("MAGENTO_TOTAL", Integer),
+        Column("MEMO", String),
+        Column("ORDER_PAYMENT_METHOD_ID", Integer),
+        Column("PARTNER_ID", Integer),
+        Column("PROMOTION_CODE_ID", String),
+        Column("RECIPIENT", String),
+        Column("RECIPIENT_PHONE", String),
+        Column("SALES_REP_ID", Integer),
+        Column("SHIPADDRESS", String),
+        Column("SHIPPING_METHOD_C_ID", Integer),
+        Column("STATUS", String),
+        Column("TRANSACTION_TYPE", String),
+        Column("REF__INVOICE__DELIVERY_ORDE_ID", Integer),
+        Column("REF__TRANSACTION_ID", Integer),
+        Column("RETURNED_REASON_ID", Integer),
+        Column("REFERENCE_SALES_ORDER_ID", Integer),
+        Column("TRANSFER_LOCATION", Integer),
+        Column("TRANSFER_ORDER_TYPE_ID", Integer),
+        Column("PURCHASE_ORDER_TYPE_ID", Integer),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class TransactionLines:
+    table = "TRANSACTION_LINES"
+    columns = [
+        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("TRANSACTION_LINE_ID", Integer, primary_key=True),
+        Column("ACCOUNT_ID", Integer),
+        Column("AMOUNT", Integer),
+        Column("AMOUNT_BEFORE_DISCOUNT", Integer),
+        Column("AMOUNT_FOREIGN_LINKED", Integer),
+        Column("CLASS_ID", Integer),
+        Column("COMPANY_ID", Integer),
+        Column("DATE_CLOSED", DateTime(timezone=True)),
+        Column("DATE_CREATED", DateTime(timezone=True)),
+        Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
+        Column("DELIVERY_METHOD_ID", Integer),
+        Column("DELIVER_LOCATION_ID", Integer),
+        Column("DEPARTMENT_ID", Integer),
+        Column("EXPECTED_DELIVERY_DATE_SO", DateTime(timezone=True)),
+        Column("GROSS_AMOUNT", Integer),
+        Column("IS_COST_LINE", String),
+        Column("ITEM_COUNT", Integer),
+        Column("ITEM_GROUP_PROMOTION_ID", Integer),
+        Column("ITEM_ID", Integer),
+        Column("ITEM_TYPE", String),
+        Column("ITEM_UNIT_PRICE", String),
+        Column("LOCATION_ID", Integer),
+        Column("MEMO", String),
+        Column("NET_AMOUNT", Integer),
+        Column("QUANTITY_RECEIVED_IN_SHIPMENT", Integer),
+        Column("SUBSIDIARY_ID", Integer),
+        Column("TRANSACTION_ORDER", Integer),
+        Column("TRANSFER_ORDER_ITEM_LINE", Integer),
+        Column("TRANSFER_ORDER_LINE_TYPE", String),
+        Column("VENDOR_ID", Integer),
+        Column("TRANSACTIONS_DATE_LAST_MODIFIED", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class NS2TranPromotion:
+    table = "ns2_tranPromotion"
+    columns = [
+        Column("transaction", Integer),
+        Column("couponcode", Integer),
+        Column("eligiblefreegifts", Float),
+        Column("freegiftsadded", Float),
+        Column("promocode", Integer),
+        Column("promotiontype", String),
+        Column("purchasediscount", Float),
+        Column("shippingdiscount", Float),
+        Column("lastmodifieddate", DateTime(timezone=True)),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class NS2TransactionLine:
+    table = "ns2_transactionLine"
+    columns = [
+        Column("TRANSACTION_ID", Integer),
+        # Column("id", Integer, primary_key=True),
+        Column("ACCOUNT_ID", Integer),
+        Column("netamount", Float),
+        Column("rate", Float),
+        Column("rateamount", Float),
+        Column("linelastmodifieddate", DateTime(timezone=True)),
+        Column("ratepercent", Float),
+    ]
+    main = Table(table, metadata_obj, *copy.deepcopy(columns))
+    stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
+
+
+class NS2CouponCode:
+    table = "ns2_couponCode"
+    columns = [
+        Column("code", String),
+        Column("datesent", DateTime(timezone=True)),
+        Column("externalid", String),
+        Column("id", Integer, primary_key=True),
+        Column("promotion", Integer),
     ]
     main = Table(table, metadata_obj, *copy.deepcopy(columns))
     stage = Table(f"_stage_{table}", metadata_obj, *copy.deepcopy(columns))
