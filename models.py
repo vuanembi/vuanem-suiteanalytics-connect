@@ -167,18 +167,6 @@ class Classes(NetSuite):
     ]
 
 
-class Customers(NetSuite):
-    table = "CUSTOMERS"
-    model = pg_models.Customers
-
-    connector = connector.NetSuiteConnector
-    getter = getter.StandardGetter
-    loader = [
-        loader.BigQueryStandardLoader,
-        loader.PostgresStandardLoader,
-    ]
-
-
 class DeliveryPerson(NetSuite):
     table = "DELIVERY_PERSON"
     model = pg_models.DeliveryPerson
@@ -288,6 +276,24 @@ class ItemLocationMap(NetSuite):
 
 
 # * Incremental
+
+class Customers(NetSuite):
+    table = "CUSTOMERS"
+    model = pg_models.Customers
+    keys = {
+        "p_key": ["CUSTOMER_ID"],
+        "rank_key": ["CUSTOMER_ID"],
+        "incre_key": ["DATE_LAST_MODIFIED"],
+        "rank_incre_key": ["DATE_LAST_MODIFIED"],
+        "row_num_incre_key": ["DATE_LAST_MODIFIED"],
+    }
+
+    connector = connector.NetSuiteConnector
+    getter = getter.StandardGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
+    ]
 
 
 class Cases(NetSuite):
