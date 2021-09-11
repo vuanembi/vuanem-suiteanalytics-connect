@@ -1,4 +1,4 @@
-# Vuanem NetSuite v2.0
+# Vuanem NetSuite v3.0
 
 [![CI/CD](https://github.com/vuanembi/vuanem_ns/actions/workflows/main.yaml/badge.svg)](https://github.com/vuanembi/vuanem_ns/actions/workflows/main.yaml)
 
