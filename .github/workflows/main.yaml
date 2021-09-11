@@ -39,7 +39,7 @@ jobs:
         gcloud run deploy ${{ env.SERVICE }}
         --image=gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
         --concurrency=1
-        --memory=4Gi
+        --memory=8Gi
         --cpu=2
         --platform=managed
         --service-account=${{ secrets.GCP_SA }}
