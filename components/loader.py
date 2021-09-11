@@ -1,12 +1,9 @@
 import time
-from datetime import datetime
 from abc import ABCMeta, abstractmethod
 
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
-from sqlalchemy import select, delete, and_, insert
-
-# from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import delete, and_, insert
 
 from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, ENGINE
 
@@ -53,7 +50,6 @@ class BigQueryLoader(Loader):
                     attempts += 1
                 else:
                     raise e
-        print(datetime.now().isoformat())
         return {
             "load": "BigQuery",
             "output_rows": loads.output_rows,
@@ -106,8 +102,6 @@ class PostgresLoader(Loader):
     def load(self, rows):
         with ENGINE.begin() as conn:
             loads = self._load(conn, rows)
-
-        print(datetime.now().isoformat())
         return {
             "load": "Postgres",
             "output_rows": len(loads.inserted_primary_key_rows),

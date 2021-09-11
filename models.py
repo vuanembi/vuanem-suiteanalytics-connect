@@ -70,7 +70,6 @@ class NetSuite(metaclass=ABCMeta):
 
     def run(self):
         rows = self._getter.get()
-        print(datetime.now().isoformat())
         response = {
             "table": self.table,
             "data_source": self._connector.data_source,
@@ -81,7 +80,6 @@ class NetSuite(metaclass=ABCMeta):
             response["end"] = self._getter.end
         if len(rows) > 0:
             rows = self._transform(rows)
-            print(datetime.now().isoformat())
             response["loads"] = [loader.load(rows) for loader in self._loader]
         return response
 
