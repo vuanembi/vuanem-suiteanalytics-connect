@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import re
 from abc import ABCMeta, abstractmethod
 
 from components import connector, getter, loader, pg_models
@@ -60,6 +61,8 @@ class NetSuiteFactory:
             return ServiceAddonSOMap(*args)
         elif table == "SERVICE_ADDON_TO_MAP":
             return ServiceAddonTOMap(*args)
+        elif table == "PROMOTION_SMS_INTEGRATION":
+            return PromotionSMSIntegration(*args)
         # *
         else:
             raise NotImplementedError(table)
@@ -103,11 +106,16 @@ class NetSuite(metaclass=ABCMeta):
         self._loader = [loader(self) for loader in self.loader]
 
     def _transform(self, rows):
+        pattern = "[\t\n\r\f\v]"
         int_cols = [i["name"] for i in self.schema if i["type"] == "INTEGER"]
+        str_cols = [i["name"] for i in self.schema if i["type"] == "STRING"]
         for row in rows:
             if int_cols:
                 for col in int_cols:
                     row[col] = int(row[col]) if row[col] is not None else row[col]
+            if str_cols:
+                for col in str_cols:
+                    row[col] = re.sub(pattern, '', row[col]) if row[col] else None
         return rows
 
     def run(self):
@@ -150,7 +158,7 @@ class Budget(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
     loader = [
-        # loader.BigQueryStandardLoader,
+        loader.BigQueryStandardLoader,
         loader.PostgresStandardLoader,
     ]
 
@@ -277,6 +285,7 @@ class ItemLocationMap(NetSuite):
 
 # * Incremental
 
+
 class Customers(NetSuite):
     table = "CUSTOMERS"
     model = pg_models.Customers
@@ -290,9 +299,9 @@ class Customers(NetSuite):
     model = pg_models.Customers
 
     connector = connector.NetSuiteConnector
-    getter = getter.StandardGetter
+    getter = getter.TimeIncrementalGetter
     loader = [
-        loader.BigQueryIncrementalLoader,
+        # loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
     ]
 
@@ -519,6 +528,25 @@ class ServiceAddonTOMap(NetSuite):
         "row_num_incre_key": ["DATE_LAST_MODIFIED"],
     }
     model = pg_models.ServiceAddonTOMap
+
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
+    ]
+
+
+class PromotionSMSIntegration(NetSuite):
+    table = "PROMOTION_SMS_INTEGRATION"
+    keys = {
+        "p_key": ["PROMOTION_SMS_INTEGRATION_ID"],
+        "rank_key": ["PROMOTION_SMS_INTEGRATION_ID"],
+        "incre_key": ["LAST_MODIFIED_DATE"],
+        "rank_incre_key": ["LAST_MODIFIED_DATE"],
+        "row_num_incre_key": ["LAST_MODIFIED_DATE"],
+    }
+    model = pg_models.PromotionSMSIntegration
 
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
