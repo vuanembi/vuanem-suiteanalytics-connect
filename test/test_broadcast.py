@@ -6,8 +6,16 @@ from .utils import process
 @pytest.mark.parametrize(
     "broadcast",
     [
+        {
+            "broadcast": "standard",
+        },
+        {
+            "broadcast": "incre",
+        },
+    ],
+    ids=[
         "standard",
-        "incre",
+        "auto",
     ],
 )
 def test_broadcast(broadcast):

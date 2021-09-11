@@ -25,17 +25,19 @@ def main(request):
     print(data)
 
     if "broadcast" in data:
-        responses = broadcast(data["broadcast"])
+        results = broadcast(data)
     else:
         job = NetSuiteFactory.factory(
             data['table'],
             data.get("start"),
             data.get("end"),
         )
-        responses = {
-            "pipelines": "NetSuite",
-            "results": job.run(),
-        }
+        results = job.run()
+    
+    responses = {
+        "pipelines": "NetSuite",
+        "results": results,
+    }
 
     print(responses)
 

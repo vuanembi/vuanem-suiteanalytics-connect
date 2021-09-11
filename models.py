@@ -9,61 +9,11 @@ from components import connector, getter, loader, pg_models
 class NetSuiteFactory:
     @staticmethod
     def factory(table, start, end):
-        args = (start, end)
-        if table == "ACCOUNTS":
-            return Accounts(*args)
-        elif table == "BUDGET":
-            return Budget(*args)
-        elif table == "CLASSES":
-            return Classes(*args)
-        elif table == "CUSTOMERS":
-            return Customers(*args)
-        elif table == "DELIVERY_PERSON":
-            return DeliveryPerson(*args)
-        elif table == "DEPARTMENTS":
-            return Departments(*args)
-        elif table == "EMPLOYEES":
-            return Employees(*args)
-        elif table == "ITEMS":
-            return Items(*args)
-        elif table == "LOCATIONS":
-            return Locations(*args)
-        elif table == "SYSTEM_NOTES_PRICE":
-            return SystemNotesPrice(*args)
-        elif table == "VENDORS":
-            return Vendors(*args)
-        elif table == "ns2_promotionCode":
-            return NS2PromotionCode(*args)
-        elif table == "ITEM_LOCATION_MAP":
-            return ItemLocationMap(*args)
-        # *
-        elif table == "CASES":
-            return Cases(*args)
-        elif table == "DELETED_RECORDS":
-            return DeletedRecords(*args)
-        elif table == "TRANSACTIONS":
-            return Transactions(*args)
-        elif table == "TRANSACTION_LINES":
-            return TransactionLines(*args)
-        elif table == "STORE_TRAFFIC":
-            return StoreTraffic(*args)
-        elif table == "SUPPORT_PERSON_MAP":
-            return SupportPersonMap(*args)
-        elif table == "ns2_transactionLine":
-            return NS2TransactionLine(*args)
-        elif table == "ns2_couponCode":
-            return NS2CouponCode(*args)
-        elif table == "ns2_tranPromotion":
-            return NS2TranPromotion(*args)
-        elif table == "LOYALTY_TRANSACTION":
-            return LoyaltyTransaction(*args)
-        elif table == "SERVICE_ADDON_SO_MAP":
-            return ServiceAddonSOMap(*args)
-        elif table == "SERVICE_ADDON_TO_MAP":
-            return ServiceAddonTOMap(*args)
-        elif table == "PROMOTION_SMS_INTEGRATION":
-            return PromotionSMSIntegration(*args)
-        # *
+        tables_mapping = [i for v in TABLES.values() for i in v]
+        tables =  [v for i in tables_mapping for k, v in i.items() if k == table]
+        if len(tables) == 1:
+            table = tables[0]
+            return table(start, end)
         else:
             raise NotImplementedError(table)
 
@@ -551,3 +501,37 @@ class PromotionSMSIntegration(NetSuite):
         loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
     ]
+
+
+TABLES = {
+    "standard": [
+        {"ACCOUNTS": Accounts},
+        {"BUDGET": Budget},
+        {"CLASSES": Classes},
+        {"DELIVERY_PERSON": DeliveryPerson},
+        {"DEPARTMENTS": Departments},
+        {"EMPLOYEES": Employees},
+        {"ITEMS": Items},
+        {"LOCATIONS": Locations},
+        {"SYSTEM_NOTES_PRICE": SystemNotesPrice},
+        {"VENDORS": Vendors},
+        {"ns2_promotionCode": NS2PromotionCode},
+        {"ITEM_LOCATION_MAP": ItemLocationMap},
+    ],
+    "time_incre": [
+        {"CASES": Cases},
+        {"CUSTOMERS": Customers},
+        {"DELETED_RECORDS": DeletedRecords},
+        {"TRANSACTIONS": Transactions},
+        {"TRANSACTION_LINES": TransactionLines},
+        {"STORE_TRAFFIC": StoreTraffic},
+        {"SUPPORT_PERSON_MAP": SupportPersonMap},
+        {"ns2_transactionLine": NS2TransactionLine},
+        {"ns2_tranPromotion": NS2TranPromotion},
+        {"LOYALTY_TRANSACTION": LoyaltyTransaction},
+        {"SERVICE_ADDON_SO_MAP": ServiceAddonSOMap},
+        {"SERVICE_ADDON_TO_MAP": ServiceAddonTOMap},
+        {"PROMOTION_SMS_INTEGRATION": PromotionSMSIntegration},
+    ],
+    "id_incre": [{"ns2_couponCode": NS2CouponCode}],
+}
