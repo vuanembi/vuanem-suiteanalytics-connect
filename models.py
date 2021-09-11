@@ -115,7 +115,7 @@ class NetSuite(metaclass=ABCMeta):
                     row[col] = int(row[col]) if row[col] is not None else row[col]
             if str_cols:
                 for col in str_cols:
-                    row[col] = re.sub(pattern, '', row[col]) if row[col] else None
+                    row[col] = re.sub(pattern, "", row[col]) if row[col] else None
         return rows
 
     def run(self):
@@ -301,7 +301,7 @@ class Customers(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        # loader.BigQueryIncrementalLoader,
+        loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
     ]
 
@@ -371,10 +371,7 @@ class TransactionLines(NetSuite):
         "rank_key": ["TRANSACTION_ID"],
         "incre_key": ["DATE_LAST_MODIFIED", "TRANSACTIONS_DATE_LAST_MODIFIED"],
         "rank_incre_key": ["TRANSACTIONS_DATE_LAST_MODIFIED"],
-        "row_num_incre_key": [
-            "TRANSACTIONS_DATE_LAST_MODIFIED",
-            "DATE_LAST_MODIFIED",
-        ],
+        "row_num_incre_key": ["TRANSACTIONS_DATE_LAST_MODIFIED", "DATE_LAST_MODIFIED"],
     }
     model = pg_models.TransactionLines
 
