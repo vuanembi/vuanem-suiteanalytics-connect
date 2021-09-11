@@ -27,6 +27,13 @@ ID_START = 1
 ID_END = 1000
 
 
+def assertion(res):
+    assert res["num_processed"] >= 0
+    if res["num_processed"] > 0:
+        for i in res['loads']:
+            assert res["num_processed"] == i["output_rows"]
+
+
 @pytest.mark.parametrize(
     "table",
     [
@@ -38,7 +45,8 @@ def test_auto(table):
     data = {
         "table": table,
     }
-    process(data)
+    res = process(data)
+    assertion(res)
 
 
 @pytest.mark.parametrize(
@@ -51,7 +59,8 @@ def test_manual_time(table):
         "start": TIME_START,
         "end": TIME_END,
     }
-    process(data)
+    res = process(data)
+    assertion(res)
 
 
 @pytest.mark.parametrize(
@@ -64,7 +73,8 @@ def test_manual_id(table):
         "start": ID_START,
         "end": ID_END,
     }
-    process(data)
+    res = process(data)
+    assertion(res)
 
 
 @pytest.mark.parametrize(
@@ -88,4 +98,5 @@ def test_standard(table):
     data = {
         "table": table,
     }
-    process(data)
+    res = process(data)
+    assertion(res)

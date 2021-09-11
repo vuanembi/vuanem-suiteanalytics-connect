@@ -1,9 +1,6 @@
-from unittest.mock import Mock
-
 import pytest
 
-from main import main
-from .utils import encode_data
+from .utils import process
 
 
 @pytest.mark.parametrize(
@@ -14,10 +11,5 @@ from .utils import encode_data
     ],
 )
 def test_broadcast(broadcast):
-    data = {
-        "broadcast": broadcast,
-    }
-    message = encode_data(data)
-    req = Mock(get_json=Mock(return_value=message), args=message)
-    res = main(req)
+    res = process(broadcast)
     assert res["message_sent"] > 0
