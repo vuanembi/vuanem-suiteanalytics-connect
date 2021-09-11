@@ -29,7 +29,10 @@ ID_END = 1000
 
 @pytest.mark.parametrize(
     "table",
-    [*TIME_TABLES, *ID_TABLES],
+    [
+        *TIME_TABLES,
+        *ID_TABLES,
+    ],
 )
 def test_auto(table):
     data = {
@@ -60,5 +63,29 @@ def test_manual_id(table):
         "table": table,
         "start": ID_START,
         "end": ID_END,
+    }
+    process(data)
+
+
+@pytest.mark.parametrize(
+    "table",
+    [
+        "ACCOUNTS",
+        "BUDGET",
+        "CLASSES",
+        "DELIVERY_PERSON",
+        "DEPARTMENTS",
+        "EMPLOYEES",
+        "ITEMS",
+        "LOCATIONS",
+        "SYSTEM_NOTES_PRICE",
+        "VENDORS",
+        "ns2_promotionCode",
+        "ITEM_LOCATION_MAP",
+    ],
+)
+def test_standard(table):
+    data = {
+        "table": table,
     }
     process(data)
