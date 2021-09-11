@@ -1,21 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "CASE_ID"
-        ],
-        "rank_key": [
-            "CASE_ID"
-        ],
-        "incremental_key": [
-            "DATE_LAST_MODIFIED"
-        ],
-        "rank_incremental_key": [
-            "DATE_LAST_MODIFIED"
-        ],
-        "row_num_incremental_key": [
-            "DATE_LAST_MODIFIED"
-        ]
-    },
     "schema": [
         {
             "name": "ASSIGNED_ID",

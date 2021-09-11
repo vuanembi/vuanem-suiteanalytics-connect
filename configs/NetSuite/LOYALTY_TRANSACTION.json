@@ -1,21 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "LOYALTY_TRANSACTION_ID"
-        ],
-        "rank_key": [
-            "LOYALTY_TRANSACTION_ID"
-        ],
-        "incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "rank_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "row_num_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ]
-    },
     "schema": [
         {
             "name": "AMOUNT",

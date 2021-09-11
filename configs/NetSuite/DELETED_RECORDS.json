@@ -1,21 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "RECORD_ID"
-        ],
-        "rank_key": [
-            "RECORD_ID"
-        ],
-        "incremental_key": [
-            "DATE_DELETED"
-        ],
-        "rank_incremental_key": [
-            "DATE_DELETED"
-        ],
-        "row_num_incremental_key": [
-            "DATE_DELETED"
-        ]
-    },
     "schema": [
         {
             "name": "CUSTOM_RECORD_TYPE",

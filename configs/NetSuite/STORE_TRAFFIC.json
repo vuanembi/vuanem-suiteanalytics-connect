@@ -1,21 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "STORE_TRAFFIC_ID"
-        ],
-        "rank_key": [
-            "STORE_TRAFFIC_ID"
-        ],
-        "incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "rank_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "row_num_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ]
-    },
     "schema": [
         {
             "name": "DATE_0",

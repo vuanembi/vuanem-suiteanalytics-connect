@@ -1,22 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "TRANSACTION_ID",
-            "TRANSACTION_LINE_ID"
-        ],
-        "rank_key": [
-            "TRANSACTION_ID"
-        ],
-        "incremental_key": [
-            "DATE_LAST_MODIFIED",
-            "TRANSACTIONS_DATE_LAST_MODIFIED"
-        ],
-        "rank_incremental_key": ["TRANSACTIONS_DATE_LAST_MODIFIED"],
-        "row_num_incremental_key": [
-            "TRANSACTIONS_DATE_LAST_MODIFIED",
-            "DATE_LAST_MODIFIED"
-        ]
-    },
     "schema": [
         {
             "name": "TRANSACTION_ID",

@@ -1,21 +1,4 @@
 {
-    "keys": {
-        "p_key": [
-            "PROMOTION_SMS_INTEGRATION_ID"
-        ],
-        "rank_key": [
-            "PROMOTION_SMS_INTEGRATION_ID"
-        ],
-        "incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "rank_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ],
-        "row_num_incremental_key": [
-            "LAST_MODIFIED_DATE"
-        ]
-    },
     "schema": [
         {
             "name": "PROMOTION_SMS_INTEGRATION_ID",
