@@ -89,6 +89,7 @@ Customers = Table(
     Column("SOURCES_ID", Integer),
     Column("STATUS", String),
     Column("SUBSIDIARY_ID", Integer),
+    Column("DATE_OF_BIRTH", DateTime(timezone=True)),
 )
 
 DeliveryPerson = Table(
@@ -353,7 +354,7 @@ ServiceAddonSOMap = Table(
     "SERVICE_ADDON_SO_MAP",
     metadata_obj,
     Column("LIST_SERVICE_ADD_ON_SO_ID", Integer),
-    Column("TRANSACTION_ID", Integer, primary_key=True),
+    Column("TRANSACTION_ID", Integer),
     Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
 )
 
@@ -361,7 +362,7 @@ ServiceAddonTOMap = Table(
     "SERVICE_ADDON_TO_MAP",
     metadata_obj,
     Column("LIST_SERVICE_ADD_ON_TO_ID", Integer),
-    Column("TRANSACTION_ID", Integer, primary_key=True),
+    Column("TRANSACTION_ID", Integer),
     Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
 )
 
@@ -450,9 +451,9 @@ TransactionLines = Table(
     Column("TRANSACTION_ID", Integer, primary_key=True),
     Column("TRANSACTION_LINE_ID", Integer, primary_key=True),
     Column("ACCOUNT_ID", Integer),
-    Column("AMOUNT", Integer),
-    Column("AMOUNT_BEFORE_DISCOUNT", Integer),
-    Column("AMOUNT_FOREIGN_LINKED", Integer),
+    Column("AMOUNT", BigInteger),
+    Column("AMOUNT_BEFORE_DISCOUNT", BigInteger),
+    Column("AMOUNT_FOREIGN_LINKED", BigInteger),
     Column("CLASS_ID", Integer),
     Column("COMPANY_ID", Integer),
     Column("DATE_CLOSED", DateTime(timezone=True)),
@@ -462,7 +463,7 @@ TransactionLines = Table(
     Column("DELIVER_LOCATION_ID", Integer),
     Column("DEPARTMENT_ID", Integer),
     Column("EXPECTED_DELIVERY_DATE_SO", DateTime(timezone=True)),
-    Column("GROSS_AMOUNT", Integer),
+    Column("GROSS_AMOUNT", BigInteger),
     Column("IS_COST_LINE", String),
     Column("ITEM_COUNT", Integer),
     Column("ITEM_GROUP_PROMOTION_ID", Integer),
@@ -471,7 +472,7 @@ TransactionLines = Table(
     Column("ITEM_UNIT_PRICE", String),
     Column("LOCATION_ID", Integer),
     Column("MEMO", String),
-    Column("NET_AMOUNT", Integer),
+    Column("NET_AMOUNT", BigInteger),
     Column("QUANTITY_RECEIVED_IN_SHIPMENT", Integer),
     Column("SUBSIDIARY_ID", Integer),
     Column("TRANSACTION_ORDER", Integer),
@@ -515,4 +516,32 @@ NS2CouponCode = Table(
     Column("externalid", String),
     Column("id", Integer, primary_key=True),
     Column("promotion", Integer),
+)
+
+PromotionSMSIntegration = Table(
+    "PROMOTION_SMS_INTEGRATION",
+    metadata_obj,
+    Column("PROMOTION_SMS_INTEGRATION_ID", Integer),
+    Column("COUPON_CODES", String),
+    Column("CUSTOMER_ID", Integer),
+    Column("CUSTOMER_NAME", String),
+    Column("CUSTOMER_NUMBER", String),
+    Column("DATE_CREATED", DateTime(timezone=True)),
+    Column("END_DATE", String),
+    Column("INTERNAL_ID_COUPON_CODE", Integer),
+    Column("ISLOCK", String),
+    Column("ISSEND", String),
+    Column("IS_INACTIVE", String),
+    Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
+    Column("MESSENGER_TEMPLATE", String),
+    Column("PARENT_ID", Integer),
+    Column("PHONE_NUMBER", String),
+    Column("PROMOTION_INTERNAL_ID", Integer),
+    Column("PROMOTION_NAME", String),
+    Column("PROMOTION_SMS_INTEGRATION_EXTI", String),
+    Column("SEND_TIME", String),
+    Column("SEND_TIME_DATETIME", DateTime(timezone=True)),
+    Column("START_DATE", String),
+    Column("STATUS_SEND", String),
+    Column("VERIFY_SMS", String),
 )
