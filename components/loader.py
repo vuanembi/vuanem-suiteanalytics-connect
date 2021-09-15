@@ -50,6 +50,7 @@ class BigQueryLoader(Loader):
                     attempts += 1
                 else:
                     raise e
+        self._update()
         return {
             "load": "BigQuery",
             "output_rows": loads.output_rows,
@@ -92,7 +93,7 @@ class BigQueryIncrementalLoader(BigQueryLoader):
             row_num_incre_key=self.keys["row_num_incre_key"],
             rank_incre_key=self.keys["rank_incre_key"],
         )
-        BQ_CLIENT.query(rendered_query)
+        BQ_CLIENT.query(rendered_query).result()
 
 
 class PostgresLoader(Loader):
