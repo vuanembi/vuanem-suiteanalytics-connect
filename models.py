@@ -353,7 +353,7 @@ class StoreTraffic(NetSuite):
 class SupportPersonMap(NetSuite):
     table = "SUPPORT_PERSON_MAP"
     keys = {
-        "p_key": ["TRANSACTION_ID"],
+        "p_key": ["DELIVERY_PERSON_ID", "TRANSACTION_ID"],
         "rank_key": ["TRANSACTION_ID"],
         "incre_key": ["DATE_LAST_MODIFIED"],
         "rank_incre_key": ["DATE_LAST_MODIFIED"],
