@@ -501,6 +501,26 @@ class PromotionSMSIntegration(NetSuite):
     ]
 
 
+class LoyaltyCustomerGroup(NetSuite):
+    table = "LOYALTY_CUSTOMER_GROUP"
+    keys = {
+        "p_key": ["LOYALTY_CUSTOMER_GROUP_ID"],
+        "rank_key": ["LOYALTY_CUSTOMER_GROUP_ID"],
+        "incre_key": ["LAST_MODIFIED_DATE"],
+        "rank_incre_key": ["LAST_MODIFIED_DATE"],
+        "row_num_incre_key": ["LAST_MODIFIED_DATE"],
+    }
+    model = pg_models.LoyaltyCustomerGroup
+
+    connector = connector.NetSuiteConnector
+    getter = getter.TimeIncrementalGetter
+    loader = [
+        loader.BigQueryIncrementalLoader,
+        loader.PostgresIncrementalLoader,
+    ]
+
+
+
 TABLES = {
     "standard": [
         {"ACCOUNTS": Accounts},
@@ -530,6 +550,7 @@ TABLES = {
         {"SERVICE_ADDON_SO_MAP": ServiceAddonSOMap},
         {"SERVICE_ADDON_TO_MAP": ServiceAddonTOMap},
         {"PROMOTION_SMS_INTEGRATION": PromotionSMSIntegration},
+        {"LOYALTY_CUSTOMER_GROUP": LoyaltyCustomerGroup},
     ],
     "id_incre": [{"ns2_couponCode": NS2CouponCode}],
 }

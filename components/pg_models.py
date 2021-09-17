@@ -546,3 +546,19 @@ PromotionSMSIntegration = Table(
     Column("STATUS_SEND", String),
     Column("VERIFY_SMS", String),
 )
+
+LoyaltyCustomerGroup = Table(
+    "LOYALTY_CUSTOMER_GROUP",
+    metadata_obj,
+    Column("LOYALTY_CUSTOMER_GROUP_ID", Integer, primary_key=True),
+    Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
+    Column("DATE_CREATED", DateTime(timezone=True)),
+    Column("IS_INACTIVE", String),
+    Column("LEVEL_0", Integer),
+    Column("LOYALTY_CUSTOMER_GROUP_EXTID", String),
+    Column("LOYALTY_CUSTOMER_GROUP_NAME", String),
+    Column("MIN_REDEEMABLE_POINT", Integer),
+    Column("PARENT_ID", Integer),
+    Column("POINT_LEVEL_FROM", Integer),
+    Column("POINT_LEVEL_TO", Integer),
+)

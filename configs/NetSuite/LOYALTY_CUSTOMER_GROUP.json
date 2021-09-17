@@ -1,0 +1,48 @@
+{
+    "schema": [
+        {
+            "name": "LOYALTY_CUSTOMER_GROUP_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "LAST_MODIFIED_DATE",
+            "type": "TIMESTAMP"
+        },
+        {
+            "name": "DATE_CREATED",
+            "type": "TIMESTAMP"
+        },
+        {
+            "name": "IS_INACTIVE",
+            "type": "STRING"
+        },
+        {
+            "name": "LEVEL_0",
+            "type": "INTEGER"
+        },
+        {
+            "name": "LOYALTY_CUSTOMER_GROUP_EXTID",
+            "type": "STRING"
+        },
+        {
+            "name": "LOYALTY_CUSTOMER_GROUP_NAME",
+            "type": "STRING"
+        },
+        {
+            "name": "MIN_REDEEMABLE_POINT",
+            "type": "INTEGER"
+        },
+        {
+            "name": "PARENT_ID",
+            "type": "INTEGER"
+        },
+        {
+            "name": "POINT_LEVEL_FROM",
+            "type": "INTEGER"
+        },
+        {
+            "name": "POINT_LEVEL_TO",
+            "type": "INTEGER"
+        }
+    ]
+}
