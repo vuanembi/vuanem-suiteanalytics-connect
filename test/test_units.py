@@ -21,8 +21,8 @@ ID_TABLES = [
     "ns2_couponCode",
 ]
 
-TIME_START = "2020-01-01"
-TIME_END = "2020-07-01"
+TIME_START = "2021-06-01"
+TIME_END = "2021-09-16"
 ID_START = 1
 ID_END = 1000
 
@@ -53,6 +53,7 @@ def test_auto(table):
     "table",
     TIME_TABLES,
 )
+@pytest.mark.timeout(0)
 def test_manual_time(table):
     data = {
         "table": table,

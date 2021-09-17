@@ -90,6 +90,7 @@ Customers = Table(
     Column("STATUS", String),
     Column("SUBSIDIARY_ID", Integer),
     Column("DATE_OF_BIRTH", DateTime(timezone=True)),
+    Column("LOYALTY_GROUP_ID", DateTime(timezone=True)),
 )
 
 DeliveryPerson = Table(

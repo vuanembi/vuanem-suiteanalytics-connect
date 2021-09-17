@@ -143,6 +143,10 @@
         {
             "name": "DATE_OF_BIRTH",
             "type": "TIMESTAMP"
+        },
+        {
+            "name": "LOYALTY_GROUP_ID",
+            "type": "INTEGER"
         }
     ]
 }
