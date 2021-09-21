@@ -8,5 +8,6 @@ SELECT
     ratepercent
 FROM
     transactionLine
-WHERE linelastmodifieddate >= TO_DATE('{{ start }}', 'YYYY-MM-DD HH24:MI:SS')
-AND linelastmodifieddate <= TO_DATE('{{ end }}', 'YYYY-MM-DD HH24:MI:SS')
+WHERE
+    linelastmodifieddate >= TO_DATE('{{ start }}', 'YYYY-MM-DD HH24:MI:SS')
+    AND linelastmodifieddate <= TO_DATE('{{ end }}', 'YYYY-MM-DD HH24:MI:SS')

@@ -1,14 +1,10 @@
-SELECT 
+SELECT
     SPM.DELIVERY_PERSON_ID,
     SPM.TRANSACTION_ID,
     T.DATE_LAST_MODIFIED
 FROM
     "Vua Nem Joint Stock Company".Administrator.SUPPORT_PERSON_MAP SPM
-LEFT JOIN 
-    "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS T
-ON
-    SPM.TRANSACTION_ID = T.TRANSACTION_ID
-WHERE 
+    LEFT JOIN "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS T ON SPM.TRANSACTION_ID = T.TRANSACTION_ID
+WHERE
     T.DATE_LAST_MODIFIED >= '{{ start }}'
-    AND
-    T.DATE_LAST_MODIFIED <= '{{ end }}'
+    AND T.DATE_LAST_MODIFIED <= '{{ end }}'

@@ -4,7 +4,7 @@ import base64
 
 import requests
 
-from models import NetSuiteFactory
+from models.models import NetSuiteFactory
 from broadcast import broadcast
 
 

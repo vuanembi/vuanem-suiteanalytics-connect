@@ -10,7 +10,8 @@ SELECT
 	PARENT_ID,
 	POINT_LEVEL_FROM,
 	POINT_LEVEL_TO
-FROM "Vua Nem Joint Stock Company".Administrator.LOYALTY_CUSTOMER_GROUP 
+FROM
+	"Vua Nem Joint Stock Company".Administrator.LOYALTY_CUSTOMER_GROUP
 WHERE
-    LAST_MODIFIED_DATE >= '{{ start }}'
-    AND LAST_MODIFIED_DATE <= '{{ end }}'
+	LAST_MODIFIED_DATE >= '{{ start }}'
+	AND LAST_MODIFIED_DATE <= '{{ end }}'

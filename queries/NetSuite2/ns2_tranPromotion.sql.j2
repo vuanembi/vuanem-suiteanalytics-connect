@@ -10,8 +10,7 @@ SELECT
     b.lastmodifieddate
 FROM
     tranPromotion a
-    LEFT JOIN transaction b
-    ON b.id = a.transaction
+    LEFT JOIN transaction b ON b.id = a.transaction
 WHERE
     b.lastmodifieddate >= TO_DATE(
         '{{ start }}',

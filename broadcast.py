@@ -3,7 +3,7 @@ import json
 
 from google.cloud import pubsub_v1
 
-from models import TABLES
+from models.models import TABLES
 
 PUBLISHER = pubsub_v1.PublisherClient()
 TOPIC_PATH = PUBLISHER.topic_path(os.getenv("PROJECT_ID"), os.getenv("TOPIC_ID"))
