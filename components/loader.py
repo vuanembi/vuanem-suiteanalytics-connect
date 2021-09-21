@@ -101,7 +101,7 @@ class PostgresLoader(Loader):
         self.model = model.model
 
     def load(self, rows):
-        with ENGINE.begin() as conn:
+        with ENGINE.connect() as conn:
             loads = self._load(conn, rows)
         return {
             "load": "Postgres",
@@ -115,8 +115,9 @@ class PostgresLoader(Loader):
 
 class PostgresStandardLoader(PostgresLoader):
     def _load(self, conn, rows):
-        self.model.drop(bind=ENGINE, checkfirst=True)
         self.model.create(bind=ENGINE, checkfirst=True)
+        truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
+        conn.execute(truncate_stmt)
         loads = conn.execute(insert(self.model), rows)
         return loads
 
