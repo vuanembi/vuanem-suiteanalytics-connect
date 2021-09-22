@@ -1,6 +1,7 @@
 from datetime import datetime
 from abc import ABCMeta, abstractmethod
 
+from jinja2 import Template
 from google.api_core.exceptions import NotFound
 
 from .utils import (
@@ -18,9 +19,8 @@ from .utils import (
 class Getter(metaclass=ABCMeta):
     def __init__(self, model):
         self.connector = model._connector
-        data_source = model._connector.data_source
         self.table = model.table
-        self.template = QUERIES_ENV.get_template(f"{data_source}/{model.table}.sql.j2")
+        self.template = Template(model.query)
 
     def get(self):
         with self.connector.connect() as conn:

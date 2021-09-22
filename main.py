@@ -4,7 +4,7 @@ import base64
 
 import requests
 
-from models.models import NetSuiteFactory
+from models.models import NetSuite
 from broadcast import broadcast
 
 
@@ -27,7 +27,7 @@ def main(request):
     if "broadcast" in data:
         results = broadcast(data)
     else:
-        job = NetSuiteFactory.factory(
+        job = NetSuite.factory(
             data['table'],
             data.get("start"),
             data.get("end"),
