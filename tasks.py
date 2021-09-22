@@ -62,6 +62,6 @@ def create_tasks(data):
         for task in tasks
     ]
     return {
-        "messages_sent": len(responses),
-        "tasks_data": data,
+        "tasks": len(responses),
+        "data": data,
     }

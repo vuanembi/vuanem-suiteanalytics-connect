@@ -123,4 +123,4 @@ def test_tasks(mode):
             "mode": mode,
         }
     )
-    assert res["message_sent"] > 0
+    assert res["tasks"] > 0
