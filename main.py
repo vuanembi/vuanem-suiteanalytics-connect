@@ -1,38 +1,33 @@
 import os
 import json
-import base64
 
 import requests
 
 from models.models import NetSuite
-from broadcast import broadcast
+from tasks import create_tasks
 
 
 def main(request):
     """Gateway to process request
 
     Args:
-        request (flask.Request): Request from PubSub
+        request (flask.Request): HTTP Request
 
     Returns:
         dict: Responses
     """
 
-    request_json = request.get_json()
-    message = request_json["message"]
-    data_bytes = message["data"]
-    data = json.loads(base64.b64decode(data_bytes).decode("utf-8"))
+    data = request.get_json()
     print(data)
 
-    if "broadcast" in data:
-        results = broadcast(data)
+    if "mode" in data and "table" not in data:
+        results = create_tasks(data)
     else:
-        job = NetSuite.factory(
+        results = NetSuite.factory(
             data['table'],
             data.get("start"),
             data.get("end"),
-        )
-        results = job.run()
+        ).run()
     
     responses = {
         "pipelines": "NetSuite",
