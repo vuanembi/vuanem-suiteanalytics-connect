@@ -3,6 +3,7 @@ import json
 import uuid
 
 from google.cloud import tasks_v2
+from google.protobuf.duration_pb2 import Duration
 
 from models.models import TABLES
 
@@ -38,6 +39,7 @@ def create_tasks(data):
             "name": TASKS_CLIENT.task_path(
                 **CLOUD_TASKS_PATH, task=f"{payload['table']}-{uuid.uuid4()}"
             ),
+            "dispatch_deadline": Duration().FromSeconds(900),
             "http_request": {
                 "http_method": tasks_v2.HttpMethod.POST,
                 "url": os.getenv("PUBLIC_URL"),
