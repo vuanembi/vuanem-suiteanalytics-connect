@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk8:centos-slim
 COPY --from=python:3.9-slim / /
 
-ARG PYTHON_ENV
+ARG BUILD_ENV
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONFAULTHANDLER=1
@@ -15,7 +15,8 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 
 RUN poetry config virtualenvs.create false \
-    && poetry install $(test "$PYTHON_ENV" == prod && echo "--no-dev") --no-root --no-interaction --no-ansi
+    && poetry install $(if [ "$BUILD_ENV" = 'prod' ]; then echo '--no-dev'; fi) \
+    --no-root --no-interaction --no-ansi
 
 COPY . /app
 

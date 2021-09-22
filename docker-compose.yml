@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        PYTHON_DEV: dev
+        BUILD_ENV: dev
     container_name: vuanem-ns
     volumes:
       - ./creds/${CREDS_FILENAME}.json:/tmp/${CREDS_FILENAME}.json
@@ -29,6 +29,9 @@ services:
       PG_DB: ${PG_DB}
       PG_UID: ${PG_UID}
       PG_PWD: ${PG_PWD}
+      REGION: ${REGION}
+      PUBLIC_URL: ${PUBLIC_URL}
+      GCP_SA: ${GCP_SA}
 
     ports:
       - '8080:8080'
