@@ -17,6 +17,7 @@ STANDARD_TABLES = [
     "VENDORS",
     "ns2_promotionCode",
     "ITEM_LOCATION_MAP",
+    "CAMPAIGNS",
 ]
 TIME_TABLES = [
     "CASES",
@@ -51,7 +52,7 @@ def process(data):
 
 
 class TestPipelines:
-    def assert_pipelines(res):
+    def assert_pipelines(self, res):
         assert res["num_processed"] >= 0
         if res["num_processed"] > 0:
             for i in res["loads"]:
