@@ -103,6 +103,7 @@ TABLES = {
         "SERVICE_ADDON_TO_MAP",
         "PROMOTION_SMS_INTEGRATION",
         "LOYALTY_CUSTOMER_GROUP",
+        "SYSTEM_NOTES_CREATE",
     ],
     "id_incre": [
         "ns2_couponCode",
