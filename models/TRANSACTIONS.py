@@ -179,6 +179,7 @@ class TRANSACTIONS(NetSuite):
         Column("TRANSFER_ORDER_TYPE_ID", Integer),
         Column("PURCHASE_ORDER_TYPE_ID", Integer),
     ]
+    materialized_view = "NetSuite__Customers2"
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [

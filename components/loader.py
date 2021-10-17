@@ -126,6 +126,7 @@ class PostgresIncrementalLoader(PostgresLoader):
     def __init__(self, model):
         super().__init__(model)
         self.keys = model.keys
+        self.materialized_view = getattr(model, 'materialized_view', None)
 
     def _load(self, conn, rows):
         self.model.create(bind=ENGINE, checkfirst=True)
@@ -140,3 +141,11 @@ class PostgresIncrementalLoader(PostgresLoader):
         conn.execute(delete_stmt)
         loads = conn.execute(insert(self.model), rows)
         return loads
+    
+    def _refresh_materialized_view(self, conn):
+        conn.execute(f"""
+            REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}
+            """
+        )
+
+
