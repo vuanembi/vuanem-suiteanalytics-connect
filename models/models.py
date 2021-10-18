@@ -87,6 +87,7 @@ TABLES = {
         "ns2_promotionCode",
         "ITEM_LOCATION_MAP",
         "CAMPAIGNS",
+        "ENTITY_NOT_CUSTJOB",
     ],
     "time_incre": [
         "CASES",
