@@ -3,42 +3,43 @@ from unittest.mock import Mock
 import pytest
 
 from main import main
+from models.models import TABLES
 
-STANDARD_TABLES = [
-    "ACCOUNTS",
-    "BUDGET",
-    "CLASSES",
-    "DELIVERY_PERSON",
-    "DEPARTMENTS",
-    "EMPLOYEES",
-    "ITEMS",
-    "LOCATIONS",
-    "SYSTEM_NOTES_PRICE",
-    "VENDORS",
-    "ns2_promotionCode",
-    "ITEM_LOCATION_MAP",
-    "CAMPAIGNS",
-]
-TIME_TABLES = [
-    "CASES",
-    "CUSTOMERS",
-    "DELETED_RECORDS",
-    "TRANSACTIONS",
-    "TRANSACTION_LINES",
-    "STORE_TRAFFIC",
-    "SUPPORT_PERSON_MAP",
-    "ns2_transactionLine",
-    "ns2_tranPromotion",
-    "LOYALTY_TRANSACTION",
-    "SERVICE_ADDON_SO_MAP",
-    "SERVICE_ADDON_TO_MAP",
-    "PROMOTION_SMS_INTEGRATION",
-    "LOYALTY_CUSTOMER_GROUP",
-    "SYSTEM_NOTES_CREATE",
-]
-ID_TABLES = [
-    "ns2_couponCode",
-]
+# STANDARD_TABLES = [
+#     "ACCOUNTS",
+#     "BUDGET",
+#     "CLASSES",
+#     "DELIVERY_PERSON",
+#     "DEPARTMENTS",
+#     "EMPLOYEES",
+#     "ITEMS",
+#     "LOCATIONS",
+#     "SYSTEM_NOTES_PRICE",
+#     "VENDORS",
+#     "ns2_promotionCode",
+#     "ITEM_LOCATION_MAP",
+#     "CAMPAIGNS",
+# ]
+# TIME_TABLES = [
+#     "CASES",
+#     "CUSTOMERS",
+#     "DELETED_RECORDS",
+#     "TRANSACTIONS",
+#     "TRANSACTION_LINES",
+#     "STORE_TRAFFIC",
+#     "SUPPORT_PERSON_MAP",
+#     "ns2_transactionLine",
+#     "ns2_tranPromotion",
+#     "LOYALTY_TRANSACTION",
+#     "SERVICE_ADDON_SO_MAP",
+#     "SERVICE_ADDON_TO_MAP",
+#     "PROMOTION_SMS_INTEGRATION",
+#     "LOYALTY_CUSTOMER_GROUP",
+#     "SYSTEM_NOTES_CREATE",
+# ]
+# ID_TABLES = [
+#     "ns2_couponCode",
+# ]
 
 TIME_START = "2021-07-01"
 TIME_END = "2021-08-01"
@@ -61,7 +62,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        STANDARD_TABLES,
+        TABLES['standard'],
     )
     def test_standard(self, table):
         data = {
@@ -73,8 +74,8 @@ class TestPipelines:
     @pytest.mark.parametrize(
         "table",
         [
-            *TIME_TABLES,
-            *ID_TABLES,
+            *TABLES['time_incre'],
+            *TABLES['id_incre'],
         ],
     )
     def test_auto(self, table):
@@ -86,7 +87,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        TIME_TABLES,
+        TABLES['time_incre'],
     )
     @pytest.mark.timeout(0)
     def test_manual_time(self, table):
@@ -100,7 +101,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        ID_TABLES,
+        TABLES['id_incre'],
     )
     def test_manual_id(self, table):
         data = {
