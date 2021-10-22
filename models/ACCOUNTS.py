@@ -52,6 +52,6 @@ class ACCOUNTS(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
     loader = [
-        loader.BigQueryStandardLoader,
         loader.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
     ]

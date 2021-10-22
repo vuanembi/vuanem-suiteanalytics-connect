@@ -72,6 +72,6 @@ class ns2_promotionCode(NetSuite):
     connector = connector.NetSuite2Connector
     getter = getter.StandardGetter
     loader = [
-        loader.BigQueryStandardLoader,
         loader.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
     ]

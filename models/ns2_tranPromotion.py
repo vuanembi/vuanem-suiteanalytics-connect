@@ -63,6 +63,6 @@ class ns2_tranPromotion(NetSuite):
     connector = connector.NetSuite2Connector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
+        loader.BigQueryIncrementalLoader,
     ]

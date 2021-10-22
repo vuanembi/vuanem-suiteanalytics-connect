@@ -98,6 +98,6 @@ class PROMOTION_SMS_INTEGRATION(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
+        loader.BigQueryIncrementalLoader,
     ]

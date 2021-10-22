@@ -34,6 +34,6 @@ class SYSTEM_NOTES_PRICE(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
     loader = [
-        loader.BigQueryStandardLoader,
         loader.PostgresStandardLoader,
+        loader.BigQueryStandardLoader,
     ]

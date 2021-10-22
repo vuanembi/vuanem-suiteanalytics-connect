@@ -56,6 +56,6 @@ class DELETED_RECORDS(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.BigQueryIncrementalLoader,
         loader.PostgresIncrementalLoader,
+        loader.BigQueryIncrementalLoader,
     ]
