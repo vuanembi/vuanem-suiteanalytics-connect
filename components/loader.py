@@ -5,7 +5,7 @@ from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
 from sqlalchemy import delete, and_, insert
 
-from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, ENGINE
+from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, get_engine
 
 
 class Loader(metaclass=ABCMeta):
@@ -101,21 +101,23 @@ class PostgresLoader(Loader):
         self.model = model.model
 
     def load(self, rows):
-        with ENGINE.connect() as conn:
-            loads = self._load(conn, rows)
+        engine = get_engine()
+        with engine.connect() as conn:
+            loads = self._load(engine, conn, rows)
+        engine.dispose()
         return {
             "load": "Postgres",
             "output_rows": len(loads.inserted_primary_key_rows),
         }
 
     @abstractmethod
-    def _load(self, conn, rows):
+    def _load(self, engine, conn, rows):
         pass
 
 
 class PostgresStandardLoader(PostgresLoader):
-    def _load(self, conn, rows):
-        self.model.create(bind=ENGINE, checkfirst=True)
+    def _load(self, engine, conn, rows):
+        self.model.create(bind=engine, checkfirst=True)
         truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
         conn.execute(truncate_stmt)
         loads = conn.execute(insert(self.model), rows)
@@ -128,8 +130,8 @@ class PostgresIncrementalLoader(PostgresLoader):
         self.keys = model.keys
         self.materialized_view = getattr(model, 'materialized_view', None)
 
-    def _load(self, conn, rows):
-        self.model.create(bind=ENGINE, checkfirst=True)
+    def _load(self, engine, conn, rows):
+        self.model.create(bind=engine, checkfirst=True)
         delete_stmt = delete(self.model).where(
             and_(
                 *[

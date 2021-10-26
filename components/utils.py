@@ -23,14 +23,15 @@ TEMPLATE_ENV = jinja2.Environment(loader=TEMPLATE_LOADER)
 QUERIES_LOADER = jinja2.FileSystemLoader(searchpath="./queries")
 QUERIES_ENV = jinja2.Environment(loader=QUERIES_LOADER)
 
-ENGINE = create_engine(
-    URL.create(
-        drivername="postgresql+psycopg2",
-        username=os.getenv("PG_UID"),
-        password=os.getenv("PG_PWD"),
-        host=os.getenv("PG_HOST"),
-        database=os.getenv("PG_DB"),
-    ),
-    executemany_mode="values",
-    executemany_values_page_size=1000,
-)
+def get_engine():
+    return create_engine(
+        URL.create(
+            drivername="postgresql+psycopg2",
+            username=os.getenv("PG_UID"),
+            password=os.getenv("PG_PWD"),
+            host=os.getenv("PG_HOST"),
+            database=os.getenv("PG_DB"),
+        ),
+        executemany_mode="values",
+        executemany_values_page_size=1000,
+    )
