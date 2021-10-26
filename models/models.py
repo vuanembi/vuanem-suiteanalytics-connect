@@ -105,6 +105,7 @@ TABLES = {
         "PROMOTION_SMS_INTEGRATION",
         "LOYALTY_CUSTOMER_GROUP",
         "SYSTEM_NOTES_CREATE",
+        "ORIGINATING_LEADS",
     ],
     "id_incre": [
         "ns2_couponCode",
