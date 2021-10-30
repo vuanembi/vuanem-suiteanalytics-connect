@@ -88,6 +88,7 @@ TABLES = {
         "ITEM_LOCATION_MAP",
         "CAMPAIGNS",
         "ENTITY_NOT_CUSTJOB",
+        "TRANSACTIONS_DUE_DATE",
     ],
     "time_incre": [
         "CASES",
