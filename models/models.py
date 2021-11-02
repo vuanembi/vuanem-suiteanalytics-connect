@@ -89,6 +89,8 @@ TABLES = {
         "CAMPAIGNS",
         "ENTITY_NOT_CUSTJOB",
         "TRANSACTIONS_DUE_DATE",
+        "PURCHASE_ORDER",
+        "IR",
     ],
     "time_incre": [
         "CASES",
