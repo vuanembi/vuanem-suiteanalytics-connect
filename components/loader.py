@@ -3,7 +3,8 @@ from abc import ABCMeta, abstractmethod
 
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
-from sqlalchemy import delete, and_, insert
+from sqlalchemy import delete, and_
+from sqlalchemy.dialects.postgresql import insert
 
 from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, get_engine
 
@@ -107,7 +108,7 @@ class PostgresLoader(Loader):
         engine.dispose()
         return {
             "load": "Postgres",
-            "output_rows": len(loads.inserted_primary_key_rows),
+            "output_rows": loads,
         }
 
     @abstractmethod
@@ -121,33 +122,39 @@ class PostgresStandardLoader(PostgresLoader):
         truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
         conn.execute(truncate_stmt)
         loads = conn.execute(insert(self.model), rows)
-        return loads
+        return loads.inserted_primary_key_rows
 
 
 class PostgresIncrementalLoader(PostgresLoader):
     def __init__(self, model):
         super().__init__(model)
         self.keys = model.keys
-        self.materialized_view = getattr(model, 'materialized_view', None)
+        self.materialized_view = getattr(model, "materialized_view", None)
 
     def _load(self, engine, conn, rows):
         self.model.create(bind=engine, checkfirst=True)
-        delete_stmt = delete(self.model).where(
-            and_(
-                *[
-                    self.model.c[p_key].in_([row[p_key] for row in rows])
-                    for p_key in self.keys["p_key"]
-                ]
-            )
+        stmt = insert(self.model).values(rows)
+        # update_dict = {c.name: c for c in stmt.excluded if not c.primary_key}
+        update_dict = {c.name: c for c in stmt.excluded if c.name not in self.keys['p_key']}
+        stmt = stmt.on_conflict_do_update(
+            index_elements=self.model.primary_key.columns,
+            set_=update_dict,
         )
-        conn.execute(delete_stmt)
-        loads = conn.execute(insert(self.model), rows)
-        return loads
-    
+        # delete_stmt = delete(self.model).where(
+        #     and_(
+        #         *[
+        #             self.model.c[p_key].in_([row[p_key] for row in rows])
+        #             for p_key in self.keys["p_key"]
+        #         ]
+        #     )
+        # )
+        loads = conn.execute(stmt)
+        # loads = conn.execute(insert(self.model), rows)
+        return loads.rowcount
+
     def _refresh_materialized_view(self, conn):
-        conn.execute(f"""
+        conn.execute(
+            f"""
             REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}
             """
         )
-
-
