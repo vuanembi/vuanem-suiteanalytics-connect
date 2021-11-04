@@ -2,11 +2,6 @@ import re
 import importlib
 from abc import ABCMeta, abstractmethod
 
-from sqlalchemy import MetaData, Table
-
-
-metadata = MetaData(schema="NetSuite")
-
 
 class NetSuite(metaclass=ABCMeta):
     @staticmethod

@@ -99,7 +99,7 @@ class CUSTOMERS(NetSuite):
         {"name": "LOYALTY_GROUP_ID", "type": "INTEGER"},
     ]
     columns = [
-        Column("CUSTOMER_ID", Integer, primary_key=True),
+        Column("CUSTOMER_ID", Integer),
         Column("PHONE", String),
         Column("EMAIL", String),
         Column("CATEGORY_0", String),
