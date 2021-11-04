@@ -1,0 +1,7 @@
+WITH cte AS (
+    SELECT 
+    _id, 
+    ROW_NUMBER() OVER (
+        PARTITION BY "CASE_ID" ORDER BY "DATE_LAST_MODIFIED" DESC) AS row_num
+    FROM "NetSuite"."CASES2")
+DELETE FROM "NetSuite"."CASES2" WHERE "_id" IN (SELECT _id FROM cte WHERE row_num > 1)

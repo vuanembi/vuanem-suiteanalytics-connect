@@ -34,4 +34,5 @@ def get_engine():
         ),
         executemany_mode="values",
         executemany_values_page_size=1000,
+        echo=True,
     )

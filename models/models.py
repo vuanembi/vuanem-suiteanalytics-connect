@@ -38,7 +38,7 @@ class NetSuite(metaclass=ABCMeta):
     def __init__(self, start, end):
         self.start, self.end = start, end
         self.table = self.__class__.__name__
-        self.model = Table(self.table, metadata, *self.columns)
+        # self.columns = Table(self.table, metadata, *self.columns)
         self._connector = self.connector()
         self._getter = self.getter(self)
         self._loader = [loader(self) for loader in self.loader]
