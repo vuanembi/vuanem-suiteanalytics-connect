@@ -93,8 +93,8 @@ class TRANSACTION_LINES(NetSuite):
         {"name": "TRANSACTIONS_DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
     ]
     columns = [
-        Column("TRANSACTION_ID", Integer, primary_key=True),
-        Column("TRANSACTION_LINE_ID", Integer, primary_key=True),
+        Column("TRANSACTION_ID", Integer),
+        Column("TRANSACTION_LINE_ID", Integer),
         Column("ACCOUNT_ID", Integer),
         Column("AMOUNT", BigInteger),
         Column("AMOUNT_BEFORE_DISCOUNT", BigInteger),

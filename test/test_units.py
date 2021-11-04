@@ -42,7 +42,7 @@ from models.models import TABLES
 # ]
 
 TIME_START = "2021-09-01"
-TIME_END = "2021-10-31"
+TIME_END = "2021-09-02"
 ID_START = 1
 ID_END = 1000
 

@@ -2,18 +2,42 @@ import time
 from abc import ABCMeta, abstractmethod
 import io
 import csv
-import json
+import os
 
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
-from sqlalchemy import MetaData, Table, delete, and_, select, func, desc
+from sqlalchemy import (
+    create_engine,
+    MetaData,
+    Table,
+    Column,
+    Identity,
+    Integer,
+    delete,
+    select,
+    func,
+)
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.engine import URL
 
-from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, get_engine
+from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV
 
 schema = "NetSuite"
 
 metadata = MetaData(schema=schema)
+
+engine = create_engine(
+    URL.create(
+        drivername="postgresql+psycopg2",
+        username=os.getenv("PG_UID"),
+        password=os.getenv("PG_PWD"),
+        host=os.getenv("PG_HOST"),
+        database=os.getenv("PG_DB"),
+    ),
+    executemany_mode="values",
+    executemany_values_page_size=1000,
+    echo=True,
+)
 
 
 class Loader(metaclass=ABCMeta):
@@ -106,14 +130,24 @@ class BigQueryIncrementalLoader(BigQueryLoader):
 
 class PostgresLoader(Loader):
     def __init__(self, model):
-        self.model = Table(model.table, metadata, *model.columns)
+        self.model = Table(
+            model.table,
+            metadata,
+            *[
+                Column(
+                    "_id",
+                    Integer,
+                    Identity(start=1, cycle=True, increment=1),
+                    primary_key=True,
+                ),
+                *model.columns,
+            ],
+        )
         self.columns = model.columns
 
     def load(self, rows):
-        engine = get_engine()
         with engine.connect() as conn:
             loads = self._load(engine, conn, rows)
-        engine.dispose()
         return {
             "load": "Postgres",
             "output_rows": loads,
@@ -139,58 +173,25 @@ class PostgresIncrementalLoader(PostgresLoader):
         self.keys = model.keys
         self.materialized_view = getattr(model, "materialized_view", None)
 
-    def _create_temp(self, engine):
-        temp_table = Table(
-            f"temp_{self.model.name}",
-            # MetaData(bind=engine),
-            metadata,
-            *[c.copy() for c in self.model.c],
-            # prefixes=["TEMPORARY"],
-        )
-        temp_table.create(bind=engine, checkfirst=True)
-        return temp_table
-
     def _dump_io(self, rows):
         output = io.StringIO()
         csv_writer = csv.DictWriter(
             output,
-            [c.name for c in self.model.c],
+            [c.name for c in self.model.c if not c.primary_key],
         )
         csv_writer.writeheader()
         csv_writer.writerows(rows)
         output.seek(0)
         return output
 
-    def _generate_copy_stmt(self):
-        column_names = ",".join([f'"{c.name}"' for c in self.model.c])
-        copy_stmt = f'COPY "{schema}"."temp_{self.model.name}" ({column_names}) FROM STDIN WITH (FORMAT CSV, HEADER TRUE)'
-        return copy_stmt
-
-    def _drop_temp_table(self, temp_table):
-        temp_table.drop()
-
-    def _delete_duplicates(self):
-        
-
     def _load(self, engine, conn, rows):
-        temp_table = self._create_temp(engine)
-        try:
-            output_io = self._dump_io(rows)
-            copy_stmt = self._generate_copy_stmt()
-            with engine.raw_connection() as raw_conn:
-                with raw_conn.cursor() as cur:
-                    cur.copy_expert(copy_stmt, output_io)
-                    raw_conn.commit()
-            insert_stmt = insert(self.model).from_select(
-                temp_table.c, select(self.model)
-            )
-            conn.execute(insert_stmt)
-            cte = select(
-                *[
-                    self.model.c[c.name]
-                    for c in self.model.c
-                    if c.name in self.keys["p_key"]
-                ],
+        column_names = ",".join(
+            [f'"{c.name}"' for c in self.model.c if not c.primary_key]
+        )
+        copy_stmt = f'COPY "{schema}"."{self.model.name}" ({column_names}) FROM STDIN WITH (FORMAT CSV, HEADER TRUE)'
+        sbq = select(
+            [
+                self.model.c._id,
                 func.row_number()
                 .over(
                     partition_by=[
@@ -198,9 +199,10 @@ class PostgresIncrementalLoader(PostgresLoader):
                         for c in self.model.c
                         if c.name in self.keys["p_key"]
                     ],
-                    order_by=desc(
-                        getattr(self.model.c, self.keys["row_num_incre_key"])
-                    ),
+                    order_by=[
+                        getattr(self.model.c, i).desc()
+                        for i in self.keys["row_num_incre_key"]
+                    ],
                 )
                 .label("row_num"),
                 func.rank()
@@ -210,49 +212,32 @@ class PostgresIncrementalLoader(PostgresLoader):
                         for c in self.model.c
                         if c.name in self.keys["p_key"]
                     ],
-                    order_by=desc(getattr(self.model.c, self.keys["rank_incre_key"])),
+                    order_by=[
+                        getattr(self.model.c, i).desc()
+                        for i in self.keys["rank_incre_key"]
+                    ],
                 )
                 .label("rank"),
-            )
-        except:
-            print(123)
-        finally:
-            temp_table.drop(engine)
+            ]
+        ).subquery("num")
+        cte = (
+            select(sbq.c._id)
+            .where(sbq.c.row_num == 1)
+            .where(sbq.c.rank == 1)
+            .cte("cte")
+        )
+        delete_stmt = delete(self.model).where(~self.model.c._id.in_(select(cte.c._id)))
 
-        # conn2 = engine.connect().connection
-        # raw_cur = conn2.cursor()
-        # conn2.commit()
-        # # raw_cur.copy_from(output, f'"NetSuite"."temp_{self.model.name}"',sep=',',null='', columns=[c.name for c in self.model.c])
-        # raw_cur.copy_expert(copy_stmt, output)
-        # conn2.commit()
-        # raw_cur.execute('SELECT * FROM "NetSuite"."temp_CASES"')
-        # x = raw_cur.fetchall()
-        # x = output.getvalue()
+        output_io = self._dump_io(rows)
+        raw_conn = engine.raw_connection()
+        with raw_conn.cursor() as cur:
+            cur.copy_expert(copy_stmt, output_io)
+            raw_conn.commit()
+        conn.execute(delete_stmt)
 
-        # stmt = insert(self.model).values(rows)
-        # # update_dict = {c.name: c for c in stmt.excluded if not c.primary_key}
-        # update_dict = {
-        #     c.name: c for c in stmt.excluded if c.name not in self.keys["p_key"]
-        # }
-        # stmt = stmt.on_conflict_do_update(
-        #     index_elements=self.model.primary_key.columns,
-        #     set_=update_dict,
-        # )
-        # delete_stmt = delete(self.model).where(
-        #     and_(
-        #         *[
-        #             self.model.c[p_key].in_([row[p_key] for row in rows])
-        #             for p_key in self.keys["p_key"]
-        #         ]
-        #     )
-        # )
-        # loads = conn.execute(stmt)
-        # loads = conn.execute(insert(self.model), rows)
-        return 1
+        return cur.rowcount
 
     def _refresh_materialized_view(self, conn):
         conn.execute(
-            f"""
-            REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}
-            """
+            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}'
         )
