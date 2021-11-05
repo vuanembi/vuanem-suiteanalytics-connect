@@ -30,8 +30,8 @@ class ITEM_LOCATION_MAP(NetSuite):
     ]
     columns = [
         Column("NEW_ITEM_CODE", String),
-        Column("ITEM_ID", Integer, primary_key=True),
-        Column("LOCATION_ID", Integer, primary_key=True),
+        Column("ITEM_ID", Integer),
+        Column("LOCATION_ID", Integer),
         Column("DISPLAYNAME", String),
         Column("ON_HAND_COUNT", Integer),
     ]

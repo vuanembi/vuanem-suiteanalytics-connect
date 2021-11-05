@@ -144,8 +144,29 @@ class PostgresLoader(Loader):
         )
         self.columns = model.columns
 
+    def _copy(self, engine, rows):
+        output_io = io.StringIO()
+        csv_writer = csv.DictWriter(
+            output_io,
+            [c.name for c in self.model.c if not c.primary_key],
+        )
+        csv_writer.writeheader()
+        csv_writer.writerows(rows)
+        output_io.seek(0)
+        column_names = ",".join(
+            [f'"{c.name}"' for c in self.model.c if not c.primary_key]
+        )
+        copy_stmt = f'COPY "{schema}"."{self.model.name}" ({column_names}) FROM STDIN WITH (FORMAT CSV, HEADER TRUE)'
+        raw_conn = engine.raw_connection()
+        with raw_conn.cursor() as cur:
+            cur.copy_expert(copy_stmt, output_io)
+            raw_conn.commit()
+        return cur
+
+
     def load(self, rows):
-        with engine.connect() as conn:
+        self.model.create(bind=engine, checkfirst=True)
+        with engine.connect().execution_options(autocommit=True) as conn:
             loads = self._load(engine, conn, rows)
         return {
             "load": "Postgres",
@@ -159,12 +180,10 @@ class PostgresLoader(Loader):
 
 class PostgresStandardLoader(PostgresLoader):
     def _load(self, engine, conn, rows):
-        self.model.create(bind=engine, checkfirst=True)
         truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
         conn.execute(truncate_stmt)
-        loads = conn.execute(insert(self.model), rows)
-        return len(loads.inserted_primary_key_rows)
-
+        loads = self._copy(engine, rows)
+        return loads.rowcount
 
 class PostgresIncrementalLoader(PostgresLoader):
     def __init__(self, model):
@@ -184,10 +203,7 @@ class PostgresIncrementalLoader(PostgresLoader):
         return output
 
     def _load(self, engine, conn, rows):
-        column_names = ",".join(
-            [f'"{c.name}"' for c in self.model.c if not c.primary_key]
-        )
-        copy_stmt = f'COPY "{schema}"."{self.model.name}" ({column_names}) FROM STDIN WITH (FORMAT CSV, HEADER TRUE)'
+        loads = self._copy(engine, rows)
         sbq = select(
             [
                 self.model.c._id,
@@ -209,34 +225,28 @@ class PostgresIncrementalLoader(PostgresLoader):
                     partition_by=[
                         self.model.c[c.name]
                         for c in self.model.c
-                        if c.name in self.keys["p_key"]
+                        if c.name in self.keys["rank_key"]
                     ],
                     order_by=[
                         getattr(self.model.c, i).desc()
                         for i in self.keys["rank_incre_key"]
                     ],
                 )
-                .label("rank"),
+                .label("rank_num"),
             ]
         ).subquery("num")
         cte = (
             select(sbq.c._id)
-            .where(sbq.c.row_num == 1)
-            .where(sbq.c.rank == 1)
+            .where(sbq.c.row_num > 1)
+            .where(sbq.c.rank_num > 1)
             .cte("cte")
         )
-        delete_stmt = delete(self.model).where(~self.model.c._id.in_(select(cte.c._id)))
+        delete_stmt = delete(self.model).where(self.model.c._id.in_(select(cte.c._id)))
+        _ = conn.execute(delete_stmt)
 
-        output_io = self._dump_io(rows)
-        raw_conn = engine.raw_connection()
-        with raw_conn.cursor() as cur:
-            cur.copy_expert(copy_stmt, output_io)
-            raw_conn.commit()
-        conn.execute(delete_stmt)
-
-        return cur.rowcount
-
-    def _refresh_materialized_view(self, conn):
-        conn.execute(
-            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}'
+        if self.materialized_view:
+            conn.execute(
+            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite"."{self.materialized_view}"'
         )
+
+        return loads.rowcount

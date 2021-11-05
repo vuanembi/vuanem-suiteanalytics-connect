@@ -96,7 +96,7 @@ FROM
         {"name": "OPENNING_DAY2", "type": "TIMESTAMP"},
     ]
     columns = [
-        Column("LOCATION_ID", Integer, primary_key=True),
+        Column("LOCATION_ID", Integer),
         Column("STORE_NAME", String),
         Column("ISINACTIVE", String),
         Column("SUBSIDIARY_ID", Integer),
