@@ -37,7 +37,7 @@ class ACCOUNTS(NetSuite):
         {"name": "TYPE_NAME", "type": "STRING"},
     ]
     columns = [
-        Column("ACCOUNT_ID", Integer, primary_key=True),
+        Column("ACCOUNT_ID", Integer),
         Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
         Column("FULL_DESCRIPTION", String),
         Column("DESCRIPTION", String),

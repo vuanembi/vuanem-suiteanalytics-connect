@@ -100,7 +100,7 @@ class ITEMS(NetSuite):
         {"name": "LOYALTY_CATEGORY_ID", "type": "INTEGER"},
     ]
     columns = [
-        Column("ITEM_ID", Integer, primary_key=True),
+        Column("ITEM_ID", Integer),
         Column("CLASS_ID", Integer),
         Column("FULL_NAME", String),
         Column("DISPLAYNAME", String),

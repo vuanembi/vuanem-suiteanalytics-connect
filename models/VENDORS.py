@@ -31,7 +31,7 @@ class VENDORS(NetSuite):
         {"name": "VENDOR_TYPE", "type": "STRING"},
     ]
     columns = [
-        Column("VENDOR_ID", Integer, primary_key=True),
+        Column("VENDOR_ID", Integer),
         Column("NAME", String),
         Column("FULL_NAME", String),
         Column("VENDOR_TYPE", String),

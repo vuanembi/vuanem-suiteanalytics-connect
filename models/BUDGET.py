@@ -33,7 +33,7 @@ class BUDGET(NetSuite):
         {"name": "BUDGET_ISINACTIVE", "type": "STRING"},
     ]
     columns = [
-        Column("BUDGET_ID", Integer, primary_key=True),
+        Column("BUDGET_ID", Integer),
         Column("LOCATION_ID", Integer),
         Column("STARTING", DateTime(timezone=True)),
         Column("PERIODS_NAME", String),
