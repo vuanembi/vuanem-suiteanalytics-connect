@@ -28,6 +28,7 @@ class PURCHASE_ORDER(NetSuite):
             t.DUE_DATE >= '2021-06-01'
             AND t.TRANSACTION_TYPE = 'Purchase Order'
             AND tl.ITEM_ID IS NOT NULL
+            AND it.DISPLAYNAME IS NOT NULL
     """
     schema = [
         {"name": "TRANID", "type": "STRING"},

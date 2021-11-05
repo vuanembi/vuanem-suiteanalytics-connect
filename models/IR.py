@@ -30,6 +30,7 @@ class IR(NetSuite):
             t.DUE_DATE > '2021-06-01'
             AND t.TRANSACTION_TYPE = 'Purchase Order'
             AND tl.ITEM_ID IS NOT NULL
+            AND it.DISPLAYNAME IS NOT NULL
     """
     schema = [
         {"name": "PO_TranID", "type": "STRING"},

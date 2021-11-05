@@ -1,11 +1,42 @@
 import time
 from abc import ABCMeta, abstractmethod
+import io
+import csv
+import os
 
 from google.cloud import bigquery
 from google.api_core.exceptions import Forbidden
-from sqlalchemy import delete, and_, insert
+from sqlalchemy import (
+    create_engine,
+    MetaData,
+    Table,
+    Column,
+    Identity,
+    Integer,
+    delete,
+    select,
+    func,
+)
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.engine import URL
 
-from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV, get_engine
+from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV
+
+schema = "NetSuite"
+
+metadata = MetaData(schema=schema)
+
+engine = create_engine(
+    URL.create(
+        drivername="postgresql+psycopg2",
+        username=os.getenv("PG_UID"),
+        password=os.getenv("PG_PWD"),
+        host=os.getenv("PG_HOST"),
+        database=os.getenv("PG_DB"),
+    ),
+    executemany_mode="values",
+    executemany_values_page_size=1000,
+)
 
 
 class Loader(metaclass=ABCMeta):
@@ -98,16 +129,27 @@ class BigQueryIncrementalLoader(BigQueryLoader):
 
 class PostgresLoader(Loader):
     def __init__(self, model):
-        self.model = model.model
+        self.model = Table(
+            model.table,
+            metadata,
+            *[
+                Column(
+                    "_id",
+                    Integer,
+                    Identity(start=1, cycle=True, increment=1),
+                    primary_key=True,
+                ),
+                *model.columns,
+            ],
+        )
+        self.columns = model.columns
 
     def load(self, rows):
-        engine = get_engine()
         with engine.connect() as conn:
             loads = self._load(engine, conn, rows)
-        engine.dispose()
         return {
             "load": "Postgres",
-            "output_rows": len(loads.inserted_primary_key_rows),
+            "output_rows": loads,
         }
 
     @abstractmethod
@@ -121,33 +163,80 @@ class PostgresStandardLoader(PostgresLoader):
         truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
         conn.execute(truncate_stmt)
         loads = conn.execute(insert(self.model), rows)
-        return loads
+        return len(loads.inserted_primary_key_rows)
 
 
 class PostgresIncrementalLoader(PostgresLoader):
     def __init__(self, model):
         super().__init__(model)
         self.keys = model.keys
-        self.materialized_view = getattr(model, 'materialized_view', None)
+        self.materialized_view = getattr(model, "materialized_view", None)
+
+    def _dump_io(self, rows):
+        output = io.StringIO()
+        csv_writer = csv.DictWriter(
+            output,
+            [c.name for c in self.model.c if not c.primary_key],
+        )
+        csv_writer.writeheader()
+        csv_writer.writerows(rows)
+        output.seek(0)
+        return output
 
     def _load(self, engine, conn, rows):
-        self.model.create(bind=engine, checkfirst=True)
-        delete_stmt = delete(self.model).where(
-            and_(
-                *[
-                    self.model.c[rank_key].in_([row[rank_key] for row in rows])
-                    for rank_key in self.keys["rank_key"]
-                ]
-            )
+        column_names = ",".join(
+            [f'"{c.name}"' for c in self.model.c if not c.primary_key]
         )
+        copy_stmt = f'COPY "{schema}"."{self.model.name}" ({column_names}) FROM STDIN WITH (FORMAT CSV, HEADER TRUE)'
+        sbq = select(
+            [
+                self.model.c._id,
+                func.row_number()
+                .over(
+                    partition_by=[
+                        self.model.c[c.name]
+                        for c in self.model.c
+                        if c.name in self.keys["p_key"]
+                    ],
+                    order_by=[
+                        getattr(self.model.c, i).desc()
+                        for i in self.keys["row_num_incre_key"]
+                    ],
+                )
+                .label("row_num"),
+                func.rank()
+                .over(
+                    partition_by=[
+                        self.model.c[c.name]
+                        for c in self.model.c
+                        if c.name in self.keys["p_key"]
+                    ],
+                    order_by=[
+                        getattr(self.model.c, i).desc()
+                        for i in self.keys["rank_incre_key"]
+                    ],
+                )
+                .label("rank"),
+            ]
+        ).subquery("num")
+        cte = (
+            select(sbq.c._id)
+            .where(sbq.c.row_num == 1)
+            .where(sbq.c.rank == 1)
+            .cte("cte")
+        )
+        delete_stmt = delete(self.model).where(~self.model.c._id.in_(select(cte.c._id)))
+
+        output_io = self._dump_io(rows)
+        raw_conn = engine.raw_connection()
+        with raw_conn.cursor() as cur:
+            cur.copy_expert(copy_stmt, output_io)
+            raw_conn.commit()
         conn.execute(delete_stmt)
-        loads = conn.execute(insert(self.model), rows)
-        return loads
-    
+
+        return cur.rowcount
+
     def _refresh_materialized_view(self, conn):
-        conn.execute(f"""
-            REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}
-            """
+        conn.execute(
+            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}'
         )
-
-

@@ -82,7 +82,7 @@ class CASES(NetSuite):
     ]
     columns = [
         Column("ASSIGNED_ID", Integer),
-        Column("CASE_ID", Integer, primary_key=True),
+        Column("CASE_ID", Integer),
         Column("CASE_NUMBER", Integer),
         Column("CAI_THIEN", String),
         Column("CREATE_DATE", DateTime(timezone=True)),
