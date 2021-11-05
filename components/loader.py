@@ -163,7 +163,7 @@ class PostgresStandardLoader(PostgresLoader):
         truncate_stmt = f'TRUNCATE TABLE "{self.model.schema}"."{self.model.name}"'
         conn.execute(truncate_stmt)
         loads = conn.execute(insert(self.model), rows)
-        return loads.inserted_primary_key_rows
+        return len(loads.inserted_primary_key_rows)
 
 
 class PostgresIncrementalLoader(PostgresLoader):
