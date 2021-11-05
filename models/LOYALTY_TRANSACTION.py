@@ -67,7 +67,7 @@ class LOYALTY_TRANSACTION(NetSuite):
         {"name": "VALID_TO_DATE", "type": "TIMESTAMP"},
     ]
     columns = [
-        Column("LOYALTY_TRANSACTION_ID", Integer, primary_key=True),
+        Column("LOYALTY_TRANSACTION_ID", Integer),
         Column("AMOUNT", Integer),
         Column("CUSTOMER_ID", Integer),
         Column("DATE_CREATED", DateTime(timezone=True)),

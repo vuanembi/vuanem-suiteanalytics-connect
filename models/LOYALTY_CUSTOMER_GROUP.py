@@ -47,7 +47,7 @@ class LOYALTY_CUSTOMER_GROUP(NetSuite):
         {"name": "POINT_LEVEL_TO", "type": "INTEGER"},
     ]
     columns = [
-        Column("LOYALTY_CUSTOMER_GROUP_ID", Integer, primary_key=True),
+        Column("LOYALTY_CUSTOMER_GROUP_ID", Integer),
         Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
         Column("DATE_CREATED", DateTime(timezone=True)),
         Column("IS_INACTIVE", String),

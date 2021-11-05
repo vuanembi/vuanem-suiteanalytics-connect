@@ -32,8 +32,8 @@ class SUPPORT_PERSON_MAP(NetSuite):
         {"name": "DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
     ]
     columns = [
-        Column("DELIVERY_PERSON_ID", Integer, primary_key=True),
-        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("DELIVERY_PERSON_ID", Integer),
+        Column("TRANSACTION_ID", Integer),
         Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
     ]
     connector = connector.NetSuiteConnector

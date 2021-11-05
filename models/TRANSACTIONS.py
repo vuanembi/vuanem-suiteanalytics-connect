@@ -127,7 +127,7 @@ class TRANSACTIONS(NetSuite):
         {"name": "PURCHASE_ORDER_TYPE_ID", "type": "INTEGER"},
     ]
     columns = [
-        Column("TRANSACTION_ID", Integer, primary_key=True),
+        Column("TRANSACTION_ID", Integer),
         Column("TRANID", String),
         Column("TRANSACTION_NUMBER", String),
         Column("TRANDATE", DateTime(timezone=True)),

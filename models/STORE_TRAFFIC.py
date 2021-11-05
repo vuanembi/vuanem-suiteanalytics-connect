@@ -51,7 +51,7 @@ class STORE_TRAFFIC(NetSuite):
         Column("IS_INACTIVE", String),
         Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),
         Column("LOCATION_ID", Integer),
-        Column("STORE_TRAFFIC_ID", Integer, primary_key=True),
+        Column("STORE_TRAFFIC_ID", Integer),
         Column("SUBSIDIARY_ID", Integer),
         Column("TOTAL_TIMES_OF_VISITING", Integer),
         Column("TOTAL_VISITOR", Integer),
