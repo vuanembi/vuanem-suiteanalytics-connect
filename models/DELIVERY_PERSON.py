@@ -33,7 +33,7 @@ class DELIVERY_PERSON(NetSuite):
     columns = [
         Column("DATE_CREATED", DateTime(timezone=True)),
         Column("DELIVERY_PERSON_EXTID", String),
-        Column("DELIVERY_PERSON_ID", Integer, primary_key=True),
+        Column("DELIVERY_PERSON_ID", Integer),
         Column("DELIVERY_PERSON_NAME", String),
         Column("IS_INACTIVE", String),
         Column("LAST_MODIFIED_DATE", DateTime(timezone=True)),

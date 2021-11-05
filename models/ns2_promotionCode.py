@@ -59,7 +59,7 @@ class ns2_promotionCode(NetSuite):
         Column("displaylinediscounts", String),
         Column("externalid", String),
         Column("fixedprice", Integer),
-        Column("id", Integer, primary_key=True),
+        Column("id", Integer),
         Column("isinactive", String),
         Column("itemquantifier", Integer),
         Column("location", String),

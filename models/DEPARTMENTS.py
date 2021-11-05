@@ -36,7 +36,7 @@ class DEPARTMENTS(NetSuite):
         Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
         Column("DEPARTMENT_DESCRIPTION", String),
         Column("DEPARTMENT_EXTID", String),
-        Column("DEPARTMENT_ID", Integer, primary_key=True),
+        Column("DEPARTMENT_ID", Integer),
         Column("FULL_NAME", String),
         Column("ISINACTIVE", String),
         Column("IS_INCLUDING_CHILD_SUBS", String),

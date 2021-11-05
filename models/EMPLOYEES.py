@@ -83,7 +83,7 @@ class EMPLOYEES(NetSuite):
         {"name": "SUPERVISOR_ID", "type": "INTEGER"},
     ]
     columns = [
-        Column("EMPLOYEE_ID", Integer, primary_key=True),
+        Column("EMPLOYEE_ID", Integer),
         Column("VN_CODE", String),
         Column("FULL_NAME", String),
         Column("FIRSTNAME", String),

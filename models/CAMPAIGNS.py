@@ -136,7 +136,7 @@ class CAMPAIGNS(NetSuite):
         Column("BANK_ACCOUNT_NAME", String),
         Column("BANK_NAME", String),
         Column("CAMPAIGN_EXTID", String),
-        Column("CAMPAIGN_ID", Integer, primary_key=True),
+        Column("CAMPAIGN_ID", Integer),
         Column("CATEGORY_ID", Integer),
         Column("CI_THIN", String),
         Column("COST_0", String),

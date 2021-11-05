@@ -166,7 +166,7 @@ class PostgresLoader(Loader):
 
     def load(self, rows):
         self.model.create(bind=engine, checkfirst=True)
-        with engine.connect() as conn:
+        with engine.connect().execution_options(autocommit=True) as conn:
             loads = self._load(engine, conn, rows)
         return {
             "load": "Postgres",
@@ -225,24 +225,27 @@ class PostgresIncrementalLoader(PostgresLoader):
                     partition_by=[
                         self.model.c[c.name]
                         for c in self.model.c
-                        if c.name in self.keys["p_key"]
+                        if c.name in self.keys["p_key"]!!!!!
                     ],
                     order_by=[
                         getattr(self.model.c, i).desc()
                         for i in self.keys["rank_incre_key"]
                     ],
                 )
-                .label("rank"),
+                .label("rank_num"),
             ]
         ).subquery("num")
         cte = (
             select(sbq.c._id)
             .where(sbq.c.row_num == 1)
-            .where(sbq.c.rank == 1)
+            .where(sbq.c.rank_num == 1)
             .cte("cte")
         )
         delete_stmt = delete(self.model).where(~self.model.c._id.in_(select(cte.c._id)))
-        conn.execute(delete_stmt)
+        x = str(delete_stmt)
+        print(x)
+        delll = conn.execute(delete_stmt)
+        delll
 
         if self.materialized_view:
             conn.execute(

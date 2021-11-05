@@ -29,7 +29,7 @@ class CLASSES(NetSuite):
         {"name": "PRODUCT_GROUP_CODE", "type": "STRING"},
     ]
     columns = [
-        Column("CLASS_ID", Integer, primary_key=True),
+        Column("CLASS_ID", Integer),
         Column("DATE_LAST_MODIFIED", DateTime(timezone=True)),
         Column("FULL_NAME", String),
         Column("ISINACTIVE", String),
