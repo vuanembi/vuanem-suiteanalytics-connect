@@ -38,7 +38,7 @@ class ns2_couponCode(NetSuite):
         Column("code", String),
         Column("datesent", DateTime(timezone=True)),
         Column("externalid", String),
-        Column("id", Integer, primary_key=True),
+        Column("id", Integer),
         Column("promotion", Integer),
     ]
     connector = connector.NetSuite2Connector
