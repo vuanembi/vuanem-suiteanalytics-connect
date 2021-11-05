@@ -225,7 +225,7 @@ class PostgresIncrementalLoader(PostgresLoader):
                     partition_by=[
                         self.model.c[c.name]
                         for c in self.model.c
-                        if c.name in self.keys["p_key"]!!!!!
+                        if c.name in self.keys["rank_key"]
                     ],
                     order_by=[
                         getattr(self.model.c, i).desc()
@@ -237,15 +237,12 @@ class PostgresIncrementalLoader(PostgresLoader):
         ).subquery("num")
         cte = (
             select(sbq.c._id)
-            .where(sbq.c.row_num == 1)
-            .where(sbq.c.rank_num == 1)
+            .where(sbq.c.row_num > 1)
+            .where(sbq.c.rank_num > 1)
             .cte("cte")
         )
-        delete_stmt = delete(self.model).where(~self.model.c._id.in_(select(cte.c._id)))
-        x = str(delete_stmt)
-        print(x)
-        delll = conn.execute(delete_stmt)
-        delll
+        delete_stmt = delete(self.model).where(self.model.c._id.in_(select(cte.c._id)))
+        _ = conn.execute(delete_stmt)
 
         if self.materialized_view:
             conn.execute(

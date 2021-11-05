@@ -52,12 +52,11 @@ class TRANSACTION_LINES(NetSuite):
             "Vua Nem Joint Stock Company".Administrator.TRANSACTION_LINES AS TRANSACTION_LINES
             LEFT JOIN "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS AS TRANSACTIONS ON TRANSACTION_LINES.TRANSACTION_ID = TRANSACTIONS.TRANSACTION_ID
         WHERE
-            -- (
-            --     TRANSACTIONS.DATE_LAST_MODIFIED >= '{{ start }}'
-            --     OR TRANSACTION_LINES.DATE_LAST_MODIFIED_GMT >= '{{ start }}'
-            -- )
-            -- AND TRANSACTIONS.DATE_LAST_MODIFIED <= '{{ end }}'
-            TRANSACTION_LINES.TRANSACTION_ID = 3162384
+            (
+                TRANSACTIONS.DATE_LAST_MODIFIED >= '{{ start }}'
+                OR TRANSACTION_LINES.DATE_LAST_MODIFIED_GMT >= '{{ start }}'
+            )
+            AND TRANSACTIONS.DATE_LAST_MODIFIED <= '{{ end }}'
     """
     schema = [
         {"name": "TRANSACTION_ID", "type": "INTEGER"},
