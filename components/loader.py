@@ -233,10 +233,10 @@ class PostgresIncrementalLoader(PostgresLoader):
             cur.copy_expert(copy_stmt, output_io)
             raw_conn.commit()
         conn.execute(delete_stmt)
+        
+        if self.materialized_view:
+            conn.execute(
+            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite"."{self.materialized_view}"'
+        )
 
         return cur.rowcount
-
-    def _refresh_materialized_view(self, conn):
-        conn.execute(
-            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite".{self.materialized_view}'
-        )
