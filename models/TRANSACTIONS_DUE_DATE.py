@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, BigInteger
 
 from models.models import NetSuite
 from components import connector
@@ -24,18 +24,10 @@ class TRANSACTIONS_DUE_DATE(NetSuite):
             LEFT JOIN "Vua Nem Joint Stock Company".Administrator.ITEMS it ON tl.ITEM_ID = it.ITEM_ID
             LEFT JOIN "Vua Nem Joint Stock Company".Administrator.EMPLOYEES e ON t.SALES_REP_ID = e.EMPLOYEE_ID
         WHERE
-            t.DUE_DATE >= CURRENT_DATE()
+            t.DUE_DATE is NOT NULL
             AND t.TRANSACTION_TYPE = 'Purchase Order'
             AND tl.ITEM_ID IS NOT NULL
             AND it.DISPLAYNAME IS NOT NULL
-            AND t.TRANSACTION_ID NOT IN (
-                SELECT
-                    CREATED_FROM_ID
-                FROM
-                    "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS
-                WHERE
-                    TRANSACTION_TYPE = 'Item Receipt'
-            )
     """
     schema = [
         {"name": "TRANSACTION_ID", "type": "INTEGER"},
@@ -57,7 +49,7 @@ class TRANSACTIONS_DUE_DATE(NetSuite):
         Column("DISPLAYNAME", String),
         Column("STATUS", String),
         Column("ITEM_COUNT", Integer),
-        Column("AMOUNT", Integer),
+        Column("AMOUNT", BigInteger),
     ]
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
