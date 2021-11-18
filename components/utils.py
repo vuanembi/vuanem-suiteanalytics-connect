@@ -4,7 +4,7 @@ import jinja2
 from google.cloud import bigquery
 
 NOW = datetime.utcnow()
-DATASET = "NetSuite"
+DATASET = "IP_NetSuite"
 DATE_FORMAT = "%Y-%m-%d"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 

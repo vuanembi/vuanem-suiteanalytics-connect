@@ -41,7 +41,7 @@ FROM
                 {%- endfor %}
             ) AS `_rank`
         FROM
-            `{{ dataset }}`.`_stage_{{ table }}`
+            `{{ dataset }}`.`{{ table }}`
     )
 WHERE
     `row_num` = 1

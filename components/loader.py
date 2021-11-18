@@ -17,7 +17,6 @@ from sqlalchemy import (
     select,
     func,
 )
-from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.engine import URL
 
 from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV
@@ -56,18 +55,13 @@ class BigQueryLoader(Loader):
     def write_disposition(self):
         pass
 
-    @property
-    @abstractmethod
-    def load_target(self):
-        pass
-
     def load(self, rows):
         attempts = 0
         while True:
             try:
                 loads = BQ_CLIENT.load_table_from_json(
                     rows,
-                    f"{DATASET}.{self.load_target}",
+                    f"{DATASET}.{self.table}",
                     job_config=bigquery.LoadJobConfig(
                         schema=self.schema,
                         create_disposition="CREATE_IF_NEEDED",
@@ -95,10 +89,6 @@ class BigQueryLoader(Loader):
 class BigQueryStandardLoader(BigQueryLoader):
     write_disposition = "WRITE_TRUNCATE"
 
-    @property
-    def load_target(self):
-        return self.table
-
     def _update(self):
         pass
 
@@ -109,10 +99,6 @@ class BigQueryIncrementalLoader(BigQueryLoader):
     def __init__(self, model):
         super().__init__(model)
         self.keys = model.keys
-
-    @property
-    def load_target(self):
-        return f"_stage_{self.table}"
 
     def _update(self):
         template = TEMPLATE_ENV.get_template("update_from_stage.sql.j2")
