@@ -17,6 +17,7 @@ from sqlalchemy import (
     select,
     func,
 )
+from sqlalchemy.pool import NullPool
 from sqlalchemy.engine import URL
 
 from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV
@@ -24,18 +25,6 @@ from .utils import BQ_CLIENT, DATASET, MAX_LOAD_ATTEMPTS, TEMPLATE_ENV
 schema = "NetSuite"
 
 metadata = MetaData(schema=schema)
-
-engine = create_engine(
-    URL.create(
-        drivername="postgresql+psycopg2",
-        username=os.getenv("PG_UID"),
-        password=os.getenv("PG_PWD"),
-        host=os.getenv("PG_HOST"),
-        database=os.getenv("PG_DB"),
-    ),
-    executemany_mode="values",
-    executemany_values_page_size=1000,
-)
 
 
 class Loader(metaclass=ABCMeta):
@@ -149,11 +138,23 @@ class PostgresLoader(Loader):
             raw_conn.commit()
         return cur
 
-
     def load(self, rows):
+        engine = create_engine(
+            URL.create(
+                drivername="postgresql+psycopg2",
+                username=os.getenv("PG_UID"),
+                password=os.getenv("PG_PWD"),
+                host=os.getenv("PG_HOST"),
+                database=os.getenv("PG_DB"),
+            ),
+            executemany_mode="values",
+            executemany_values_page_size=1000,
+            poolclass=NullPool,
+        )
         self.model.create(bind=engine, checkfirst=True)
         with engine.connect().execution_options(autocommit=True) as conn:
             loads = self._load(engine, conn, rows)
+        engine.dispose()
         return {
             "load": "Postgres",
             "output_rows": loads,
@@ -170,6 +171,7 @@ class PostgresStandardLoader(PostgresLoader):
         conn.execute(truncate_stmt)
         loads = self._copy(engine, rows)
         return loads.rowcount
+
 
 class PostgresIncrementalLoader(PostgresLoader):
     def __init__(self, model):
@@ -230,9 +232,9 @@ class PostgresIncrementalLoader(PostgresLoader):
         delete_stmt = delete(self.model).where(self.model.c._id.in_(select(cte.c._id)))
         _ = conn.execute(delete_stmt)
 
-        if self.materialized_view:
-            conn.execute(
-            f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite"."{self.materialized_view}"'
-        )
+        # if self.materialized_view:
+        #     conn.execute(
+        #         f'REFRESH MATERIALIZED VIEW CONCURRENTLY "NetSuite"."{self.materialized_view}"'
+        #     )
 
         return loads.rowcount

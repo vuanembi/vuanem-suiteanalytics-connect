@@ -78,6 +78,7 @@ class TestPipelines:
             *TABLES['id_incre'],
         ],
     )
+    @pytest.mark.timeout(0)
     def test_auto(self, table):
         data = {
             "table": table,
