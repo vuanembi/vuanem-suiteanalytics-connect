@@ -10,7 +10,7 @@ class ns2_transaction(NetSuite):
     keys = {
         "p_key": ["id"],
         "rank_key": ["id"],
-        "incre_key": ["id"],
+        "incre_key": ["lastmodifieddate"],
         "rank_incre_key": ["lastmodifieddate"],
         "row_num_incre_key": ["lastmodifieddate"],
     }
@@ -38,7 +38,7 @@ class ns2_transaction(NetSuite):
         Column("promotion", Integer),
     ]
     connector = connector.NetSuite2Connector
-    getter = getter.IDIncrementalGetter
+    getter = getter.TimeIncrementalGetter
     loader = [
         # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
