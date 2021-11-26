@@ -113,6 +113,6 @@ class CASES(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.PostgresIncrementalLoader,
+        # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
     ]
