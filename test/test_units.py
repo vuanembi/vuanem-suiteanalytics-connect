@@ -41,8 +41,8 @@ from models.models import TABLES
 #     "ns2_couponCode",
 # ]
 
-TIME_START = "2021-09-01"
-TIME_END = "2021-09-02"
+TIME_START = "2021-01-01"
+TIME_END = "2022-01-01"
 ID_START = 1
 ID_END = 1000
 
@@ -78,6 +78,7 @@ class TestPipelines:
             *TABLES['id_incre'],
         ],
     )
+    @pytest.mark.timeout(0)
     def test_auto(self, table):
         data = {
             "table": table,
