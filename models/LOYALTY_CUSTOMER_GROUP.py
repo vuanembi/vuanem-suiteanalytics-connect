@@ -62,6 +62,6 @@ class LOYALTY_CUSTOMER_GROUP(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.PostgresIncrementalLoader,
+        # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
     ]

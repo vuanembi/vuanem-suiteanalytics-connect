@@ -40,6 +40,6 @@ class CLASSES(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.StandardGetter
     loader = [
-        loader.PostgresStandardLoader,
+        # loader.PostgresStandardLoader,
         loader.BigQueryStandardLoader,
     ]

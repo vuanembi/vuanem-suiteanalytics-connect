@@ -50,6 +50,6 @@ class ns2_transactionLine(NetSuite):
     connector = connector.NetSuite2Connector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.PostgresIncrementalLoader,
+        # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
     ]

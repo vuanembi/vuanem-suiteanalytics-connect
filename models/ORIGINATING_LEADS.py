@@ -545,6 +545,6 @@ class ORIGINATING_LEADS(NetSuite):
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
-        loader.PostgresIncrementalLoader,
+        # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
     ]

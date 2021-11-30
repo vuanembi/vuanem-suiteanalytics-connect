@@ -44,6 +44,6 @@ class ns2_couponCode(NetSuite):
     connector = connector.NetSuite2Connector
     getter = getter.IDIncrementalGetter
     loader = [
-        loader.PostgresIncrementalLoader,
+        # loader.PostgresIncrementalLoader,
         loader.BigQueryIncrementalLoader,
     ]
