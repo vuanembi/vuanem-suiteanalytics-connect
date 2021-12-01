@@ -41,7 +41,7 @@ from models.models import TABLES
 #     "ns2_couponCode",
 # ]
 
-TIME_START = "2021-01-01"
+TIME_START = "2021-11-20"
 TIME_END = "2022-01-01"
 ID_START = 1
 ID_END = 1000
