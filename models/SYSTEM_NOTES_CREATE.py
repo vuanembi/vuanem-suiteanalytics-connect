@@ -5,11 +5,38 @@ from components import connector
 from components import getter
 from components import loader
 
+"RECORD_ID",
+"RECORD_TYPE_ID",
+"LINE_TRANSACTION_ID",
+"EVENT_ID",
+"ITEM_ID",
+"AUTHOR_ID",
+"COMPANY_ID",
+"NAME",
+
 
 class SYSTEM_NOTES_CREATE(NetSuite):
     keys = {
-        "p_key": ["RECORD_ID", "RECORD_TYPE_ID", "LINE_ID", "LINE_TRANSACTION_ID"],
-        "rank_key": ["RECORD_ID", "RECORD_TYPE_ID", "LINE_ID", "LINE_TRANSACTION_ID"],
+        "p_key": [
+            "RECORD_ID",
+            "RECORD_TYPE_ID",
+            "LINE_TRANSACTION_ID",
+            "EVENT_ID",
+            "ITEM_ID",
+            "AUTHOR_ID",
+            "COMPANY_ID",
+            "NAME",
+        ],
+        "rank_key": [
+            "RECORD_ID",
+            "RECORD_TYPE_ID",
+            "LINE_TRANSACTION_ID",
+            "EVENT_ID",
+            "ITEM_ID",
+            "AUTHOR_ID",
+            "COMPANY_ID",
+            "NAME",
+        ],
         "incre_key": ["DATE_CREATED"],
         "rank_incre_key": ["DATE_CREATED"],
         "row_num_incre_key": ["DATE_CREATED"],
@@ -42,6 +69,7 @@ class SYSTEM_NOTES_CREATE(NetSuite):
                 AND DATE_CREATED <= '{{ end }}'
             )
             AND OPERATION LIKE '%Create%'
+            AND COMPANY_ID IS NOT NULL
     """
     schema = [
         {"name": "AUTHOR_ID", "type": "INTEGER"},
