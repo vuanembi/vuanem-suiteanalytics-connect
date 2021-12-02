@@ -5,15 +5,6 @@ from components import connector
 from components import getter
 from components import loader
 
-"RECORD_ID",
-"RECORD_TYPE_ID",
-"LINE_TRANSACTION_ID",
-"EVENT_ID",
-"ITEM_ID",
-"AUTHOR_ID",
-"COMPANY_ID",
-"NAME",
-
 
 class SYSTEM_NOTES_CREATE(NetSuite):
     keys = {

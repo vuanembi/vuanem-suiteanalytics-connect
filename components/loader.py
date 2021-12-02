@@ -64,7 +64,7 @@ class BigQueryLoader(Loader):
                     attempts += 1
                 else:
                     raise e
-        # self._update()
+        self._update()
         return {
             "load": "BigQuery",
             "output_rows": loads.output_rows,
