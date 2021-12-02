@@ -104,6 +104,7 @@ TABLES = {
         "SYSTEM_NOTES_CREATE",
         "ORIGINATING_LEADS",
         "ns2_transaction",
+        "RATING",
     ],
     "id_incre": [
         "ns2_couponCode",
