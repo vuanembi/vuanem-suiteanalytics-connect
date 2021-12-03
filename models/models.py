@@ -85,6 +85,7 @@ TABLES = {
         "TRANSACTIONS_DUE_DATE",
         "PURCHASE_ORDER",
         "IR",
+        "CASETYPE",
     ],
     "time_incre": [
         "CASES",
