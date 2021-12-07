@@ -66,7 +66,8 @@ class TRANSACTIONS(NetSuite):
             TRANSACTIONS.REFERENCE_SALES_ORDER_ID,
             TRANSACTIONS.TRANSFER_LOCATION,
             TRANSACTIONS.TRANSFER_ORDER_TYPE_ID,
-            TRANSACTIONS.PURCHASE_ORDER_TYPE_ID
+            TRANSACTIONS.PURCHASE_ORDER_TYPE_ID,
+            TRANSACTIONS.ONLINE_SUPPORT_REP_ID
         FROM
             "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS
         WHERE
@@ -125,6 +126,7 @@ class TRANSACTIONS(NetSuite):
         {"name": "TRANSFER_LOCATION", "type": "INTEGER"},
         {"name": "TRANSFER_ORDER_TYPE_ID", "type": "INTEGER"},
         {"name": "PURCHASE_ORDER_TYPE_ID", "type": "INTEGER"},
+        {"name": "ONLINE_SUPPORT_REP_ID", "type": "INTEGER"},
     ]
     columns = [
         Column("TRANSACTION_ID", Integer),
@@ -179,7 +181,7 @@ class TRANSACTIONS(NetSuite):
         Column("TRANSFER_ORDER_TYPE_ID", Integer),
         Column("PURCHASE_ORDER_TYPE_ID", Integer),
     ]
-    materialized_view = "NetSuite__Customers2"
+    # materialized_view = "NetSuite__Customers2"
     connector = connector.NetSuiteConnector
     getter = getter.TimeIncrementalGetter
     loader = [
