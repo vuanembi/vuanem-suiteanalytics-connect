@@ -5,6 +5,7 @@ from google.cloud import bigquery
 
 NOW = datetime.utcnow()
 DATASET = "IP_NetSuite"
+# DATASET = "NetSuite_dev"
 DATE_FORMAT = "%Y-%m-%d"
 TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
 

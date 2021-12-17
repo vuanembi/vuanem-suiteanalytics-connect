@@ -81,7 +81,6 @@ TABLES = {
         "ns2_promotionCode",
         "ITEM_LOCATION_MAP",
         "CAMPAIGNS",
-        "ENTITY_NOT_CUSTJOB",
         "TRANSACTIONS_DUE_DATE",
         "PURCHASE_ORDER",
         "IR",
@@ -106,6 +105,7 @@ TABLES = {
         "ORIGINATING_LEADS",
         "ns2_transaction",
         "RATING",
+        "ENTITY",
     ],
     "id_incre": [
         "ns2_couponCode",

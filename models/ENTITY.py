@@ -6,7 +6,14 @@ from components import getter
 from components import loader
 
 
-class ENTITY_NOT_CUSTJOB(NetSuite):
+class ENTITY(NetSuite):
+    keys = {
+        "p_key": ["ENTITY_ID"],
+        "rank_key": ["ENTITY_ID"],
+        "incre_key": ["DATE_LAST_MODIFIED"],
+        "rank_incre_key": ["DATE_LAST_MODIFIED"],
+        "row_num_incre_key": ["DATE_LAST_MODIFIED"],
+    }
     query = """
         SELECT
             ACCOUNT_OWNER_NAME,
@@ -93,8 +100,6 @@ class ENTITY_NOT_CUSTJOB(NetSuite):
             ZIPCODE
         FROM
             "Vua Nem Joint Stock Company".Administrator.ENTITY
-        WHERE
-            ENTITY_TYPE  <> 'CustJob'
     """
     schema = [
         {"name": "ACCOUNT_OWNER_NAME", "type": "STRING"},
@@ -265,8 +270,8 @@ class ENTITY_NOT_CUSTJOB(NetSuite):
         Column("ZIPCODE", String),
     ]
     connector = connector.NetSuiteConnector
-    getter = getter.StandardGetter
+    getter = getter.TimeIncrementalGetter
     loader = [
         # loader.PostgresStandardLoader,
-        loader.BigQueryStandardLoader,
+        loader.BigQueryIncrementalLoader,
     ]
