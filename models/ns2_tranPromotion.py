@@ -15,7 +15,7 @@ class ns2_tranPromotion(NetSuite):
         "row_num_incre_key": ["lastmodifieddate"],
     }
     query = """
-        SELECT
+        SELECT 
             a.couponcode,
             a.eligiblefreegifts,
             a.freegiftsadded,
@@ -24,6 +24,7 @@ class ns2_tranPromotion(NetSuite):
             a.purchasediscount,
             a.shippingdiscount,
             a.transaction,
+            a.applicabilitystatus,
             b.lastmodifieddate
         FROM
             tranPromotion a
@@ -47,6 +48,7 @@ class ns2_tranPromotion(NetSuite):
         {"name": "purchasediscount", "type": "FLOAT"},
         {"name": "shippingdiscount", "type": "FLOAT"},
         {"name": "transaction", "type": "INTEGER"},
+        {"name": "applicabilitystatus", "type": "STRING"},
         {"name": "lastmodifieddate", "type": "TIMESTAMP"},
     ]
     columns = [
