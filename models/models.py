@@ -45,9 +45,9 @@ class NetSuite(metaclass=ABCMeta):
             if int_cols:
                 for col in int_cols:
                     row[col] = int(row[col]) if row[col] is not None else row[col]
-            if str_cols:
-                for col in str_cols:
-                    row[col] = re.sub(pattern, "", row[col]) if row[col] else None
+            # if str_cols:
+            #     for col in str_cols:
+            #         row[col] = re.sub(pattern, "", row[col]) if row[col] else None
         return rows
 
     def run(self):

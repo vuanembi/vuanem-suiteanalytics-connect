@@ -25,7 +25,15 @@ class ns2_promotionCode(NetSuite):
             pc.name,
             pc.promotiontype,
             pc.rate,
-            pc.repeatdiscount
+            pc.repeatdiscount,
+            pc.custrecordissue_cho_bo_phan,
+            pc.custrecordmuc_dich_su_dung_voucher,
+            pc.custrecord_promotion_sm,
+            pc.custrecord_messenger_sms,
+            pc.custrecordpromotion_loai_vc2,
+            pc.custrecordpromo_doituong_ad,
+            pc.custrecordpromo_menhgia_vc,
+            pc.usetype
         FROM
             promotionCode pc
     """
@@ -48,6 +56,14 @@ class ns2_promotionCode(NetSuite):
         {"name": "rate", "type": "FLOAT"},
         {"name": "repeatdiscount", "type": "STRING"},
         {"name": "lastmodifieddate", "type": "TIMESTAMP"},
+        {"name": "custrecordissue_cho_bo_phan", "type": "STRING"},
+        {"name": "custrecordmuc_dich_su_dung_voucher", "type": "STRING"},
+        {"name": "custrecord_promotion_sm", "type": "STRING"},
+        {"name": "custrecord_messenger_sms", "type": "STRING"},
+        {"name": "custrecordpromotion_loai_vc2", "type": "STRING"},
+        {"name": "custrecordpromo_doituong_ad", "type": "STRING"},
+        {"name": "custrecordpromo_menhgia_vc", "type": "STRING"},
+        {"name": "usetype", "type": "STRING"},
     ]
     columns = [
         Column("enddate", DateTime(timezone=True)),
