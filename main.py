@@ -24,11 +24,11 @@ def main(request):
         results = create_tasks(data)
     else:
         results = NetSuite.factory(
-            data['table'],
+            data["table"],
             data.get("start"),
             data.get("end"),
         ).run()
-    
+
     responses = {
         "pipelines": "NetSuite",
         "results": results,

@@ -85,6 +85,7 @@ TABLES = {
         "PURCHASE_ORDER",
         "IR",
         "CASETYPE",
+        "ns2_promotionCodeCurrency",
     ],
     "time_incre": [
         "CASES",
