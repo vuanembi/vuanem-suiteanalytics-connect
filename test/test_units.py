@@ -62,7 +62,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        TABLES['standard'],
+        TABLES["standard"],
     )
     def test_standard(self, table):
         data = {
@@ -74,8 +74,8 @@ class TestPipelines:
     @pytest.mark.parametrize(
         "table",
         [
-            *TABLES['time_incre'],
-            *TABLES['id_incre'],
+            *TABLES["time_incre"],
+            *TABLES["id_incre"],
         ],
     )
     @pytest.mark.timeout(0)
@@ -88,7 +88,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        TABLES['time_incre'],
+        TABLES["time_incre"],
     )
     @pytest.mark.timeout(0)
     def test_manual_time(self, table):
@@ -102,7 +102,7 @@ class TestPipelines:
 
     @pytest.mark.parametrize(
         "table",
-        TABLES['id_incre'],
+        TABLES["id_incre"],
     )
     def test_manual_id(self, table):
         data = {
