@@ -107,6 +107,10 @@ TABLES = {
         "ns2_transaction",
         "RATING",
         "ENTITY",
+        "ADDRESSES",
+        "ADDRESS_BOOK",
+        "CITYPROVINCE_LIST",
+        "QUANHUYEN_LIST",
     ],
     "id_incre": [
         "ns2_couponCode",
