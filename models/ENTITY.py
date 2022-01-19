@@ -100,6 +100,10 @@ class ENTITY(NetSuite):
             ZIPCODE
         FROM
             "Vua Nem Joint Stock Company".Administrator.ENTITY
+        WHERE
+            DATE_LAST_MODIFIED >= '{{ start }}'
+            AND DATE_LAST_MODIFIED <= '{{ end }}'
+
     """
     schema = [
         {"name": "ACCOUNT_OWNER_NAME", "type": "STRING"},
