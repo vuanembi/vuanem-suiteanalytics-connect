@@ -42,16 +42,13 @@ netsuite2_connection = _get_connection(
 )
 
 
-def get(connection: jaydebeapi.Connection):
+def get(connection: jaydebeapi.Connection, query: str) -> list[dict[str, Any]]:
     def _fetch(cursor: jaydebeapi.Cursor) -> list[tuple]:
         results = cursor.fetchmany(ROWS_PER_FETCH)
         return () if not results else results + _fetch(cursor)
 
-    def _get(query: str) -> list[dict[str, Any]]:
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            keys = [key[0] for key in cursor.description]
-            values = _fetch(cursor)
-            return [dict(zip(keys, value)) for value in values]
-
-    return _get
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        keys = [key[0] for key in cursor.description]
+        values = _fetch(cursor)
+        return [dict(zip(keys, value)) for value in values]
