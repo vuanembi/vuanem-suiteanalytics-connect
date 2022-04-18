@@ -1,3 +1,4 @@
+from unittest.mock import Mock
 from datetime import date, timedelta
 
 import pytest
@@ -9,6 +10,7 @@ from netsuite.pipeline import (
 )
 from netsuite.netsuite_service import pipeline_service
 from tasks.tasks_service import TASKS, tasks_service
+from main import main
 
 TIME_RANGE = [
     # ("auto", (None, None)),
@@ -40,9 +42,26 @@ class TestPipeline:
         print(res)
         assert res["output_rows"] >= 0
 
+    def controller(self, pipeline, start, end):
+        data = {
+            "table": pipeline.name,
+            "start": start,
+            "end": end,
+        }
+        res = main(Mock(get_json=Mock(return_value=data), args=data))
+        print(res)
+        assert res["output_rows"] >= 0
+
+    @pytest.fixture(
+        params=[service, controller],
+        ids=["service", "controller"],
+    )
+    def mode(self, request):
+        return request.param
+
     @pytest.mark.parametrize(**parameterize(static_pipelines))
-    def test_static_pipeline(self, pipeline):
-        return self.service(pipeline, None, None)
+    def test_static_pipeline(self, mode, pipeline):
+        return mode(self, pipeline, None, None)
 
     @pytest.mark.parametrize(**parameterize(time_dynamic_pipelines))
     @pytest.mark.parametrize(
@@ -50,8 +69,8 @@ class TestPipeline:
         [tr[1] for tr in TIME_RANGE],
         ids=[tr[0] for tr in TIME_RANGE],
     )
-    def test_time_dynamic_pipeline(self, pipeline, timerange):
-        return self.service(pipeline, timerange[0], timerange[1])
+    def test_time_dynamic_pipeline(self, mode, pipeline, timerange):
+        return mode(self, pipeline, timerange[0], timerange[1])
 
     @pytest.mark.parametrize(**parameterize(id_dynamic_pipelines))
     @pytest.mark.parametrize(
@@ -59,8 +78,8 @@ class TestPipeline:
         [ir[1] for ir in ID_RANGE],
         ids=[ir[0] for ir in ID_RANGE],
     )
-    def test_id_dynamic_pipeline(self, pipeline, idrange):
-        return self.service(pipeline, idrange[0], idrange[1])
+    def test_id_dynamic_pipeline(self, mode, pipeline, idrange):
+        return mode(self, pipeline, idrange[0], idrange[1])
 
 
 class TestTasks:
@@ -71,4 +90,4 @@ class TestTasks:
     )
     def test_service(self, task):
         res = tasks_service({"task": task})
-        res
+        assert res["tasks"] > 0
