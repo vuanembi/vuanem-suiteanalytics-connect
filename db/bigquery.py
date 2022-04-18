@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Callable
 from datetime import datetime
 
 from google.cloud import bigquery
@@ -10,29 +10,35 @@ client = bigquery.Client()
 DATASET = "DEV_NetSuite"
 
 
-def timeframe_builder(table: str, key: Key):
-    def _get(timeframe: tuple[Optional[str], Optional[str]]) -> tuple[str, str]:
-        start, end = timeframe
-        if start and end:
-            return start, end
-        else:
-            maxs = [f"MAX({_key})" for _key in key.cursor_key]
-            rows = client.query(
-                f"""SELECT LEAST({','.join(maxs)}) AS cursor
-                FROM {DATASET}.{table}
-                """
-            ).result()
-            return tuple( # type: ignore
-                [
-                    i.date().isoformat()
-                    for i in [
-                        [row for row in rows][0]["cursor"],
-                        datetime.utcnow(),
-                    ]
-                ]
-            )
+def _get_latest(start_fn: Callable[[Any], str], end_fn: Callable[[], Any]):
+    def _get(table: str, key: Key):
+        def __get(range_: tuple[Optional[str], Optional[str]]) -> tuple[str, str]:
+            start, end = range_
+            if start and end:
+                return start, end
+            else:
+                maxs = [f"MAX({_key})" for _key in key.cursor_key]
+                rows = client.query(
+                    f"""
+                    SELECT LEAST({','.join(maxs)}) AS cursor
+                    FROM {DATASET}.{table}
+                    """
+                ).result()
+                return start_fn([row for row in rows][0]["cursor"]), end_fn()
+
+        return __get
 
     return _get
+
+
+timeframe_builder = _get_latest(
+    lambda x: x.date().isoformat(),
+    lambda: datetime.utcnow().date().isoformat(),
+)
+id_builder = _get_latest(
+    lambda x: x,
+    lambda: int(50e7),
+)
 
 
 def load(table: str, schema: list[dict[str, Any]], key: Optional[Key]):
@@ -60,10 +66,10 @@ def load(table: str, schema: list[dict[str, Any]], key: Optional[Key]):
 
 def update(table: str, key: Key):
     def _update(output_rows: int):
-        id_key = ','.join(key.id_key)
-        cursor_rn_key = ','.join(key.cursor_rn_key)
-        rank_key = ','.join(key.rank_key)
-        cursor_rank_key = ','.join(key.cursor_rank_key)
+        id_key = ",".join(key.id_key)
+        cursor_rn_key = ",".join(key.cursor_rn_key)
+        rank_key = ",".join(key.rank_key)
+        cursor_rank_key = ",".join(key.cursor_rank_key)
         query = f"""
         CREATE OR REPLACE TABLE {DATASET}.{table} AS
         SELECT * EXCEPT (row_num, _rank)

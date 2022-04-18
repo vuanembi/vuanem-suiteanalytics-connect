@@ -1,16 +1,17 @@
-from netsuite.pipeline.netsuite import ACCOUNTS, TRANSACTION_LINES
+from netsuite.pipeline.netsuite import accounts, transaction_lines
+from netsuite.pipeline.netsuite2 import coupon_code
 
 static = [
-    ACCOUNTS,
+    accounts,
 ]
 
 time_dynamic = [
-    TRANSACTION_LINES,
+    transaction_lines,
 ]
 
-id_dynamic = []
-
-static_pipelines = {i.pipeline.name: i.pipeline for i in static}
+id_dynamic = [
+    coupon_code,
+]
 
 static_pipelines, time_dynamic_pipelines, id_dynamic_pipelines = [
     {i.pipeline.name: i.pipeline for i in group}
