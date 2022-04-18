@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "vuanem_ns"
-version = "3.4"
+name = "vuanem-suiteanalytics-connect"
+version = "4.0"
 description = ""
 authors = ["HM <hieumdd@gmail.com>"]
 
