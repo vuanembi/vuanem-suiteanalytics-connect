@@ -47,7 +47,7 @@ def load(table: str, schema: list[dict[str, Any]], key: Optional[Key]):
             return 0
 
         output_rows = (
-            client.load_table_from_json(
+            client.load_table_from_json(  # type: ignore
                 data,
                 f"{DATASET}.{table}",
                 job_config=bigquery.LoadJobConfig(
@@ -68,7 +68,7 @@ def update(table: str, key: Key):
     def _update(output_rows: int):
         if output_rows == 0:
             return output_rows
-            
+
         id_key = ",".join(key.id_key)
         cursor_rn_key = ",".join(key.cursor_rn_key)
         rank_key = ",".join(key.rank_key)
