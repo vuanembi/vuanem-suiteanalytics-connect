@@ -9,12 +9,12 @@ from netsuite.pipeline.interface import Pipeline
 
 def _transform_int(cols: list[str]):
     def _transform(key: str, value: Optional[Any]):
-        return int(value) if key in cols and value else None
+        return int(value) if key in cols and value is not None else value
 
     return _transform
 
 
-def transform_service(schema: Pipeline.schema):
+def transform_service(schema: list[dict[str, Any]]):
     def _svc(data: list[dict[str, Any]]):
         transform_int = _transform_int(
             [i["name"] for i in schema if i["type"] == "INTEGER"]
@@ -29,17 +29,18 @@ def pipeline_service(pipeline: Pipeline):
         with pipeline.conn_fn() as conn:
             return get(conn, query)
 
-    def _svc(body: dict):
+    def _svc(start: Optional[str], end: Optional[str]):
         return compose(
             lambda x: {
                 "table": pipeline.name,
                 "output_rows": x,
             },
-            pipeline.load_callback_fn(pipeline.table, pipeline.key),
+            pipeline.load_callback_fn(pipeline.name, pipeline.key),
             load(pipeline.name, pipeline.schema, pipeline.key),
+            transform_service(pipeline.schema),
             _get,
             pipeline.query_fn,
-            pipeline.param_fn(pipeline.name, getattr(pipeline.key, "cursor_key")),
-        )((body.get("start"), body.get("end")))
+            pipeline.param_fn(pipeline.name, pipeline.key),
+        )((start, end))
 
     return _svc

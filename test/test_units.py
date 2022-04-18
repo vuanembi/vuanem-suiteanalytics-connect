@@ -4,47 +4,67 @@ import pytest
 
 from main import main
 from models.models import TABLES
+from netsuite.pipeline import (
+    static_pipelines,
+    time_dynamic_pipelines,
+    id_dynamic_pipelines,
+)
+from netsuite.netsuite_service import pipeline_service
 
-# STANDARD_TABLES = [
-#     "ACCOUNTS",
-#     "BUDGET",
-#     "CLASSES",
-#     "DELIVERY_PERSON",
-#     "DEPARTMENTS",
-#     "EMPLOYEES",
-#     "ITEMS",
-#     "LOCATIONS",
-#     "SYSTEM_NOTES_PRICE",
-#     "VENDORS",
-#     "ns2_promotionCode",
-#     "ITEM_LOCATION_MAP",
-#     "CAMPAIGNS",
-# ]
-# TIME_TABLES = [
-#     "CASES",
-#     "CUSTOMERS",
-#     "DELETED_RECORDS",
-#     "TRANSACTIONS",
-#     "TRANSACTION_LINES",
-#     "STORE_TRAFFIC",
-#     "SUPPORT_PERSON_MAP",
-#     "ns2_transactionLine",
-#     "ns2_tranPromotion",
-#     "LOYALTY_TRANSACTION",
-#     "SERVICE_ADDON_SO_MAP",
-#     "SERVICE_ADDON_TO_MAP",
-#     "PROMOTION_SMS_INTEGRATION",
-#     "LOYALTY_CUSTOMER_GROUP",
-#     "SYSTEM_NOTES_CREATE",
-# ]
-# ID_TABLES = [
-#     "ns2_couponCode",
-# ]
+TIME_RANGE = [
+    ("auto", (None, None)),
+    ("manual", ("2022-01-10", "2022-01-11")),
+]
+ID_RANGE = [
+    ("auto", (None, None)),
+    ("manual", (1, 1000)),
+]
 
-TIME_START = "2022-03-01"
-TIME_END = "2022-05-01"
+TIME_START = "2022-01-01"
+TIME_END = "2022-01-03"
 ID_START = 1
 ID_END = 1000
+
+
+def parameterize(pipeline_group):
+    return {
+        "argnames": "pipeline",
+        "argvalues": pipeline_group.values(),
+        "ids": pipeline_group.keys(),
+    }
+
+
+class TestPipeline:
+    @pytest.mark.parametrize(**parameterize(static_pipelines))
+    def test_static_pipeline(self, pipeline):
+        res = pipeline_service(pipeline)(None, None)
+        assert res['output_rows'] > 0
+
+    @pytest.mark.parametrize(**parameterize(time_dynamic_pipelines))
+    @pytest.mark.parametrize(
+        "timerange",
+        [tr[1] for tr in TIME_RANGE],
+        ids=[tr[0] for tr in TIME_RANGE],
+    )
+    def test_time_dynamic_pipeline(self, pipeline, timerange):
+        res = pipeline_service(pipeline)(
+            timerange[0],
+            timerange[1],
+        )
+        assert res['output_rows'] > 0
+
+
+    @pytest.mark.parametrize(**parameterize(id_dynamic_pipelines))
+    @pytest.mark.parametrize(
+        "idrange",
+        [ir[1] for ir in ID_RANGE],
+        ids=[ir[0] for ir in ID_RANGE],
+    )
+    def test_id_dynamic_pipeline(self, pipeline, idrange):
+        res = pipeline_service(pipeline)(
+            idrange[0],
+            idrange[1],
+        )
 
 
 def process(data):

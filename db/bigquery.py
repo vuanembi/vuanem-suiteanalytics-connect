@@ -60,10 +60,10 @@ def load(table: str, schema: list[dict[str, Any]], key: Optional[Key]):
 
 def update(table: str, key: Key):
     def _update(output_rows: int):
-        id_key = key.id_key.join(",")
-        cursor_rn_key = key.cursor_rn_key.join(",")
-        rank_key = key.rank_key.join(",")
-        cursor_rank_key = key.cursor_rank_key.join(",")
+        id_key = ','.join(key.id_key)
+        cursor_rn_key = ','.join(key.cursor_rn_key)
+        rank_key = ','.join(key.rank_key)
+        cursor_rank_key = ','.join(key.cursor_rank_key)
         query = f"""
         CREATE OR REPLACE TABLE {DATASET}.{table} AS
         SELECT * EXCEPT (row_num, _rank)

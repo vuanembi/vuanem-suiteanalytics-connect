@@ -45,7 +45,7 @@ netsuite2_connection = _get_connection(
 def get(connection: jaydebeapi.Connection, query: str) -> list[dict[str, Any]]:
     def _fetch(cursor: jaydebeapi.Cursor) -> list[tuple]:
         results = cursor.fetchmany(ROWS_PER_FETCH)
-        return () if not results else results + _fetch(cursor)
+        return [] if not results else results + _fetch(cursor)
 
     with connection.cursor() as cursor:
         cursor.execute(query)
