@@ -92,10 +92,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["CUSTOMER_ID"],
-        rank_key=["CUSTOMER_ID"],
         cursor_key=["DATE_LAST_MODIFIED"],
-        cursor_rank_key=["DATE_LAST_MODIFIED"],
-        cursor_rn_key=["DATE_LAST_MODIFIED"],
     ),
     load_callback_fn=update,
 )

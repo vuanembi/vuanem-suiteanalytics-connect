@@ -28,10 +28,7 @@ pipeline = Pipeline(
     param_fn=id_builder,
     key=Key(
         id_key=["id"],
-        rank_key=["id"],
         cursor_key=["id"],
-        cursor_rank_key=["id"],
-        cursor_rn_key=["id"],
     ),
     load_callback_fn=update,
 )

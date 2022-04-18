@@ -28,8 +28,6 @@ pipeline = Pipeline(
         id_key=["DELIVERY_PERSON_ID", "TRANSACTION_ID"],
         rank_key=["TRANSACTION_ID"],
         cursor_key=["DATE_LAST_MODIFIED"],
-        cursor_rank_key=["DATE_LAST_MODIFIED"],
-        cursor_rn_key=["DATE_LAST_MODIFIED"],
     ),
     load_callback_fn=update,
 )

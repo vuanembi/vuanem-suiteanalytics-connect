@@ -24,10 +24,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["id"],
-        rank_key=["id"],
         cursor_key=["lastmodifieddate"],
-        cursor_rank_key=["lastmodifieddate"],
-        cursor_rn_key=["lastmodifieddate"],
     ),
     load_callback_fn=update,
 )

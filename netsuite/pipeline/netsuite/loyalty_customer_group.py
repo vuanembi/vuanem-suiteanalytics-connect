@@ -40,10 +40,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["LOYALTY_CUSTOMER_GROUP_ID"],
-        rank_key=["LOYALTY_CUSTOMER_GROUP_ID"],
         cursor_key=["LAST_MODIFIED_DATE"],
-        cursor_rank_key=["LAST_MODIFIED_DATE"],
-        cursor_rn_key=["LAST_MODIFIED_DATE"],
     ),
     load_callback_fn=update,
 )

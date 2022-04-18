@@ -32,10 +32,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["TRANSACTION_ID"],
-        rank_key=["TRANSACTION_ID"],
         cursor_key=["linelastmodifieddate"],
-        cursor_rank_key=["linelastmodifieddate"],
-        cursor_rn_key=["linelastmodifieddate"],
     ),
     load_callback_fn=update,
 )

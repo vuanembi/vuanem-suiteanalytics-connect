@@ -36,10 +36,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["RECORD_ID"],
-        rank_key=["RECORD_ID"],
         cursor_key=["DATE_DELETED"],
-        cursor_rank_key=["DATE_DELETED"],
-        cursor_rn_key=["DATE_DELETED"],
     ),
     load_callback_fn=update,
 )

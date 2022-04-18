@@ -34,10 +34,7 @@ pipeline = Pipeline(
     param_fn=timeframe_builder,
     key=Key(
         id_key=["QUNHUYN_LIST_ID"],
-        rank_key=["QUNHUYN_LIST_ID"],
         cursor_key=["LAST_MODIFIED_DATE"],
-        cursor_rank_key=["LAST_MODIFIED_DATE"],
-        cursor_rn_key=["LAST_MODIFIED_DATE"],
     ),
     load_callback_fn=update,
 )

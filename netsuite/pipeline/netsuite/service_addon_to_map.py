@@ -27,8 +27,6 @@ pipeline = Pipeline(
         id_key=["TRANSACTION_ID", "LIST_SERVICE_ADD_ON_TO_ID"],
         rank_key=["TRANSACTION_ID"],
         cursor_key=["DATE_LAST_MODIFIED"],
-        cursor_rank_key=["DATE_LAST_MODIFIED"],
-        cursor_rn_key=["DATE_LAST_MODIFIED"],
     ),
     load_callback_fn=update,
 )

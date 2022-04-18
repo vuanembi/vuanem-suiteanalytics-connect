@@ -1,21 +1,25 @@
-from typing import Callable, Any, Optional, Protocol
-from dataclasses import dataclass
+from typing import Callable, Any, Optional
+from dataclasses import dataclass, field
 
 from jaydebeapi import Connection
-
-
-# class LoadCallback(Protocol):
-#     def __call__(self, *args) -> Callable[[int], int]:
-#         pass
 
 
 @dataclass
 class Key:
     id_key: list[str]
-    rank_key: list[str]
     cursor_key: list[str]
-    cursor_rank_key: list[str]
-    cursor_rn_key: list[str]
+    rank_key: list[str] = field(default_factory=list)
+    cursor_rank_key: list[str] = field(default_factory=list)
+    cursor_rn_key: list[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        self.rank_key = self.rank_key if self.rank_key else self.id_key
+        self.cursor_rank_key = (
+            self.cursor_rank_key if self.cursor_rank_key else self.cursor_key
+        )
+        self.cursor_rn_key = (
+            self.cursor_rn_key if self.cursor_rn_key else self.cursor_key
+        )
 
 
 @dataclass

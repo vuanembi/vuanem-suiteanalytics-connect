@@ -42,8 +42,6 @@ pipeline = Pipeline(
         id_key=["transaction", "couponcode", "promocode"],
         rank_key=["transaction"],
         cursor_key=["lastmodifieddate"],
-        cursor_rank_key=["lastmodifieddate"],
-        cursor_rn_key=["lastmodifieddate"],
     ),
     load_callback_fn=update,
 )
