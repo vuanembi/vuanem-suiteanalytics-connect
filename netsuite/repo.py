@@ -30,15 +30,15 @@ def _get_connection(data_source: str, role_id: str, user: str, pwd: str):
 
 netsuite_connection = _get_connection(
     "NetSuite",
-    os.getenv("ROLE_ID"),
-    os.getenv("NS_UID"),
-    os.getenv("NS_PWD"),
+    os.getenv("ROLE_ID", ""),
+    os.getenv("NS_UID", ""),
+    os.getenv("NS_PWD", ""),
 )
 netsuite2_connection = _get_connection(
     "NetSuite2",
-    os.getenv("ROLE_ID2"),
-    os.getenv("NS_UID2"),
-    os.getenv("NS_PWD2"),
+    os.getenv("ROLE_ID2", ""),
+    os.getenv("NS_UID2", ""),
+    os.getenv("NS_PWD2", ""),
 )
 
 

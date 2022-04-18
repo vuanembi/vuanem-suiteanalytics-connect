@@ -7,7 +7,7 @@ from netsuite.pipeline.interface import Key
 
 client = bigquery.Client()
 
-DATASET = "IP_NetSuite"
+DATASET = "DEV_NetSuite"
 
 
 def timeframe_builder(table: str, key: Key):
@@ -18,13 +18,13 @@ def timeframe_builder(table: str, key: Key):
         else:
             maxs = [f"MAX({_key})" for _key in key.cursor_key]
             rows = client.query(
-                f"""SELECT LEAST({maxs.join(',')}) AS cursor
+                f"""SELECT LEAST({','.join(maxs)}) AS cursor
                 FROM {DATASET}.{table}
                 """
             ).result()
-            return tuple(
+            return tuple( # type: ignore
                 [
-                    i.isoformat(timespec="seconds", sep=" ")
+                    i.date().isoformat()
                     for i in [
                         [row for row in rows][0]["cursor"],
                         datetime.utcnow(),

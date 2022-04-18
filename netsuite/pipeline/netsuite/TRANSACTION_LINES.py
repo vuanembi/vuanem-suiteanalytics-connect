@@ -39,7 +39,7 @@ pipeline = Pipeline(
         {"name": "TRANSACTIONS_DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
     ],
     conn_fn=netsuite_connection,
-    query_fn=lambda start, end: f"""
+    query_fn=lambda tr: f"""
         SELECT
             TRANSACTION_LINES.TRANSACTION_ID,
             TRANSACTION_LINES.TRANSACTION_LINE_ID,
@@ -78,10 +78,10 @@ pipeline = Pipeline(
             LEFT JOIN "Vua Nem Joint Stock Company".Administrator.TRANSACTIONS AS TRANSACTIONS ON TRANSACTION_LINES.TRANSACTION_ID = TRANSACTIONS.TRANSACTION_ID
         WHERE
             (
-                TRANSACTIONS.DATE_LAST_MODIFIED >= '{start}'
-                OR TRANSACTION_LINES.DATE_LAST_MODIFIED_GMT >= '{start}'
+                TRANSACTIONS.DATE_LAST_MODIFIED >= '{tr[0]}'
+                OR TRANSACTION_LINES.DATE_LAST_MODIFIED_GMT >= '{tr[0]}'
             )
-            AND TRANSACTIONS.DATE_LAST_MODIFIED <= '{end}'
+            AND TRANSACTIONS.DATE_LAST_MODIFIED <= '{tr[1]}'
     """,
     param_fn=timeframe_builder,
     key=Key(

@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from jaydebeapi import Connection
 
 
-class LoadCallback(Protocol):
-    def __call__(self, *args) -> Callable[[int], int]:
-        pass
+# class LoadCallback(Protocol):
+#     def __call__(self, *args) -> Callable[[int], int]:
+#         pass
 
 
 @dataclass
@@ -26,7 +26,10 @@ class Pipeline:
     query_fn: Callable[[tuple[Optional[str], Optional[str]]], str]
     param_fn: Callable[
         [Any, Any],
-        Callable[[tuple[str, str]], tuple[str, str]],
+        Callable[[tuple[str, str]], tuple[Optional[str], Optional[str]]],
     ] = lambda *args: lambda _: (None, None)
     key: Optional[Key] = None
-    load_callback_fn: LoadCallback = lambda *args: lambda x: x
+    load_callback_fn: Callable[
+        [str, Any],
+        Callable[[int], int],
+    ] = lambda *args: lambda x: x
