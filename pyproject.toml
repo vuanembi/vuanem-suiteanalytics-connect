@@ -6,19 +6,15 @@ authors = ["HM <hieumdd@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "~3.9"
-google-cloud-bigquery = "^2.26.0"
-requests = "^2.26.0"
+google-cloud-bigquery = "^3.0.1"
 functions-framework = "^2.2.1"
 JayDeBeApi = "^1.2.3"
 JPype1 = "^1.3.0"
-Jinja2 = "^3.0.1"
-SQLAlchemy = "^1.4.23"
-psycopg2-binary = "^2.9.1"
 google-cloud-tasks = "2.5.1"
 compose = "^1.2.8"
 
 [tool.poetry.dev-dependencies]
-black = "^21.9b0"
+black = "^22.3.0"
 pytest = "^6.2.5"
 pytest-timeout = "^1.4.2"
 mypy = "^0.942"
@@ -33,3 +29,8 @@ testpaths = [
     "test",
 ]
 timeout = 900
+
+[tool.mypy]
+python_version = 3.9
+ignore_missing_imports = true
+namespace_packages = true
