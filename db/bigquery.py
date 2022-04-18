@@ -66,6 +66,9 @@ def load(table: str, schema: list[dict[str, Any]], key: Optional[Key]):
 
 def update(table: str, key: Key):
     def _update(output_rows: int):
+        if output_rows == 0:
+            return output_rows
+            
         id_key = ",".join(key.id_key)
         cursor_rn_key = ",".join(key.cursor_rn_key)
         rank_key = ",".join(key.rank_key)
