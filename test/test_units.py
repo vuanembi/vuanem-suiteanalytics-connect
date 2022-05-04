@@ -14,8 +14,8 @@ from main import main
 
 TIME_RANGE = [
     # ("auto", (None, None)),
-    # ("manual", ("2022-01-10", "2022-01-11")),
-    ("dev", (date.today().isoformat(), (date.today() + timedelta(days=1)).isoformat())),
+    ("manual", ("2018-04-01", "2022-06-01")),
+    # ("dev", (date.today().isoformat(), (date.today() + timedelta(days=1)).isoformat())),
 ]
 ID_RANGE = [
     ("auto", (None, None)),
@@ -53,8 +53,14 @@ class TestPipeline:
         assert res["output_rows"] >= 0
 
     @pytest.fixture(
-        params=[service, controller],
-        ids=["service", "controller"],
+        params=[
+            service,
+            # controller,
+        ],
+        ids=[
+            "service",
+            # "controller",
+        ],
     )
     def mode(self, request):
         return request.param

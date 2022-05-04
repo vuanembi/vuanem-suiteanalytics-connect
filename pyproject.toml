@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vuanem-suiteanalytics-connect"
-version = "4.0"
+version = "4.1"
 description = ""
 authors = ["HM <hieumdd@gmail.com>"]
 
@@ -28,7 +28,7 @@ addopts = "-p no:warnings -s --durations=0"
 testpaths = [
     "test",
 ]
-timeout = 900
+# timeout = 900
 
 [tool.mypy]
 python_version = 3.9
