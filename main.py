@@ -1,46 +1,17 @@
-import os
-import json
+from typing import Any
 
-import requests
-
-from models.models import NetSuite
-from tasks import create_tasks
+from netsuite.netsuite_controller import netsuite_controller
+from tasks.tasks_service import tasks_service
 
 
 def main(request):
-    """Gateway to process request
-
-    Args:
-        request (flask.Request): HTTP Request
-
-    Returns:
-        dict: Responses
-    """
-
-    data = request.get_json()
+    data: dict[str, Any] = request.get_json()
     print(data)
 
-    if "mode" in data and "table" not in data:
-        results = create_tasks(data)
+    if "task" in data and "table" not in data:
+        response = tasks_service(data)
     else:
-        results = NetSuite.factory(
-            data["table"],
-            data.get("start"),
-            data.get("end"),
-        ).run()
+        response = netsuite_controller(data)
 
-    responses = {
-        "pipelines": "NetSuite",
-        "results": results,
-    }
-
-    print(responses)
-
-    requests.post(
-        f"https://api.telegram.org/bot{os.getenv('TELEGRAM_TOKEN')}/sendMessage",
-        json={
-            "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
-            "text": json.dumps(responses, indent=4),
-        },
-    )
-    return responses
+    print(response)
+    return response
