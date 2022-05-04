@@ -8,7 +8,7 @@ ACCOUNT_ID = 4975572
 ROWS_PER_FETCH = 50000
 
 
-def _get_connection(data_source: str, role_id: str, user: str, pwd: str):
+def _get_connection(data_source: str, role_id: int, user: str, pwd: str):
     def _get() -> jaydebeapi.Connection:
         return jaydebeapi.connect(
             "com.netsuite.jdbc.openaccess.OpenAccessDriver",
@@ -30,13 +30,13 @@ def _get_connection(data_source: str, role_id: str, user: str, pwd: str):
 
 netsuite_connection = _get_connection(
     "NetSuite",
-    os.getenv("ROLE_ID", ""),
+    3,
     os.getenv("NS_UID", ""),
     os.getenv("NS_PWD", ""),
 )
 netsuite2_connection = _get_connection(
     "NetSuite2",
-    os.getenv("ROLE_ID2", ""),
+    1022,
     os.getenv("NS_UID2", ""),
     os.getenv("NS_PWD2", ""),
 )
