@@ -25,7 +25,7 @@ jobs:
       - name: Set env vars (dev)
         if: github.ref_name == 'dev'
         run: |
-          echo "SERVICE_NAME=https://vuanem-suiteanalytics-connect-dev-lx3iji7qaq-uc.a.run.app" >> $GITHUB_ENV
+          echo "SERVICE_NAME=vuanem-suiteanalytics-connect-dev" >> $GITHUB_ENV
           echo "PUBLIC_URL=https://vuanem-suiteanalytics-connect-dev-lx3iji7qaq-uc.a.run.app" >> $GITHUB_ENV
 
       - name: Set env vars (prod)
