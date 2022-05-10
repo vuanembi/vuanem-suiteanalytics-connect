@@ -40,14 +40,20 @@ jobs:
 
       - name: Create ${{ env.ENV_KEY }}
         run: |
-          echo "NS_UID: ${{ secrets.NS_UID }}" >> ${{ env.ENV_FILE }}
-          echo "NS_PWD: '${{ secrets.NS_PWD }}'" >> ${{ env.ENV_FILE }}
+          printf "NS_UID: ${{ secrets.NS_UID }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
+          printf "NS_PWD: ${{ secrets.NS_PWD }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
 
-          echo "NS_UID2: ${{ secrets.NS_UID2 }}" >> ${{ env.ENV_FILE }}
-          echo "NS_PWD2: ${{ secrets.NS_PWD2 }}" >> ${{ env.ENV_FILE }}
+          printf "NS_UID2: ${{ secrets.NS_UID2 }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
+          printf "NS_PWD2: ${{ secrets.NS_PWD2 }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
 
-          echo "GCP_SA: ${{ env.GCP_SA }}" >> ${{ env.ENV_FILE }}
-          echo "PUBLIC_URL: ${{ env.PUBLIC_URL }}" >> ${{ env.ENV_FILE }}
+          printf "GCP_SA: ${{ env.GCP_SA }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
+          printf "PUBLIC_URL: ${{ env.PUBLIC_URL }}" >> ${{ env.ENV_FILE }}
+          printf "\n" >> ${{ env.ENV_FILE }}
 
       - name: Upload ${{ env.ENV_FILE }}
         uses: actions/upload-artifact@v2
