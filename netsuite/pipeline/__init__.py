@@ -1,5 +1,6 @@
 from netsuite.pipeline.netsuite import (
     accounts as netsuite__accounts,
+    accounting_periods as netsuite__accounting_periods,
     address as netsuite__address,
     address_book as netsuite__address_book,
     budget as netsuite__budget,
@@ -74,6 +75,7 @@ static = [
 ]
 
 time_dynamic = [
+    netsuite__accounting_periods,
     netsuite__address_book,
     netsuite__address,
     netsuite__cases,
