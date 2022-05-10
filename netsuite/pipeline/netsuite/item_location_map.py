@@ -9,6 +9,9 @@ pipeline = Pipeline(
         {"name": "LOCATION_ID", "type": "INTEGER"},
         {"name": "DISPLAYNAME", "type": "STRING"},
         {"name": "ON_HAND_COUNT", "type": "INTEGER"},
+        {"name": "AVAILABLE_COUNT", "type": "INTEGER"},
+        {"name": "ON_HAND_VALUE", "type": "INTEGER"},
+        {"name": "PRODUCT_CODE", "type": "STRING"},
     ],
     conn_fn=netsuite_connection,
     query_fn=lambda *args: """
@@ -17,7 +20,10 @@ pipeline = Pipeline(
             ITEM_ID,
             LOCATION_ID,
             i.DISPLAYNAME,
-            ON_HAND_COUNT
+            ON_HAND_COUNT,
+            AVAILABLE_COUNT,
+            ON_HAND_VALUE,
+            PRODUCT_CODE
         FROM
             "Vua Nem Joint Stock Company".Administrator.ITEM_LOCATION_MAP ilm
         LEFT JOIN
