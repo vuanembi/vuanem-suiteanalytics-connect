@@ -20,6 +20,9 @@ pipeline = Pipeline(
         {"name": "FRONT_LENGTH", "type": "FLOAT"},
         {"name": "STORE_MODEL", "type": "STRING"},
         {"name": "OPENNING_DAY2", "type": "TIMESTAMP"},
+        {"name": "LOCATION_EXTID", "type": "STRING"},
+        {"name": "PARENT_ID", "type": "INTEGER"},
+        {"name": "STORE_MANAGER_ID", "type": "INTEGER"},
     ],
     conn_fn=netsuite_connection,
     query_fn=lambda *args: """
@@ -45,7 +48,9 @@ pipeline = Pipeline(
                     LOCATION.FRONT_LENGTH,
                     LOCATION.STORE_MODEL,
                     LOCATION.ISCLOSE,
-                    LOCATION.EMAIL,
+                    LOCATION.LOCATION_EXTID,
+                    LOCATION.PARENT_ID,
+                    LOCATION.STORE_MANAGER_ID,
                     FIRST_TRAFFIC_DATE.FIRST_TRAFFIC_DATE
                 FROM
                     (
@@ -70,7 +75,10 @@ pipeline = Pipeline(
                                 WHEN LOCATIONS.CLOSE_DATE IS NULL
                                 OR LOCATIONS.CLOSE_DATE > CURRENT_DATE() THEN '0'
                                 ELSE '1'
-                            END AS 'ISCLOSE'
+                            END AS 'ISCLOSE',
+                            LOCATION_EXTID,
+                            PARENT_ID,
+                            STORE_MANAGER_ID
                         FROM
                             "Vua Nem Joint Stock Company".Administrator.LOCATIONS
                             INNER JOIN "Vua Nem Joint Stock Company".Administrator.SUBSIDIARY_LOCATION_MAP SUBSIDIARY_LOCATION_MAP ON SUBSIDIARY_LOCATION_MAP.LOCATION_ID = LOCATIONS.LOCATION_ID
