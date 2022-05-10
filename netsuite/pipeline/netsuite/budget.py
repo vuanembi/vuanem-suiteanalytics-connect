@@ -14,6 +14,8 @@ pipeline = Pipeline(
         {"name": "ACCOUNT_ID", "type": "INTEGER"},
         {"name": "ACCOUNTING_BOOK_ID", "type": "INTEGER"},
         {"name": "ACCOUNTING_PERIOD_ID", "type": "INTEGER"},
+        {"name": "CATEGORY_ID", "type": "INTEGER"},
+        {"name": "SUBSIDIARY_ID", "type": "INTEGER"},
     ],
     conn_fn=netsuite_connection,
     query_fn=lambda *args: """
@@ -27,7 +29,9 @@ pipeline = Pipeline(
             BUDGET_CATEGORY.ISINACTIVE AS 'BUDGET_ISINACTIVE',
             BUDGET.ACCOUNT_ID,
             BUDGET.ACCOUNTING_BOOK_ID,
-            BUDGET.ACCOUNTING_PERIOD_ID
+            BUDGET.ACCOUNTING_PERIOD_ID,
+            BUDGET.CATEGORY_ID,
+            BUDGET.SUBSIDIARY_ID
         FROM
             "Vua Nem Joint Stock Company".Administrator.BUDGET
         LEFT JOIN "Vua Nem Joint Stock Company".Administrator.ACCOUNTING_PERIODS
