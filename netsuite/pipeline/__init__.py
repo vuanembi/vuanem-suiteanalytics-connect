@@ -41,6 +41,7 @@ from netsuite.pipeline.netsuite import (
     transactions as netsuite__transactions,
     transactions_due_date as netsuite__transactions_due_date,
     transaction_lines as netsuite__transaction_lines,
+    transaction_lines_2022 as netsuite__transaction_lines_2022,
     vendors as netsuite__vendors,
 )
 from netsuite.pipeline.netsuite2 import (
@@ -101,6 +102,7 @@ time_dynamic = [
     netsuite__support_person_map,
     netsuite__system_notes_create,
     netsuite__transaction_lines,
+    netsuite__transaction_lines_2022,
     netsuite__transactions,
     netsuite2__tran_promotion,
     netsuite2__transaction_line,
