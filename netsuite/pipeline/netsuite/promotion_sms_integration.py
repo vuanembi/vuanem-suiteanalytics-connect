@@ -3,7 +3,7 @@ from netsuite.repo import netsuite_connection
 from db.bigquery import timeframe_builder, update
 
 pipeline = Pipeline(
-    "ORIGINATING_LEADS",
+    "PROMOTION_SMS_INTEGRATION",
     [
         {"name": "PROMOTION_SMS_INTEGRATION_ID", "type": "INTEGER"},
         {"name": "COUPON_CODES", "type": "STRING"},
