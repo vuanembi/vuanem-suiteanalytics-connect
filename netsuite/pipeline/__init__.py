@@ -25,7 +25,7 @@ from netsuite.pipeline.netsuite import (
     loyalty_transaction as netsuite__loyalty_transaction,
     order_payment_method as netsuite__order_payment_method,
     originating_leads as netsuite__originating_leads,
-    promotion_sms_intergration as netsuite__promotion_sms_intergration,
+    promotion_sms_integration as netsuite__promotion_sms_intergration,
     purchase_order as netsuite__purchase_order,
     quanhuyen_list as netsuite__quanhuyen_list,
     rating as netsuite__rating,
