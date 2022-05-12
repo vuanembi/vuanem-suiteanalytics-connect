@@ -3,7 +3,7 @@ from netsuite.repo import netsuite_connection
 from db.bigquery import timeframe_builder, update
 
 pipeline = Pipeline(
-    "SERVICE_ADDON_SO_MAP",
+    "SERVICE_ADDON_TO_MAP",
     [
         {"name": "LIST_SERVICE_ADD_ON_TO_ID", "type": "INTEGER"},
         {"name": "TRANSACTION_ID", "type": "INTEGER"},

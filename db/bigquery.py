@@ -30,10 +30,10 @@ def _get_latest(start_fn: Callable[[Any], str], end_fn: Callable[[], Any]):
 
     return _get
 
-
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 timeframe_builder = _get_latest(
-    lambda x: x.date().isoformat(),
-    lambda: datetime.utcnow().date().isoformat(),
+    lambda x: x.strftime(TIME_FORMAT),
+    lambda: datetime.utcnow().strftime(TIME_FORMAT),
 )
 id_builder = _get_latest(
     lambda x: x,
