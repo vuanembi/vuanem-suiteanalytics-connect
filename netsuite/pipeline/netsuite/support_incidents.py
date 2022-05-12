@@ -14,6 +14,7 @@ pipeline = Pipeline(
         {"name": "SO_LOCATION_ID", "type": "INTEGER"},
         {"name": "SO_REFERENCE_ID", "type": "INTEGER"},
         {"name": "STATUS", "type": "STRING"},
+        {"name": "RATING__SAU_KHI_LN_SO_ID", "type": "INTEGER"},
         {"name": "DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
     ],
     conn_fn=netsuite_connection,
@@ -28,6 +29,7 @@ pipeline = Pipeline(
             SO_LOCATION_ID,
             SO_REFERENCE_ID,
             STATUS,
+            RATING__SAU_KHI_LN_SO_ID,
             DATE_LAST_MODIFIED
         FROM
             "Vua Nem Joint Stock Company".Administrator.SUPPORT_INCIDENTS
