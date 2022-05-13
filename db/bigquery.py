@@ -7,7 +7,7 @@ from netsuite.pipeline.interface import Key
 
 client = bigquery.Client()
 
-DATASET = "IP_NetSuite"
+DATASET = "dev_NetSuite"
 
 
 def _get_latest(start_fn: Callable[[Any], str], end_fn: Callable[[], Any]):
