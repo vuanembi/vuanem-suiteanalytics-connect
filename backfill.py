@@ -1,4 +1,5 @@
 import argparse
+import gc
 
 from datetime import datetime
 from dateutil.rrule import rrule, MONTHLY
@@ -28,6 +29,8 @@ def main(name, start, end):
             }
         )
         print(res)
+        del res
+        gc.collect()
 
 
 if __name__ == "__main__":
