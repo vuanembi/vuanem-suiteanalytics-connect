@@ -2,7 +2,7 @@ import argparse
 import gc
 
 from datetime import datetime
-from dateutil.rrule import rrule, MONTHLY
+from dateutil.rrule import rrule, DAILY
 
 from netsuite.netsuite_controller import netsuite_controller
 
@@ -12,7 +12,7 @@ def parse_datetime(start, end) -> list[datetime]:
 
 
 def generate_range(start: datetime, end: datetime):
-    start_of_months = [i for i in rrule(MONTHLY, dtstart=start, until=end)]
+    start_of_months = [i for i in rrule(DAILY, interval=5, dtstart=start, until=end)]
     return [start_of_months[i : i + 2] for i in range(len(start_of_months))]
 
 
