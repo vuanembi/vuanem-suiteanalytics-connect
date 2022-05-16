@@ -14,18 +14,13 @@ from main import main
 
 TIME_RANGE = [
     # ("auto", (None, None)),
-    ("manual", ("2022-01-01", "2022-02-01")),
+    ("manual", ("2022-05-01", "2022-06-01")),
     # ("dev", (date.today().isoformat(), (date.today() + timedelta(days=1)).isoformat())),
 ]
 ID_RANGE = [
     ("auto", (None, None)),
     ("manual", (1, 1000)),
 ]
-
-TIME_START = "2022-01-01"
-TIME_END = "2022-01-03"
-ID_START = 1
-ID_END = 1000
 
 
 def parameterize(pipeline_group):

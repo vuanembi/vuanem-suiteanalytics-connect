@@ -15,11 +15,9 @@ services:
       K_CONFIGURATION: dev
       K_REVISION: dev-00001
       
-      ROLE_ID: ${ROLE_ID}
       NS_UID: ${NS_UID}
       NS_PWD: ${NS_PWD}
 
-      ROLE_ID2: ${ROLE_ID2}
       NS_UID2: ${NS_UID2}
       NS_PWD2: ${NS_PWD2}
       

@@ -70,9 +70,9 @@ def update(table: str, key: Key):
             return output_rows
 
         id_key = ",".join(key.id_key)
-        cursor_rn_key = ",".join(key.cursor_rn_key)
+        cursor_rn_key = ",".join([f"{i} DESC" for i in key.cursor_rn_key])
         rank_key = ",".join(key.rank_key)
-        cursor_rank_key = ",".join(key.cursor_rank_key)
+        cursor_rank_key = ",".join([f"{i} DESC" for i in key.cursor_rank_key])
         query = f"""
         CREATE OR REPLACE TABLE {DATASET}.{table} AS
         SELECT * EXCEPT (row_num, _rank)
@@ -82,11 +82,11 @@ def update(table: str, key: Key):
                 *,
                 ROW_NUMBER() OVER (
                     PARTITION BY {id_key}
-                    ORDER BY {cursor_rn_key} DESC
+                    ORDER BY {cursor_rn_key}
                 ) AS row_num,
             RANK() OVER (
                     PARTITION BY {rank_key}
-                    ORDER BY {cursor_rank_key} DESC
+                    ORDER BY {cursor_rank_key}
                 ) AS _rank,
             FROM
                 {DATASET}.{table}
