@@ -7,7 +7,7 @@ pipeline = Pipeline(
     [
         {"name": "TRANSACTION_ID", "type": "INTEGER"},
         {"name": "TRANSACTION_LINE_ID", "type": "INTEGER"},
-        {"name": "TRANSACTION_DISCOUNT_LINE", "type": "INTEGER"},
+        {"name": "TRANSACTION_DISCOUNT_LINE", "type": "STRING"},
         {"name": "DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
         {"name": "TRANSACTIONS_DATE_LAST_MODIFIED", "type": "TIMESTAMP"},
     ],
