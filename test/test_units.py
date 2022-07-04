@@ -14,7 +14,7 @@ from main import main
 
 TIME_RANGE = [
     # ("auto", (None, None)),
-    ("manual", ("2022-05-01", "2022-06-01")),
+    ("manual", ("2022-02-01", "2022-06-01")),
     # ("dev", (date.today().isoformat(), (date.today() + timedelta(days=1)).isoformat())),
 ]
 ID_RANGE = [
