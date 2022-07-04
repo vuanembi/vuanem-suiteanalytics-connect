@@ -50,6 +50,7 @@ from netsuite.pipeline.netsuite2 import (
     promotion_code as netsuite2__promotion_code,
     promotion_code_currency as netsuite2__promotion_code_currency,
     transaction as netsuite2__transaction,
+    transaction2 as netsuite2__transaction2,
     transaction_line as netsuite2__transaction_line,
     transaction_line3 as netsuite2__transaction_line3,
     transactionAddressMapping as netsuite2__transactionAddressMapping,
@@ -112,6 +113,7 @@ time_dynamic = [
     netsuite2__transaction_line,
     netsuite2__transaction_line3,
     netsuite2__transaction,
+    netsuite2__transaction2,
     netsuite2__transactionAddressMapping,
 ]
 
