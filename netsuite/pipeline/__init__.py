@@ -18,6 +18,7 @@ from netsuite.pipeline.netsuite import (
     employees as netsuite__employees,
     entity as netsuite__entity,
     ir as netsuite__ir,
+    item_vendor_map as netsuite_item_vendors_map,
     items as netsuite__items,
     item_location_map as netsuite__item_location_map,
     locations as netsuite__locations,
@@ -50,8 +51,10 @@ from netsuite.pipeline.netsuite2 import (
     promotion_code as netsuite2__promotion_code,
     promotion_code_currency as netsuite2__promotion_code_currency,
     transaction as netsuite2__transaction,
-    transactionAddressMapping as netsuite2__transactionAddressMapping,
+    # transaction2 as netsuite2__transaction2,
     transaction_line as netsuite2__transaction_line,
+    transaction_line3 as netsuite2__transaction_line3,
+    transactionAddressMapping as netsuite2__transactionAddressMapping,
     tran_promotion as netsuite2__tran_promotion,
 )
 
@@ -69,6 +72,7 @@ static = [
     netsuite__ir,
     netsuite__items,
     netsuite__item_location_map,
+    netsuite_item_vendors_map,
     netsuite__locations,
     netsuite__order_payment_method,
     netsuite__purchase_order,
@@ -109,7 +113,9 @@ time_dynamic = [
     netsuite__transactions,
     netsuite2__tran_promotion,
     netsuite2__transaction_line,
+    netsuite2__transaction_line3,
     netsuite2__transaction,
+    # netsuite2__transaction2,
     netsuite2__transactionAddressMapping,
 ]
 
